@@ -14,9 +14,10 @@ function ProjectCard({ project, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="card rounded-md p-7"
+      className={`card rounded-md p-7 ${project.featured ? 'md:col-span-2' : ''}`}
+      style={project.featured ? { borderColor: 'rgba(217, 130, 63, 0.4)' } : undefined}
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-4 gap-4">
         <div>
           <p className="font-mono text-[10px] text-rust-500 tracking-wide uppercase mb-1.5">
             {project.tagline}
@@ -25,7 +26,11 @@ function ProjectCard({ project, index }) {
             {project.name}
           </h3>
         </div>
-        {project.featured && (
+        {project.badge ? (
+          <span className="text-[9px] font-mono px-2 py-1 border border-rust-500/50 text-rust-500 uppercase tracking-wide text-right flex-shrink-0">
+            {project.badge}
+          </span>
+        ) : project.featured && (
           <span className="text-[9px] font-mono px-2 py-1 border border-ink-700 text-ink-500 uppercase tracking-wide">
             Featured
           </span>

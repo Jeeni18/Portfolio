@@ -195,52 +195,73 @@ export const techStack = {
 }
 
 export const projects = {
-  sectionSubtitle: "What I build when nobody's paying me to — mostly AI.",
+  sectionSubtitle: 'Full-stack builds with APIs, integration and data underneath.',
   items: [
     {
       number: '01',
-      name: 'FER',
-      tagline: 'Facial Expression Recognition',
-      description:
-        "Four CNN architectures — VGG19, DenseNet-121, ResNet18, ResNet50 — trained on FER2013 to read emotion from faces. The hard part wasn't the model, it was getting face detection and preprocessing solid enough that accuracy held up outside the dataset.",
-      stack: ['Python', 'React', 'ML', 'Data Analysis'],
-      github: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
-      featured: true,
-    },
-    {
-      number: '02',
       name: 'DiagHer',
-      tagline: 'Gender-aware diagnosis support',
+      tagline: 'AI-Powered Clinical Decision Support System',
+      badge: "Top 16 – Nepal's Largest All-Female Hackathon (2025)",
       description:
-        "Built for SheQual, Nepal's largest all-female hackathon — Top 16 out of the field. DiagHer flags where a patient's symptoms are being read through a male-default lens and surfaces what might be getting missed.",
-      stack: ['Python', 'React', 'ML', 'Data Analysis'],
+        "Built a full-stack platform that gives gender-aware diagnostic insights; Top 16 at Nepal's largest all-female hackathon (2025).",
+      bullets: [
+        'Developed a versioned Flask REST API (12 endpoints) with request validation, error handling and rate limiting, integrated with a React + TypeScript frontend.',
+        'Integrated Scikit-learn models predicting 22 conditions from 97 symptom features.',
+      ],
+      stack: ['Flask', 'REST APIs', 'React', 'TypeScript', 'Scikit-learn'],
       github: 'https://github.com/Jeeni18/DiagHer-AI',
       featured: true,
     },
     {
-      number: '03',
-      name: 'Chronova',
-      tagline: 'AR tourism app',
+      number: '02',
+      name: 'Revolv',
+      tagline: 'Digital Growth Platform for Small Businesses',
       description:
-        "An AR app built for Hack the Circle that layers real-time personalization and cultural storytelling onto Nepal's old stories, so a historical site tells you something instead of just sitting there.",
-      stack: ['React Native', 'Python', 'ML'],
-      github: 'https://github.com/Jeeni18/Chronova',
+        'Built a web platform that recommends digital tools to small businesses based on a business-profile questionnaire.',
+      bullets: [
+        'Developed a Flask prediction API serving a Random Forest model and integrated it with a React frontend through Axios.',
+        'Built QR code generation and job posting and listing features.',
+      ],
+      stack: ['Flask', 'REST APIs', 'React', 'Axios', 'Scikit-learn'],
+      github: 'https://github.com/Jeeni18/Revolv',
+    },
+    {
+      number: '03',
+      name: 'FER',
+      tagline: 'Facial Expression Recognition',
+      description:
+        'CNN-based system that classifies human emotion from facial images.',
+      bullets: [
+        'Trained and compared four CNN architectures — VGG19, DenseNet-121, ResNet18, ResNet50 — to find the best-performing model.',
+        'Built the face detection and preprocessing pipeline, including data augmentation to improve accuracy and robustness.',
+        'Integrated the trained model into a real-time interface for live emotion recognition.',
+      ],
+      stack: ['Python', 'React', 'ML', 'Data Analysis'],
+      github: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
     },
     {
       number: '04',
-      name: 'Revolv',
-      tagline: 'Digital tooling for small businesses',
+      name: 'Chronova',
+      tagline: 'AR tourism app',
       description:
-        "Most small businesses in Nepal can't afford a dev team to go digital. Revolv looks at what a given business actually needs — QR ordering, a webpage, social scheduling — and recommends that, instead of handing over a generic toolkit.",
+        "AR app built for Hack the Circle that layers real-time personalization and storytelling onto Nepal's historical sites.",
+      bullets: [
+        'Layered real-time personalization and cultural storytelling onto physical sites via AR, instead of a static plaque or brochure.',
+        'Built with React Native on the frontend and a Python/ML backend driving the personalization.',
+      ],
       stack: ['React Native', 'Python', 'ML'],
-      github: 'https://github.com/Jeeni18/Revolv',
+      github: 'https://github.com/Jeeni18/Chronova',
     },
     {
       number: '05',
       name: 'Lumen',
       tagline: 'Anti-doomscrolling app',
       description:
-        'A behavioral-tech app that notices when scrolling turns mindless and interrupts the pattern, instead of just logging screen-time numbers nobody looks at.',
+        'Behavioral-tech app that notices when scrolling turns mindless and interrupts the pattern.',
+      bullets: [
+        'Built a behavior-detection model in Python to recognize mindless scrolling patterns rather than just tracking screen time.',
+        'React Native app that nudges the user mid-scroll instead of showing a passive end-of-day report.',
+      ],
       stack: ['React Native', 'Python', 'Behavior ML'],
       github: 'https://github.com/jeenishrestha',
     },
