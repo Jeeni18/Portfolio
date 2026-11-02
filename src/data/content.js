@@ -8,17 +8,17 @@ import {
 
 import jeeniPhoto from '../assets/me/jeeni.jpg'
 
-import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.jpg'
-import Hultprize from '../assets/achievements/hultprize.png'
-import IEEE from '../assets/achievements/Ecoflare.png'
-import Deerhack from '../assets/achievements/DeerHack_certificate.jpg'
-import Codeyatra from '../assets/achievements/Codeyatra.png'
-import Shequal from '../assets/achievements/Shequal_certificate.jpg'
-import Hackthecircle from '../assets/achievements/hackthecircle.png'
+import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.webp'
+import Hultprize from '../assets/achievements/hultprize.webp'
+import IEEE from '../assets/achievements/Ecoflare.webp'
+import Deerhack from '../assets/achievements/DeerHack_certificate.webp'
+import Codeyatra from '../assets/achievements/Codeyatra.webp'
+import Shequal from '../assets/achievements/Shequal_certificate.webp'
+import Hackthecircle from '../assets/achievements/hackthecircle.webp'
 
-import dataScienceCert from '../assets/certificates/data-science.jpg'
-import MLCert from '../assets/certificates/ML-cert.png'
-import ML from '../assets/certificates/AI_ML.jpg'
+import dataScienceCert from '../assets/certificates/data-science.webp'
+import MLCert from '../assets/certificates/ML-cert.webp'
+import ML from '../assets/certificates/AI_ML.webp'
 
 export const site = {
   name: 'Jeeni Shrestha',
