@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Hero from './sections/Hero'
 import About from './sections/About'
 import TechStack from './sections/TechStack'
+import Experience from './sections/Experience'
 import Projects from './sections/Projects'
 import Achievements from './sections/Achievements'
 import Certifications from './sections/Certifications'
@@ -22,6 +23,7 @@ function App() {
         <Hero onContactOpen={() => setContactOpen(true)} />
         <About />
         <TechStack />
+        <Experience />
         <Projects />
         <Achievements />
         <Certifications onCertClick={setSelectedCert} />

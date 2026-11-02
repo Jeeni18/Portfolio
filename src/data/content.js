@@ -80,6 +80,49 @@ export const education = {
   ],
 }
 
+export const experience = {
+  items: [
+    {
+      role: 'Full-Stack Developer',
+      org: 'Cloud Himalaya Pvt. Ltd.',
+      period: '[TODO: start month/year] – Present',
+      tech: ['Next.js', 'React', 'TypeScript', 'Payload CMS', 'PostgreSQL'],
+      bullets: [
+        'Built the company website with an integrated CMS, letting non-technical staff update content without code changes.',
+        'Designed the site architecture and developed both frontend and backend, including PostgreSQL database integration.',
+      ],
+    },
+    {
+      role: 'Web Developer (Volunteer)',
+      org: 'AWS Cloud Club TU',
+      period: '[TODO: start – end month/year]',
+      tech: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Zod', 'Docker'],
+      bullets: [
+        "Developed and maintained the club's official website with responsive layouts and reusable UI components.",
+        'Implemented form validation using React Hook Form and Zod.',
+        'Containerized the application with Docker and collaborated through Git.',
+      ],
+    },
+  ],
+}
+
+export const leadership = {
+  items: [
+    {
+      role: 'College Representative',
+      org: 'AWS Cloud Club TU',
+      period: '2025',
+      description: 'Facilitated cloud computing workshops, coordinated community events and connected students with industry.',
+    },
+    {
+      role: 'Campus Ambassador',
+      org: 'LOCUS',
+      period: '2025',
+      description: 'Promoted tech initiatives, organized student events and built engagement across campus.',
+    },
+  ],
+}
+
 export const techStack = {
   sectionSubtitle: 'Tools I reach for when something needs building.',
   categories: [
