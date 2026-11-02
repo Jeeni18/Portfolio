@@ -1,4 +1,4 @@
-import { GraduationCap, Brain, Trophy, Star, Code2, Github, Linkedin } from 'lucide-react'
+import { Brain, Trophy, Star, Code2, Network, Github, Linkedin } from 'lucide-react'
 
 import jeeniPhoto from '../assets/me/jeeni.jpg'
 
@@ -29,10 +29,11 @@ export const site = {
 
 export const navLinks = [
   { label: 'About', href: '#about' },
-  { label: 'Stack', href: '#techstack' },
+  { label: 'Skills', href: '#techstack' },
+  { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
   { label: 'Achievements', href: '#achievements' },
-  { label: 'Certifications', href: '#certifications' },
+  { label: 'Education', href: '#education' },
 ]
 
 export const hero = {
@@ -40,37 +41,41 @@ export const hero = {
   locationLine: 'Bhaktapur, Nepal — Open to full-stack & AI engineering roles',
   firstName: 'Jeeni',
   lastName: 'Shrestha.',
-  roleLine: 'Full-Stack by day, AI by obsession',
-  bio:
-    "I've spent most of the last two years in hackathon rooms — seven wins since 2025 — building AI tools aimed at problems that don't usually get AI budgets: diagnostic bias against women, small businesses priced out of going digital, and emotion recognition that actually works on real faces. The day job pays in full-stack — website, CMS, database, the whole chain — but the hackathon brain never really clocks out.",
+  roleLine: 'Full-Stack Developer',
+  bio: 'Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
   ctaPrimary: { label: 'View Projects', href: '#projects' },
   ctaSecondary: { label: "Let's Connect" },
+  ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
 }
 
 export const about = {
   sectionTitle: 'About',
   paragraphs: [
-    "My day job pays me to be a full-stack developer — I built the company's website, the CMS running it, and the database holding both together, which is a fancy way of saying I touch everything and occasionally break something gracefully.",
-    "The real obsession runs on the side: hackathons. Seven wins since 2025, building AI tools aimed at problems that don't usually get AI budgets — diagnostic bias against women, small businesses priced out of going digital, emotion recognition that actually works on real faces instead of just the demo. A few finalist rounds in there too, which taught me more than winning did.",
-    "Next move: get paid to do the hackathon thing full-time. Less demo day, more production — an AI engineering role where I build the model, not just call someone else's.",
+    "I'm a Computer Engineering graduate from Khwopa College of Engineering and a full-stack developer at Cloud Himalaya. I build web applications with React, Next.js and Python backends, design REST APIs with proper validation and error handling, and integrate machine learning where it adds real value.",
+    "Hackathons taught me to ship working software under tight deadlines and work closely in teams. I'm especially interested in building reliable, well-documented software for public services in Nepal.",
   ],
-  education: [
+  highlights: [
+    { icon: Code2, label: 'Full-Stack Developer', desc: 'React, Next.js, Python' },
+    { icon: Network, label: 'REST APIs & Integration', desc: 'Validation & error handling' },
+    { icon: Brain, label: 'AI/ML Experience', desc: 'Scikit-learn, TensorFlow' },
+    { icon: Trophy, label: '6 Awards Won', desc: 'Hackathons since 2025' },
+  ],
+}
+
+export const education = {
+  sectionTitle: 'Education & Training',
+  sectionSubtitle: 'Degrees first, then courses and programs completed outside the classroom.',
+  entries: [
     {
-      degree: 'Bachelor of Computer Engineering',
-      org: 'Khwopa College of Engineering',
+      degree: "Bachelor's in Computer Engineering",
+      org: 'Khwopa College of Engineering, Bhaktapur',
       period: '2022 – 2026',
     },
     {
-      degree: 'High School',
+      degree: '+2 Science',
       org: "St. Xavier's College, Kathmandu",
       period: '2019 – 2022',
     },
-  ],
-  highlights: [
-    { icon: Code2, label: 'Full-Stack', desc: 'Website, CMS & database — my day job' },
-    { icon: Brain, label: 'AI / ML', desc: 'CNNs, diagnosis models, emotion recognition' },
-    { icon: Trophy, label: '7 wins', desc: 'Hackathons and ideathons since 2025' },
-    { icon: GraduationCap, label: '2026', desc: 'Computer Engineering, Khwopa College' },
   ],
 }
 

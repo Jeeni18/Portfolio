@@ -1,7 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { GraduationCap } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 import { about } from '../data/content'
 
@@ -20,25 +19,6 @@ export default function About() {
               <p key={i}>{p}</p>
             ))}
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-8 space-y-3"
-          >
-            {about.education.map((ed) => (
-              <div key={ed.degree} className="card rounded-md p-5 flex items-start gap-4">
-                <div className="mt-0.5 w-8 h-8 rounded-sm bg-[var(--accent-soft)] border border-ink-700 flex items-center justify-center flex-shrink-0">
-                  <GraduationCap size={15} className="text-rust-500" />
-                </div>
-                <div>
-                  <p className="font-display font-semibold text-ink-100 text-sm">{ed.degree}</p>
-                  <p className="text-ink-500 text-xs mt-0.5">{ed.org} · {ed.period}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
         </div>
 
         {/* Right: Highlight grid */}

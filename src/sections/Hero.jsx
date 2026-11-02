@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowDown } from 'lucide-react'
+import { ArrowDown, Download } from 'lucide-react'
 import { hero, site } from '../data/content'
 
 const container = {
@@ -99,6 +99,14 @@ export default function Hero({ onContactOpen }) {
               <button onClick={() => scrollTo(hero.ctaPrimary.href)} className="btn-primary">
                 {hero.ctaPrimary.label}
               </button>
+              <a
+                href={hero.ctaDownload.href}
+                download
+                className="btn-secondary inline-flex items-center gap-2"
+              >
+                <Download size={14} />
+                {hero.ctaDownload.label}
+              </a>
               <button onClick={onContactOpen} className="btn-secondary">
                 {hero.ctaSecondary.label}
               </button>
