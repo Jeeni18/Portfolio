@@ -111,7 +111,7 @@ export default function ContactModal({ onClose }) {
                 </div>
                 <h3 className="font-display font-semibold text-ink-100">Message Sent!</h3>
                 <p className="font-body text-ink-400 text-sm">
-                  Thanks for reaching out. I'll be in touch soon.
+                  Thanks for reaching out. I&rsquo;ll be in touch soon.
                 </p>
                 <button onClick={onClose} className="mt-3 btn-primary text-xs py-2 px-5">
                   Close
