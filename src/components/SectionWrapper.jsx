@@ -9,33 +9,27 @@ export default function SectionWrapper({ children, id, className = '' }) {
     <motion.section
       id={id}
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className={`section-padding max-w-6xl mx-auto ${className}`}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className={`section-padding max-w-5xl mx-auto ${className}`}
     >
       {children}
     </motion.section>
   )
 }
 
-export function SectionTitle({ label, title, subtitle }) {
+export function SectionTitle({ title, subtitle }) {
   return (
-    <div className="mb-14">
-      {label && (
-        <p className="font-mono text-xs text-cyan-500 tracking-[0.2em] uppercase mb-3">
-          {label}
-        </p>
-      )}
-      <h2 className="font-display font-bold text-3xl md:text-4xl text-white mb-3">
+    <div className="mb-12 flex items-end justify-between gap-6 border-b border-ink-700 pb-5">
+      <h2 className="font-display font-semibold text-2xl md:text-3xl text-ink-100">
         {title}
       </h2>
       {subtitle && (
-        <p className="font-body text-slate-400 text-base max-w-xl leading-relaxed">
+        <p className="font-body text-ink-500 text-sm max-w-xs text-right leading-relaxed hidden sm:block">
           {subtitle}
         </p>
       )}
-      <div className="mt-4 w-12 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent" />
     </div>
   )
 }

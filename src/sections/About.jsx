@@ -1,31 +1,30 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { GraduationCap, Brain, Trophy, Leaf, Code2 } from 'lucide-react'
+import { GraduationCap, Brain, Trophy, Code2 } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 
 const highlights = [
   {
-    icon: GraduationCap,
-    label: '4th Year',
-    desc: 'Computer Engineering Student'
+    icon: Code2,
+    label: 'Full-Stack',
+    desc: 'Website, CMS & database — my day job'
   },
   {
     icon: Brain,
-    label: 'AI-Focused',
-    desc: 'Deep interest in Artificial Intelligence'
-  },
-  {
-    icon: Code2,
-    label: 'Builder',
-    desc: 'Builds real-world solution'
+    label: 'AI / ML',
+    desc: 'CNNs, diagnosis models, emotion recognition'
   },
   {
     icon: Trophy,
-    label: 'Hackathon',
-    desc: 'Experience in innovation competitions'
+    label: '7 wins',
+    desc: 'Hackathons and ideathons since 2025'
   },
- 
+  {
+    icon: GraduationCap,
+    label: '2026',
+    desc: 'Computer Engineering, Khwopa College'
+  },
 ]
 
 export default function About() {
@@ -33,87 +32,77 @@ export default function About() {
 
   return (
     <SectionWrapper id="about">
-      <div ref={ref} className="grid md:grid-cols-2 gap-16 items-center">
+      <div ref={ref} className="grid md:grid-cols-2 gap-16 items-start">
         {/* Left: Text */}
         <div>
-          <SectionTitle
-            label="01 — About"
-            title="About Me"
-            
-          />
+          <SectionTitle title="About" />
 
-          <div className="space-y-5 font-body text-slate-400 leading-relaxed text-[15px]">
+          <div className="space-y-5 font-body text-ink-400 leading-relaxed text-[15px]">
             <p>
-              I'm a <span className="text-slate-200 font-medium">fourth year Computer Engineering Student</span>. With a focus on AI and Data Science, I have completed courses in Python, Machine Learning, and 
-Data Science, applying these skills to solve real-world problems.
+              My day job pays me to be a{' '}
+              <span className="text-ink-100 font-medium">full-stack developer</span> — I
+              built the company's website, the CMS running it, and the database
+              holding both together, which is a fancy way of saying I touch
+              everything and occasionally break something gracefully.
             </p>
             <p>
-              My journey spans <span className="text-slate-200 font-medium">hackathons, innovation competitions</span>,
-              and hands-on project development from carbon trading platforms to behavioral wellness apps.
-              
+              The real obsession runs on the side: hackathons. Seven wins since
+              2025, building AI tools aimed at problems that don't usually get AI
+              budgets — diagnostic bias against women, small businesses priced out of
+              going digital, emotion recognition that actually works on real faces
+              instead of just the demo. A few finalist rounds in there too, which
+              taught me more than winning did.
             </p>
             <p>
-              I’m always eager to learn, build, and collaborate on ideas that push the boundaries of innovation.
+              Next move: get paid to do the hackathon thing full-time. Less demo day,
+              more production — an{' '}
+              <span className="text-ink-100 font-medium">AI engineering</span> role
+              where I build the model, not just call someone else's.
             </p>
           </div>
 
-          {/* Education card */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-8 glow-border card-bg rounded-lg p-5 transition-all duration-300"
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-8 space-y-3"
           >
-            <div className="flex items-start gap-4">
-              <div className="mt-1 w-8 h-8 rounded-md bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                <GraduationCap size={16} className="text-cyan-400" />
+            <div className="card rounded-md p-5 flex items-start gap-4">
+              <div className="mt-0.5 w-8 h-8 rounded-sm bg-[var(--accent-soft)] border border-ink-700 flex items-center justify-center flex-shrink-0">
+                <GraduationCap size={15} className="text-rust-500" />
               </div>
               <div>
-                <p className="font-mono text-[10px] text-cyan-500 tracking-widest uppercase mb-1">Education</p>
-                <p className="font-display font-semibold text-slate-200 text-sm">Bachelor of Computer Engineering</p>
-                <p className="text-slate-500  text-xs mt-0.5">Khwopa College of Engineering</p>
-                <p className="text-slate-500 text-xs mt-0.5">Currently Enrolled · Expected 2026</p>
+                <p className="font-display font-semibold text-ink-100 text-sm">Bachelor of Computer Engineering</p>
+                <p className="text-ink-500 text-xs mt-0.5">Khwopa College of Engineering · 2022 – 2026</p>
               </div>
             </div>
-          </motion.div>
-          {/* Education card */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-8 glow-border card-bg rounded-lg p-5 transition-all duration-300"
-          >
-            <div className="flex items-start gap-4">
-              <div className="mt-1 w-8 h-8 rounded-md bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                <GraduationCap size={16} className="text-cyan-400" />
+            <div className="card rounded-md p-5 flex items-start gap-4">
+              <div className="mt-0.5 w-8 h-8 rounded-sm bg-[var(--accent-soft)] border border-ink-700 flex items-center justify-center flex-shrink-0">
+                <GraduationCap size={15} className="text-rust-500" />
               </div>
               <div>
-                <p className="font-mono text-[10px] text-cyan-500 tracking-widest uppercase mb-1">Education</p>
-                <p className="font-display font-semibold text-slate-200 text-sm">High School </p>
-                <p className="text-slate-500 text-xs mt-0.5">St.Xavier's college - 2021</p>
+                <p className="font-display font-semibold text-ink-100 text-sm">High School</p>
+                <p className="text-ink-500 text-xs mt-0.5">St. Xavier's College, Kathmandu · 2019 – 2022</p>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Right: Highlight grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 md:mt-[4.25rem]">
           {highlights.map((h, i) => (
             <motion.div
               key={h.label}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.15 * i }}
-              whileHover={{ y: -3 }}
-              className={`glow-border card-bg rounded-lg p-5 transition-all duration-300 cursor-default ${
-                i === 4 ? 'col-span-2 md:col-span-1' : ''
-              }`}
+              transition={{ duration: 0.5, delay: 0.1 * i }}
+              className="card rounded-md p-5"
             >
-              <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center mb-3">
-                <h.icon size={17} className="text-cyan-400" />
+              <div className="w-8 h-8 rounded-sm bg-[var(--accent-soft)] border border-ink-700 flex items-center justify-center mb-3">
+                <h.icon size={15} className="text-rust-500" />
               </div>
-              <p className="font-display font-bold text-slate-200 text-sm">{h.label}</p>
-              <p className="font-body text-slate-500 text-xs mt-0.5 leading-snug">{h.desc}</p>
+              <p className="font-display font-semibold text-ink-100 text-base">{h.label}</p>
+              <p className="font-body text-ink-500 text-xs mt-1 leading-snug">{h.desc}</p>
             </motion.div>
           ))}
         </div>

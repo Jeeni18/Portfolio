@@ -1,5 +1,4 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 import { Github, Linkedin, ArrowUp } from 'lucide-react'
 
 const socials = [
@@ -9,49 +8,43 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-slate-800/60 bg-[#020817]">
-      <div className="max-w-6xl mx-auto px-6 py-10">
+    <footer className="relative border-t border-ink-800">
+      <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Left: Brand */}
           <div className="text-center md:text-left">
-            <p className="font-display font-bold text-lg text-gradient mb-1">
+            <p className="font-display font-semibold text-base text-ink-100 mb-1">
               Jeeni Shrestha
             </p>
-            <p className="font-mono text-[11px] text-slate-600 tracking-wide">
-              Computer Engineering Student · AI Enthusiast
+            <p className="font-mono text-[11px] text-ink-500">
+              Full-stack by day, AI by obsession
             </p>
           </div>
 
-          {/* Center: Copyright */}
-          <p className="font-mono text-[11px] text-slate-700 text-center">
-            © {new Date().getFullYear()} Jeeni Shrestha. All rights reserved.
+          <p className="font-mono text-[11px] text-ink-600 text-center">
+            © {new Date().getFullYear()} Jeeni Shrestha
           </p>
 
-          {/* Right: Socials */}
           <div className="flex items-center gap-3">
             {socials.map((social) => (
-              <motion.a
+              <a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ y: -2, scale: 1.1 }}
                 aria-label={social.label}
-                className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-slate-500 hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200"
+                className="w-9 h-9 border border-ink-700 flex items-center justify-center text-ink-500 hover:text-rust-500 hover:border-rust-500 transition-all duration-200"
               >
                 <social.icon size={15} />
-              </motion.a>
+              </a>
             ))}
 
-            {/* Back to top */}
-            <motion.button
-              whileHover={{ y: -2, scale: 1.1 }}
+            <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="w-9 h-9 rounded-lg bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-slate-500 hover:text-cyan-400 hover:border-cyan-500/30 transition-all duration-200"
+              className="w-9 h-9 border border-ink-700 flex items-center justify-center text-ink-500 hover:text-rust-500 hover:border-rust-500 transition-all duration-200"
               aria-label="Back to top"
             >
               <ArrowUp size={15} />
-            </motion.button>
+            </button>
           </div>
         </div>
       </div>

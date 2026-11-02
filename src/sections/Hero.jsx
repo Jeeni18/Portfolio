@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TypeAnimation } from 'react-type-animation'
 import { ArrowDown } from 'lucide-react'
 import jeeniPhoto from '../assets/me/jeeni.jpg'
 
 const container = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.2 }
+    transition: { staggerChildren: 0.1, delayChildren: 0.15 }
   }
 }
 
 const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
 }
 
 export default function Hero({ onContactOpen }) {
@@ -31,399 +30,111 @@ export default function Hero({ onContactOpen }) {
 
   return (
     <>
-      {/* ── Sticky Mini Logo (slides in on scroll) ── */}
       <AnimatePresence>
         {scrolled && (
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-4 left-5 z-[60] flex items-center gap-2.5 cursor-pointer"
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-4 left-6 z-[60] flex items-center gap-2.5 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div
-              className="rounded-full p-[2px] flex-shrink-0"
-              style={{
-                background: 'linear-gradient(135deg, #22d3ee, #0891b2 40%, #22d3ee90)',
-                boxShadow: '0 0 12px rgba(34,211,238,0.4)',
-              }}
-            >
-              <div className="rounded-full p-[1.5px] bg-[#020817]">
-                <img
-                  src={jeeniPhoto}
-                  alt="Jeeni"
-                  className="w-8 h-8 rounded-full object-cover object-top"
-                />
-              </div>
-            </div>
-            <div style={{ lineHeight: 1.1 }}>
-              <p className="font-display font-bold text-sm text-gradient">
-                Jeeni Shrestha
-              </p>
-              <p className="font-mono text-[9px] text-cyan-500/60 tracking-widest uppercase">
-                Portfolio
-              </p>
-            </div>
+            <img
+              src={jeeniPhoto}
+              alt="Jeeni"
+              className="w-7 h-7 rounded-full object-cover object-top border border-ink-700"
+            />
+            <p className="font-display font-semibold text-sm text-ink-100">
+              Jeeni Shrestha
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
 
       <section
         id="hero"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex items-center overflow-hidden"
       >
-        {/* Decorative rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[700px] h-[700px] rounded-full border border-cyan-500/5" />
-          <div className="absolute w-[500px] h-[500px] rounded-full border border-cyan-500/[0.07]" />
-          <div className="absolute w-[300px] h-[300px] rounded-full border border-cyan-500/10" />
-        </div>
-
-        {/* Glow core */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/[0.04] rounded-full blur-[100px] pointer-events-none" />
-
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="relative z-10 w-full max-w-6xl mx-auto px-6 pt-24 md:pt-0
-            flex flex-col md:flex-row
-            items-center justify-between
-            gap-10 md:gap-8"
+          className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-28 md:pt-0
+            grid md:grid-cols-[1.3fr_0.9fr] items-center gap-14 md:gap-10"
         >
+          {/* Text column */}
+          <div className="order-2 md:order-1">
+            <motion.p
+              variants={item}
+              className="font-mono text-xs text-ink-500 tracking-wide mb-6"
+            >
+              Bhaktapur, Nepal — Open to full-stack &amp; AI engineering roles
+            </motion.p>
 
-          {/* ══ MOBILE ONLY: status + name (hidden on desktop) ══ */}
-          <div className="flex md:hidden w-full flex-col items-center text-center">
-
-            {/* Status pill */}
-            <motion.div variants={item} className="inline-flex items-center gap-2 mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="font-mono text-[11px] text-cyan-500 tracking-[0.25em] uppercase">
-                Available for Opportunities
-              </span>
-            </motion.div>
-
-            {/* Hi I am + name on one line */}
-            <motion.div variants={item} className="mb-0">
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: '1.4rem',
-                fontWeight: 500,
-                color: '#94a3b8',
-                letterSpacing: '0.05em',
-                marginBottom: '0.5rem',
-                display: 'block',
-              }}>
-                Hi, I am
-              </p>
-
-              {/* Single h1 with two spans to keep individual gradients on one line */}
-              <h1
-                className="font-hero font-bold leading-[1.0] tracking-tight"
-                style={{ fontSize: 'clamp(1.8rem, 7vw, 5.5rem)', whiteSpace: 'nowrap' }}
-              >
-                <span style={{
-                  backgroundImage: 'linear-gradient(135deg, #f0f9ff 30%, #67e8f9 70%, #22d3ee 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                  Jeeni{' '}
-                </span>
-                <span style={{
-                  backgroundImage: 'linear-gradient(135deg, #22d3ee 0%, #67e8f9 50%, #a5f3fc 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                  Shrestha.
-                </span>
-              </h1>
-            </motion.div>
-          </div>
-
-          {/* ══ MOBILE ONLY: photo (hidden on desktop) ══ */}
-          <motion.div variants={item} className="flex md:hidden items-center justify-center mt-6">
-            <div className="relative">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: 'conic-gradient(from 0deg, #22d3ee, #0891b2, transparent, #22d3ee)',
-                  padding: '2px',
-                  borderRadius: '9999px',
-                }}
-              />
-              <div
-                className="absolute -inset-3 rounded-full opacity-30 blur-md"
-                style={{ background: 'radial-gradient(circle, #22d3ee55, transparent 70%)' }}
-              />
-              <div
-                className="absolute -inset-6 rounded-full opacity-15 blur-xl"
-                style={{ background: 'radial-gradient(circle, #22d3ee44, transparent 70%)' }}
-              />
-              <div
-                className="relative rounded-full p-[3px]"
-                style={{
-                  background: 'linear-gradient(135deg, #22d3ee, #0891b2 40%, #22d3ee90)',
-                  boxShadow: '0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.2), inset 0 0 20px rgba(34,211,238,0.1)',
-                }}
-              >
-                <div className="rounded-full p-[3px] bg-[#020817]">
-                  <div className="rounded-full overflow-hidden w-[220px] h-[220px]">
-                    <img
-                      src={jeeniPhoto}
-                      alt="Jeeni Shrestha"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-              </div>
-              <motion.div
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-cyan-400"
-                style={{ boxShadow: '0 0 12px rgba(34,211,238,0.8)' }}
-              />
-              <motion.div
-                animate={{ y: [4, -4, 4] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-3 -left-1 w-2.5 h-2.5 rounded-full bg-cyan-500/60"
-                style={{ boxShadow: '0 0 8px rgba(34,211,238,0.5)' }}
-              />
-            </div>
-          </motion.div>
-
-          {/* ══ MOBILE ONLY: typing + one-liner + buttons (hidden on desktop) ══ */}
-          <div className="flex md:hidden w-full flex-col items-center text-center mt-8">
-            <motion.div variants={item} className="mb-6 h-8 flex items-center justify-center">
-              <span className="font-mono text-base text-cyan-400/80">
-                <TypeAnimation
-                  sequence={[
-                    'Computer Engineering Student', 2500,
-                    'AI Enthusiast', 2000,
-                    'Hackathon Builder', 2000,
-                    'Tech Explorer', 2000,
-                  ]}
-                  wrapper="span"
-                  speed={55}
-                  deletionSpeed={55}
-                  repeat={Infinity}
-                />
-              </span>
-              <span className="ml-0.5 w-0.5 h-5 bg-cyan-400 animate-pulse inline-block" />
-            </motion.div>
+            <motion.h1
+              variants={item}
+              className="font-display font-semibold leading-[1.05] tracking-tight mb-5"
+              style={{ fontSize: 'clamp(2.75rem, 7vw, 4.5rem)' }}
+            >
+              <span className="text-ink-100">Jeeni </span>
+              <span className="text-rust-500">Shrestha.</span>
+            </motion.h1>
 
             <motion.p
               variants={item}
-              className="font-body text-sm text-slate-400 max-w-sm leading-relaxed mb-10 px-2"
+              className="font-mono text-sm text-ink-400 mb-7"
             >
-              I build technology-driven solutions focused on{' '}
-              <span className="text-slate-300">impact</span>,{' '}
-              <span className="text-slate-300">innovation</span>, and{' '}
-              <span className="text-slate-300">real-world problems</span>.
+              Full-Stack by day, AI by obsession
             </motion.p>
-
-            <motion.div variants={item} className="flex flex-wrap gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => scrollTo('#projects')}
-                className="btn-primary"
-              >
-                View Projects
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={onContactOpen}
-                className="btn-secondary"
-              >
-                Let's Connect
-              </motion.button>
-            </motion.div>
-          </div>
-
-          {/* ══ DESKTOP LEFT: full text column (hidden on mobile) ══ */}
-          <div className="hidden md:flex flex-1 flex-col items-start text-left">
-
-            <motion.div variants={item} className="inline-flex items-center gap-2 mb-7">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="font-mono text-[11px] text-cyan-500 tracking-[0.25em] uppercase">
-                Available for Opportunities
-              </span>
-            </motion.div>
-
-            <motion.div variants={item} className="mb-5">
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: '1.8rem',
-                fontWeight: 500,
-                color: '#94a3b8',
-                letterSpacing: '0.05em',
-                marginBottom: '0.75rem',
-                display: 'block',
-              }}>
-                Hi, I am
-              </p>
-              <h1
-                className="font-hero font-bold leading-[1.0] tracking-tight text-transparent bg-clip-text"
-                style={{
-                  fontSize: 'clamp(3rem, 8vw, 5.5rem)',
-                  backgroundImage: 'linear-gradient(135deg, #f0f9ff 30%, #67e8f9 70%, #22d3ee 100%)',
-                }}
-              >
-                Jeeni
-              </h1>
-              <h1
-                className="font-hero font-bold leading-[1.0] tracking-tight text-transparent bg-clip-text mt-1"
-                style={{
-                  fontSize: 'clamp(3rem, 8vw, 5.5rem)',
-                  backgroundImage: 'linear-gradient(135deg, #22d3ee 0%, #67e8f9 50%, #a5f3fc 100%)',
-                }}
-              >
-                Shrestha.
-              </h1>
-            </motion.div>
-
-            <motion.div variants={item} className="mb-6 h-8 flex items-center">
-              <span className="font-mono text-base md:text-lg text-cyan-400/80">
-                <TypeAnimation
-                  sequence={[
-                    'Computer Engineering Student', 2500,
-                    'AI Enthusiast', 2000,
-                    'Hackathon Builder', 2000,
-                    'Tech Explorer', 2000,
-                  ]}
-                  wrapper="span"
-                  speed={55}
-                  deletionSpeed={55}
-                  repeat={Infinity}
-                />
-              </span>
-              <span className="ml-0.5 w-0.5 h-5 bg-cyan-400 animate-pulse inline-block" />
-            </motion.div>
-
-            <motion.div
-              variants={item}
-              className="w-16 h-px bg-gradient-to-r from-cyan-500 to-transparent mb-6"
-            />
 
             <motion.p
               variants={item}
-              className="font-body text-sm md:text-base text-slate-400 max-w-lg leading-relaxed mb-10"
+              className="font-body text-[15px] text-ink-400 max-w-md leading-relaxed mb-10"
             >
-              I build technology-driven solutions focused on{' '}
-              <span className="text-slate-300">impact</span>,{' '}
-              <span className="text-slate-300">innovation</span>, and{' '}
-              <span className="text-slate-300">real-world problems</span>.
+              I've spent most of the last two years in hackathon rooms — seven wins
+              since 2025 — building AI tools aimed at problems that don't usually get
+              AI budgets: diagnostic bias against women, small businesses priced out
+              of going digital, and emotion recognition that actually works on real
+              faces. The day job pays in full-stack — website, CMS, database, the
+              whole chain — but the hackathon brain never really clocks out.
             </motion.p>
 
-            <motion.div variants={item} className="flex flex-wrap gap-4">
-              <motion.button
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => scrollTo('#projects')}
-                className="btn-primary"
-              >
+            <motion.div variants={item} className="flex flex-wrap gap-3">
+              <button onClick={() => scrollTo('#projects')} className="btn-primary">
                 View Projects
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={onContactOpen}
-                className="btn-secondary"
-              >
+              </button>
+              <button onClick={onContactOpen} className="btn-secondary">
                 Let's Connect
-              </motion.button>
+              </button>
             </motion.div>
           </div>
 
-          {/* ══ DESKTOP RIGHT: photo (hidden on mobile) ══ */}
-          <motion.div
-            variants={item}
-            className="hidden md:flex flex-shrink-0 items-center justify-center"
-          >
-            <div className="relative">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: 'conic-gradient(from 0deg, #22d3ee, #0891b2, transparent, #22d3ee)',
-                  padding: '2px',
-                  borderRadius: '9999px',
-                }}
-              />
-              <div
-                className="absolute -inset-3 rounded-full opacity-30 blur-md"
-                style={{ background: 'radial-gradient(circle, #22d3ee55, transparent 70%)' }}
-              />
-              <div
-                className="absolute -inset-6 rounded-full opacity-15 blur-xl"
-                style={{ background: 'radial-gradient(circle, #22d3ee44, transparent 70%)' }}
-              />
-              <div
-                className="relative rounded-full p-[3px]"
-                style={{
-                  background: 'linear-gradient(135deg, #22d3ee, #0891b2 40%, #22d3ee90)',
-                  boxShadow: '0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.2), inset 0 0 20px rgba(34,211,238,0.1)',
-                }}
-              >
-                <div className="rounded-full p-[3px] bg-[#020817]">
-                  <div
-                    className="rounded-full overflow-hidden"
-                    style={{
-                      width: 'clamp(220px, 28vw, 320px)',
-                      height: 'clamp(220px, 28vw, 320px)',
-                    }}
-                  >
-                    <img
-                      src={jeeniPhoto}
-                      alt="Jeeni Shrestha"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
+          {/* Photo column */}
+          <motion.div variants={item} className="order-1 md:order-2 flex justify-center md:justify-end">
+            <div className="relative w-[220px] h-[270px] md:w-[260px] md:h-[320px]">
+              <div className="absolute -top-2.5 -left-2.5 w-6 h-6 border-t-2 border-l-2 border-rust-500" />
+              <div className="absolute -bottom-2.5 -right-2.5 w-6 h-6 border-b-2 border-r-2 border-rust-500" />
+              <div className="w-full h-full overflow-hidden border border-ink-700">
+                <img
+                  src={jeeniPhoto}
+                  alt="Jeeni Shrestha"
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
-              <motion.div
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-cyan-400"
-                style={{ boxShadow: '0 0 12px rgba(34,211,238,0.8)' }}
-              />
-              <motion.div
-                animate={{ y: [4, -4, 4] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-3 -left-1 w-2.5 h-2.5 rounded-full bg-cyan-500/60"
-                style={{ boxShadow: '0 0 8px rgba(34,211,238,0.5)' }}
-              />
             </div>
           </motion.div>
-
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
+        <div
           onClick={() => scrollTo('#about')}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group"
         >
-          <span className="font-mono text-[10px] text-slate-600 tracking-widest uppercase group-hover:text-cyan-500 transition-colors">
+          <span className="font-mono text-[10px] text-ink-500 tracking-widest uppercase group-hover:text-ink-100 transition-colors">
             Scroll
           </span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-slate-600 group-hover:text-cyan-500 transition-colors"
-          >
-            <ArrowDown size={14} />
-          </motion.div>
-        </motion.div>
+          <ArrowDown size={14} className="text-ink-500 group-hover:text-ink-100 transition-colors" />
+        </div>
       </section>
     </>
   )

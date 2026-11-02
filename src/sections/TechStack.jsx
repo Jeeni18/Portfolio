@@ -49,22 +49,18 @@ function SkillPill({ skill, delay }) {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.85 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.06, y: -2 }}
-      className="group relative flex flex-col items-center gap-2 glow-border card-bg rounded-xl p-4 cursor-default transition-all duration-300"
+      initial={{ opacity: 0, y: 10 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, delay }}
+      className="card rounded-md flex flex-col items-center gap-2 p-4"
     >
       {skill.img
-        ? <img src={skill.img} alt={skill.name} className="w-8 h-8 object-contain mix-blend-lighten" />
-        : <span className="text-2xl">{skill.icon}</span>
+        ? <img src={skill.img} alt={skill.name} className="w-7 h-7 object-contain" />
+        : <span className="text-xl">{skill.icon}</span>
       }
-      <span className="font-mono text-[11px] text-slate-400 group-hover:text-cyan-300 transition-colors text-center leading-tight">
+      <span className="font-mono text-[11px] text-ink-400 text-center leading-tight">
         {skill.name}
       </span>
-      <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{ boxShadow: 'inset 0 0 20px rgba(34,211,238,0.06)' }}
-      />
     </motion.div>
   )
 }
@@ -73,26 +69,22 @@ export default function TechStack() {
   return (
     <SectionWrapper id="techstack">
       <SectionTitle
-        label="02 — Skills"
         title="Tech Stack"
-        subtitle="Tools and technologies I work with to build things that matter."
+        subtitle="Tools I reach for when something needs building."
       />
 
-      <div className="space-y-10">
+      <div className="space-y-9">
         {categories.map((cat, ci) => (
           <div key={cat.name}>
-            <div className="flex items-center gap-3 mb-5">
-              <span className="font-mono text-[10px] text-cyan-500/70 tracking-[0.2em] uppercase">
-                {cat.name}
-              </span>
-              <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/20 to-transparent" />
-            </div>
+            <p className="font-mono text-[11px] text-ink-500 tracking-[0.15em] uppercase mb-4">
+              {cat.name}
+            </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
               {cat.skills.map((skill, si) => (
                 <SkillPill
                   key={skill.name}
                   skill={skill}
-                  delay={ci * 0.08 + si * 0.06}
+                  delay={ci * 0.06 + si * 0.04}
                 />
               ))}
             </div>

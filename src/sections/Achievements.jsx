@@ -16,84 +16,95 @@ const achievements = [
     icon: Trophy,
     title: 'Winner — Hack4SafeFood',
     project: 'Project: Aahar',
-    description: 'Won the national-level hackathon with a food safety app - Aahar',
+    description: 'Won the national-level hackathon with a food safety app.',
     year: '2025',
     image: Hack4SafeFood,
-    accent: '#fbbf24',
-    badge: '🥇 Winner',
+    badge: 'Winner',
     link: 'https://drive.google.com/file/d/11ZebDYPQxgVnsRm4kQnLj1H4X9bQC1GP/view?usp=sharing',
   },
   {
     icon: Trophy,
     title: 'Winner — Hack the Circle',
-    project: 'Project: AR app',
-    description: 'Won Hack the Circle with an AR app that brings history to life.',
+    project: 'Project: Chronova',
+    description: 'Won with an AR app that brings Nepali history to life on-site.',
     year: '2025',
     image: Hackthecircle,
-    accent: '#fbbf24',
-    badge: '🥇 Winner',
+    badge: 'Winner',
     link: 'https://drive.google.com/file/d/1WFoeC9w77ENXA6zz2ppfxMgq0bJSwh24/view?usp=sharing',
   },
   {
     icon: Trophy,
-    title: 'Education Track Winner — DeerHack',
+    title: 'Ed-Tech Winner — DeerHack',
     project: 'Project: Histoury',
-    description: 'Won Education Track with app Histoury',
+    description: "Won the Ed-Tech track with Histoury.",
     year: '2025',
     image: Deerhack,
-    accent: '#fbbf24',
-    badge: '🥇 Winner',
+    badge: 'Winner',
     link: 'https://drive.google.com/file/d/11T8k8LCvDc2KE2P-JZ38TpMEJFcDxDrw/view?usp=sharing',
   },
   {
     icon: Trophy,
-    title: 'Winner — Hult On-Campus Competition',
+    title: 'Winner — Hult Prize On-Campus',
     project: 'Project: NOOK',
-    description: 'Won the campus-level Hult Prize competition with an innovative social impact business idea — NOOK.',
+    description: 'Won the campus round with a social-impact business concept.',
     year: '2024',
     image: Hultprize,
-    accent: '#fbbf24',
-    badge: '🥇 Winner',
+    badge: 'Winner',
     link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing',
   },
   {
     icon: Star,
-    title: 'Finalist — IEEE WIE Climate Tech Idea Pitch',
-    project: 'Project: Ecoflare',
-    description: 'Reached the finalist stage at the IEEE Women in Engineering Climate Technology Idea Pitch competition with Ecoflare.',
-    year: '2024',
-    image: IEEE,
-    accent: '#22d3ee',
-    badge: '🏅 Finalist',
-    link: 'https://drive.google.com/file/d/1f9N-uWpvE1-q1bs3mzkV2hKIctsqh2G2/view?usp=sharing',
-  },
-  {
-    icon: Star,
-    title: "People's Choice Award — Winner",
+    title: "People's Choice Award — CodeYatra",
     project: 'Project: Revolv',
-    description: "Won People's Choice Award with project Revolv",
+    description: "Won People's Choice with Revolv.",
     year: '2024',
     image: Codeyatra,
-    accent: '#22d3ee',
-    badge: '🏅 Winner',
+    badge: "Winner",
     link: 'https://drive.google.com/file/d/11ZfLULkGij1dKI3AXDKrcM39bD_l-9O4/view?usp=sharing',
   },
   {
     icon: Star,
-    title: "Finalist — SheQual (Nepal's Largest Women's Hackathon)",
-    project: 'Project: DiagHer',
-    description: "Reached the finalist stage at SheQual — Nepal's largest all-female hackathon — with the DiagHer project.",
-    image: Shequal,
+    title: 'Finalist — IEEE Climate Tech Idea Pitch',
+    project: 'Project: Ecoflare',
+    description: 'Reached the finals of the IEEE WIE climate technology pitch competition.',
     year: '2024',
-    accent: '#22d3ee',
-    badge: '🏅 Finalist',
+    image: IEEE,
+    badge: 'Finalist',
+    link: 'https://drive.google.com/file/d/1f9N-uWpvE1-q1bs3mzkV2hKIctsqh2G2/view?usp=sharing',
+  },
+  {
+    icon: Star,
+    title: "Top 16 — SheQual, Nepal's Largest All-Female Hackathon",
+    project: 'Project: DiagHer',
+    description: 'Reached the Top 16 with DiagHer, a gender-aware diagnosis support tool.',
+    image: Shequal,
+    year: '2025',
+    badge: 'Top 16',
     link: 'https://drive.google.com/file/d/11Uv7My8LcxcLhSACKUKTlPWzYBQe9Dzi/view?usp=sharing',
+  },
+  {
+    icon: Star,
+    title: 'Best Poster Award — Khwopa CEEL',
+    project: 'Final-year research poster',
+    description: 'Awarded best poster at the Khwopa Center for Engineering Education & Learning showcase.',
+    year: '2026',
+    image: null,
+    badge: 'Winner',
+    link: null,
+  },
+  {
+    icon: Star,
+    title: 'Finalist — Hacking for a Carbon-Neutral Future',
+    project: 'Shequal & UNESCO',
+    description: 'Reached the finals of a climate-focused hackathon run with UNESCO.',
+    year: '2026',
+    image: null,
+    badge: 'Finalist',
+    link: null,
   },
 ]
 
-// ── Certificate Modal ────────────────────────────────────────────────
 function CertificateModal({ item, onClose }) {
-  // Close on Escape key
   React.useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handler)
@@ -111,76 +122,62 @@ function CertificateModal({ item, onClose }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+        className="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-4"
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.88, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.88, y: 20 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl rounded-2xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, #0d1b2e, #0f172a)',
-            border: `1px solid ${item.accent}30`,
-          }}
+          className="relative w-full max-w-2xl bg-ink-900 border border-ink-700 rounded-md overflow-hidden"
         >
-          {/* Top accent bar */}
-          <div
-            className="h-0.5 w-full"
-            style={{ background: `linear-gradient(90deg, ${item.accent}, transparent)` }}
-          />
-
-          {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all"
+            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-sm bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
           >
             <X size={14} />
           </button>
 
-          {/* Certificate image */}
-          <div className="relative bg-slate-900 flex items-center justify-center p-4 min-h-[260px]">
-            <img
-              src={item.image}
-              alt={item.title}
-              className="max-h-[400px] w-auto rounded-lg object-contain shadow-2xl"
-            />
+          <div className="relative bg-ink-950 flex items-center justify-center p-4 min-h-[260px]">
+            {item.image ? (
+              <img
+                src={item.image}
+                alt={item.title}
+                className="max-h-[400px] w-auto rounded-sm object-contain"
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-3 py-10 text-ink-500">
+                <item.icon size={28} className="text-rust-500" />
+                <p className="font-mono text-xs">Certificate not yet uploaded</p>
+              </div>
+            )}
           </div>
 
-          {/* Info + link */}
           <div className="p-6 flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">{item.badge.split(' ')[0]}</span>
-                <span
-                  className="font-mono text-[9px] tracking-widest uppercase"
-                  style={{ color: item.accent + 'bb' }}
-                >
-                  {item.year}
+                <span className="font-mono text-[10px] text-rust-500 tracking-wide uppercase">
+                  {item.badge} · {item.year}
                 </span>
               </div>
-              <h3 className="font-display font-bold text-slate-100 text-base leading-snug mb-1">
+              <h3 className="font-display font-semibold text-ink-100 text-base leading-snug mb-1">
                 {item.title}
               </h3>
-              <p className="font-mono text-[11px] text-slate-500">{item.project}</p>
+              <p className="font-mono text-[11px] text-ink-500">{item.project}</p>
             </div>
 
-            {/* Open certificate link */}
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg font-mono text-xs tracking-wider transition-all duration-200 hover:scale-105"
-              style={{
-                background: item.accent + '18',
-                border: `1px solid ${item.accent}40`,
-                color: item.accent,
-              }}
-            >
-              <ExternalLink size={13} />
-              View Certificate
-            </a>
+            {item.link && (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 border border-ink-700 hover:border-rust-500 text-ink-300 hover:text-rust-500 font-mono text-xs tracking-wide transition-all duration-200"
+              >
+                <ExternalLink size={13} />
+                View Certificate
+              </a>
+            )}
           </div>
         </motion.div>
       </motion.div>
@@ -188,119 +185,62 @@ function CertificateModal({ item, onClose }) {
   )
 }
 
-// ── Achievement Card ─────────────────────────────────────────────────
 function AchievementCard({ item, index, onClick }) {
   const { ref, inView } = useInView({ threshold: 0.15, triggerOnce: true })
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4 }}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.06 }}
       onClick={() => onClick(item)}
-      className="group relative glow-border card-bg rounded-xl overflow-hidden cursor-pointer transition-all duration-300"
+      className="card rounded-md overflow-hidden cursor-pointer"
     >
-      {/* Side accent bar */}
-      <div
-        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl opacity-40 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ background: item.accent }}
-      />
-
-      {/* Hover glow */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-        style={{ background: `radial-gradient(circle at 0% 50%, ${item.accent}08, transparent 55%)` }}
-      />
-
-      {/* Certificate thumbnail strip */}
-      <div className="relative h-32 overflow-hidden bg-slate-900/60">
-        <img
-          src={item.image}
-          alt={item.title}
-          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105 opacity-70 group-hover:opacity-90"
-        />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0d1b2e]" />
-
-        {/* Badge pill */}
-        <div
-          className="absolute top-3 right-3 text-[10px] font-mono px-2.5 py-1 rounded-full"
-          style={{ background: item.accent + '25', border: `1px solid ${item.accent}50`, color: item.accent }}
-        >
-          {item.badge}
-        </div>
-
-        {/* Year */}
-        {item.year && (
-          <span
-            className="absolute top-3 left-4 font-mono text-[9px] tracking-widest uppercase"
-            style={{ color: item.accent + 'cc' }}
-          >
-            {item.year}
-          </span>
+      <div className="relative h-32 overflow-hidden bg-ink-900 flex items-center justify-center">
+        {item.image ? (
+          <img
+            src={item.image}
+            alt={item.title}
+            className="w-full h-full object-cover object-top opacity-80"
+          />
+        ) : (
+          <item.icon size={22} className="text-ink-700" />
         )}
 
-        {/* Click hint */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span
-            className="font-mono text-[10px] tracking-wider px-3 py-1.5 rounded-full backdrop-blur-sm"
-            style={{ background: 'rgba(2,8,23,0.75)', border: `1px solid ${item.accent}40`, color: item.accent }}
-          >
-            Click to view certificate
-          </span>
+        <div className="absolute top-3 right-3 text-[10px] font-mono px-2 py-1 bg-ink-950/80 border border-ink-700 text-rust-500 uppercase tracking-wide">
+          {item.badge}
         </div>
+        <span className="absolute top-3 left-4 font-mono text-[9px] text-ink-400 tracking-wide uppercase">
+          {item.year}
+        </span>
       </div>
 
-      {/* Card body */}
-      <div className="relative z-10 p-5 pl-7">
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div className="flex items-start gap-3">
-            <div
-              className="mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: item.accent + '15', border: `1px solid ${item.accent}30` }}
-            >
-              <item.icon size={13} style={{ color: item.accent }} />
-            </div>
-            <h3 className="font-display font-semibold text-slate-200 text-sm leading-snug">
-              {item.title}
-            </h3>
-          </div>
+      <div className="relative z-10 p-5">
+        <div className="flex items-start gap-3 mb-2">
+          <item.icon size={14} className="text-rust-500 mt-1 flex-shrink-0" />
+          <h3 className="font-display font-semibold text-ink-100 text-sm leading-snug">
+            {item.title}
+          </h3>
         </div>
 
-        <p className="font-mono text-[10px] text-slate-500 mb-1.5 ml-10">{item.project}</p>
-        <p className="font-body text-slate-400 text-[13px] leading-relaxed ml-10">
+        <p className="font-mono text-[10px] text-ink-500 mb-1.5 ml-[26px]">{item.project}</p>
+        <p className="font-body text-ink-400 text-[13px] leading-relaxed ml-[26px]">
           {item.description}
         </p>
-
-        {/* View link */}
-        <a
-          href={item.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-1.5 mt-4 ml-10 font-mono text-[11px] transition-colors duration-200 hover:opacity-80"
-          style={{ color: item.accent }}
-        >
-          <ExternalLink size={11} />
-          Open on Google Drive
-        </a>
       </div>
     </motion.div>
   )
 }
 
-// ── Main Section ─────────────────────────────────────────────────────
 export default function Achievements() {
   const [selectedItem, setSelectedItem] = useState(null)
 
   return (
     <SectionWrapper id="achievements">
       <SectionTitle
-        label="04 — Recognition"
         title="Achievements"
-        subtitle="Competitions won, stages reached, and milestones that shaped my journey."
+        subtitle="Competitions won, stages reached, since 2024."
       />
 
       <div className="grid md:grid-cols-3 gap-4">
@@ -314,7 +254,6 @@ export default function Achievements() {
         ))}
       </div>
 
-      {/* Certificate Modal */}
       {selectedItem && (
         <CertificateModal
           item={selectedItem}
