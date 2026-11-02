@@ -1,11 +1,12 @@
-import { Brain, Trophy, Star, Code2, Network, Github, Linkedin } from 'lucide-react'
+import {
+  Brain, Trophy, Star, Code2, Network, Github, Linkedin,
+  Braces, FileType2, FileCode2, FileCode, Atom, Layers, Globe, Palette, Wind,
+  Server, FlaskConical, Workflow, Component, Database, Table2, Table,
+  TestTube2, Send, BrainCircuit, Sigma, GitBranch, Gitlab, Container,
+  AppWindow, Notebook,
+} from 'lucide-react'
 
 import jeeniPhoto from '../assets/me/jeeni.jpg'
-
-import cplus from '../assets/techStack/c++.png'
-import python from '../assets/techStack/python.png'
-import c from '../assets/techStack/c.png'
-import java from '../assets/techStack/java.png'
 
 import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.jpg'
 import Hultprize from '../assets/achievements/hultprize.png'
@@ -85,34 +86,66 @@ export const techStack = {
     {
       name: 'Programming',
       skills: [
-        { name: 'Python', img: python },
-        { name: 'C', img: c },
-        { name: 'C++', img: cplus },
-        { name: 'Java', img: java },
+        { name: 'Python', icon: Code2 },
+        { name: 'JavaScript', icon: Braces },
+        { name: 'TypeScript', icon: FileType2 },
+        { name: 'C++', icon: FileCode2 },
+        { name: 'C', icon: FileCode },
       ],
     },
     {
-      name: 'AI / Data',
+      name: 'Frontend',
       skills: [
-        { name: 'Pandas', icon: '🐼' },
-        { name: 'NumPy', icon: '🔢' },
-        { name: 'Scikit-learn', icon: '🤖' },
+        { name: 'React.js', icon: Atom },
+        { name: 'Next.js', icon: Layers },
+        { name: 'HTML', icon: Globe },
+        { name: 'CSS', icon: Palette },
+        { name: 'Tailwind CSS', icon: Wind },
       ],
     },
     {
-      name: 'Web',
+      name: 'Backend & APIs',
       skills: [
-        { name: 'React', icon: '⚛️' },
-        { name: 'HTML', icon: '🌐' },
-        { name: 'CSS', icon: '🎨' },
-        { name: 'Tailwind CSS', icon: '💨' },
+        { name: 'FastAPI', icon: Server },
+        { name: 'Flask', icon: FlaskConical },
+        { name: 'Node.js', icon: Workflow },
+        { name: 'REST APIs', icon: Network },
+        { name: 'API Integration', icon: Component },
+      ],
+    },
+    {
+      name: 'Databases',
+      skills: [
+        { name: 'PostgreSQL', icon: Database },
+        { name: 'MySQL', icon: Table2 },
+        { name: 'SQL', icon: Table },
+      ],
+    },
+    {
+      name: 'Testing & Debugging',
+      skills: [
+        { name: 'pytest', icon: TestTube2 },
+        { name: 'Postman', icon: Send },
+      ],
+    },
+    {
+      name: 'AI/ML',
+      skills: [
+        { name: 'TensorFlow', icon: BrainCircuit },
+        { name: 'Scikit-learn', icon: Brain },
+        { name: 'Pandas', icon: Table },
+        { name: 'NumPy', icon: Sigma },
       ],
     },
     {
       name: 'Tools',
       skills: [
-        { name: 'Git', icon: '🌿' },
-        { name: 'GitHub', icon: '🐙' },
+        { name: 'Git', icon: GitBranch },
+        { name: 'GitHub', icon: Github },
+        { name: 'GitLab', icon: Gitlab },
+        { name: 'Docker', icon: Container },
+        { name: 'VS Code', icon: AppWindow },
+        { name: 'Jupyter Notebook', icon: Notebook },
       ],
     },
   ],

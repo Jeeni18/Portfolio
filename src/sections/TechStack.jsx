@@ -15,10 +15,7 @@ function SkillPill({ skill, delay }) {
       transition={{ duration: 0.4, delay }}
       className="card rounded-md flex flex-col items-center gap-2 p-4"
     >
-      {skill.img
-        ? <img src={skill.img} alt={skill.name} className="w-7 h-7 object-contain" loading="lazy" />
-        : <span className="text-xl">{skill.icon}</span>
-      }
+      <skill.icon size={22} className="text-rust-500" aria-hidden="true" />
       <span className="font-mono text-[11px] text-ink-400 text-center leading-tight">
         {skill.name}
       </span>
