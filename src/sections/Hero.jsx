@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowDown } from 'lucide-react'
-import jeeniPhoto from '../assets/me/jeeni.jpg'
+import { hero, site } from '../data/content'
 
 const container = {
   hidden: {},
@@ -41,12 +41,12 @@ export default function Hero({ onContactOpen }) {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <img
-              src={jeeniPhoto}
-              alt="Jeeni"
+              src={hero.photo}
+              alt={site.name}
               className="w-7 h-7 rounded-full object-cover object-top border border-ink-700"
             />
             <p className="font-display font-semibold text-sm text-ink-100">
-              Jeeni Shrestha
+              {site.name}
             </p>
           </motion.div>
         )}
@@ -69,7 +69,7 @@ export default function Hero({ onContactOpen }) {
               variants={item}
               className="font-mono text-xs text-ink-500 tracking-wide mb-6"
             >
-              Bhaktapur, Nepal — Open to full-stack &amp; AI engineering roles
+              {hero.locationLine}
             </motion.p>
 
             <motion.h1
@@ -77,35 +77,30 @@ export default function Hero({ onContactOpen }) {
               className="font-display font-semibold leading-[1.05] tracking-tight mb-5"
               style={{ fontSize: 'clamp(2.75rem, 7vw, 4.5rem)' }}
             >
-              <span className="text-ink-100">Jeeni </span>
-              <span className="text-rust-500">Shrestha.</span>
+              <span className="text-ink-100">{hero.firstName} </span>
+              <span className="text-rust-500">{hero.lastName}</span>
             </motion.h1>
 
             <motion.p
               variants={item}
               className="font-mono text-sm text-ink-400 mb-7"
             >
-              Full-Stack by day, AI by obsession
+              {hero.roleLine}
             </motion.p>
 
             <motion.p
               variants={item}
               className="font-body text-[15px] text-ink-400 max-w-md leading-relaxed mb-10"
             >
-              I've spent most of the last two years in hackathon rooms — seven wins
-              since 2025 — building AI tools aimed at problems that don't usually get
-              AI budgets: diagnostic bias against women, small businesses priced out
-              of going digital, and emotion recognition that actually works on real
-              faces. The day job pays in full-stack — website, CMS, database, the
-              whole chain — but the hackathon brain never really clocks out.
+              {hero.bio}
             </motion.p>
 
             <motion.div variants={item} className="flex flex-wrap gap-3">
-              <button onClick={() => scrollTo('#projects')} className="btn-primary">
-                View Projects
+              <button onClick={() => scrollTo(hero.ctaPrimary.href)} className="btn-primary">
+                {hero.ctaPrimary.label}
               </button>
               <button onClick={onContactOpen} className="btn-secondary">
-                Let's Connect
+                {hero.ctaSecondary.label}
               </button>
             </motion.div>
           </div>
@@ -117,8 +112,8 @@ export default function Hero({ onContactOpen }) {
               <div className="absolute -bottom-2.5 -right-2.5 w-6 h-6 border-b-2 border-r-2 border-rust-500" />
               <div className="w-full h-full overflow-hidden border border-ink-700">
                 <img
-                  src={jeeniPhoto}
-                  alt="Jeeni Shrestha"
+                  src={hero.photo}
+                  alt={site.name}
                   className="w-full h-full object-cover object-top"
                 />
               </div>

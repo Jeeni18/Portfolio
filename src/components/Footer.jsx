@@ -1,10 +1,6 @@
 import React from 'react'
-import { Github, Linkedin, ArrowUp } from 'lucide-react'
-
-const socials = [
-  { icon: Github, label: 'GitHub', href: 'https://github.com/Jeeni18' },
-  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/jeeni-shrestha-a041912b5/' },
-]
+import { ArrowUp } from 'lucide-react'
+import { site, footer, socials } from '../data/content'
 
 export default function Footer() {
   return (
@@ -13,15 +9,15 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
             <p className="font-display font-semibold text-base text-ink-100 mb-1">
-              Jeeni Shrestha
+              {site.name}
             </p>
             <p className="font-mono text-[11px] text-ink-500">
-              Full-stack by day, AI by obsession
+              {footer.tagline}
             </p>
           </div>
 
           <p className="font-mono text-[11px] text-ink-600 text-center">
-            © {new Date().getFullYear()} Jeeni Shrestha
+            © {new Date().getFullYear()} {site.name}
           </p>
 
           <div className="flex items-center gap-3">

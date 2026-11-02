@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import { X, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react'
+import { contact } from '../data/content'
 
 const EMAILJS_CONFIG = {
   SERVICE_ID: 'service_t52sujt',
@@ -86,10 +87,10 @@ export default function ContactModal({ onClose }) {
                 Contact
               </p>
               <h2 className="font-display font-semibold text-xl text-ink-100">
-                Let's Work Together
+                {contact.heading}
               </h2>
               <p className="font-body text-ink-500 text-xs mt-1">
-                I'll get back to you within 24 hours.
+                {contact.subtext}
               </p>
             </div>
             <button

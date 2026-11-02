@@ -3,40 +3,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Award, ZoomIn } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
-
-import dataScienceCert from '../assets/certificates/data-science.jpg'
-import MLCert from '../assets/certificates/ML-cert.png'
-import ML from '../assets/certificates/AI_ML.jpg'
-
-const certificates = [
-  {
-    id: 1,
-    title: 'Data Science with Python',
-    org: 'Specialization Program',
-    year: '2024',
-    description: '70-hour program in Python-based data analysis, data processing, and data-driven problem solving.',
-    image: dataScienceCert,
-    initials: 'DS',
-  },
-  {
-    id: 2,
-    title: 'Annual Nepal AI School (ANAIS)',
-    org: 'NAAMII',
-    year: '2024',
-    description: '69-hour intensive on deep learning, GNNs, graph transformers, foundation models, VLMs, LLMs, and RL, with hands-on labs and an AI hackathon.',
-    image: MLCert,
-    initials: 'AI',
-  },
-  {
-    id: 3,
-    title: 'AI/ML Workshop',
-    org: 'Industry-led sessions',
-    year: '2024',
-    description: 'Practical exposure to AI, machine learning, and computer vision led by industry professionals.',
-    image: ML,
-    initials: 'ML',
-  },
-]
+import { certifications } from '../data/content'
 
 function CertCard({ cert, onClick }) {
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
@@ -55,6 +22,7 @@ function CertCard({ cert, onClick }) {
           <img
             src={cert.image}
             alt={cert.title}
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         ) : (
@@ -95,11 +63,11 @@ export default function Certifications({ onCertClick }) {
     <SectionWrapper id="certifications">
       <SectionTitle
         title="Certifications"
-        subtitle="Courses and programs completed outside the classroom."
+        subtitle={certifications.sectionSubtitle}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {certificates.map((cert) => (
+        {certifications.items.map((cert) => (
           <CertCard key={cert.id} cert={cert} onClick={onCertClick} />
         ))}
       </div>

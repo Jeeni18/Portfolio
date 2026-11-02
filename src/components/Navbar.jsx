@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-
-const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'Stack', href: '#techstack' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Achievements', href: '#achievements' },
-  { label: 'Certifications', href: '#certifications' },
-]
+import { navLinks, site } from '../data/content'
 
 export default function Navbar({ onContactOpen }) {
   const [scrolled, setScrolled] = useState(false)
@@ -41,7 +34,7 @@ export default function Navbar({ onContactOpen }) {
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
             className="font-display font-semibold text-lg text-ink-100"
           >
-            JS
+            {site.initials}
           </a>
 
           <nav className="hidden md:flex items-center gap-8">

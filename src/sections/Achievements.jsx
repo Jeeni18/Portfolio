@@ -1,108 +1,9 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Trophy, Star, X, ExternalLink } from 'lucide-react'
+import { X, ExternalLink } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
-import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.jpg'
-import Hultprize from '../assets/achievements/hultprize.png'
-import IEEE from '../assets/achievements/Ecoflare.png'
-import Deerhack from '../assets/achievements/DeerHack_certificate.jpg'
-import Codeyatra from '../assets/achievements/Codeyatra.png'
-import Shequal from '../assets/achievements/Shequal_certificate.jpg'
-import Hackthecircle from '../assets/achievements/hackthecircle.png'
-
-const achievements = [
-  {
-    icon: Trophy,
-    title: 'Winner — Hack4SafeFood',
-    project: 'Project: Aahar',
-    description: 'Won the national-level hackathon with a food safety app.',
-    year: '2025',
-    image: Hack4SafeFood,
-    badge: 'Winner',
-    link: 'https://drive.google.com/file/d/11ZebDYPQxgVnsRm4kQnLj1H4X9bQC1GP/view?usp=sharing',
-  },
-  {
-    icon: Trophy,
-    title: 'Winner — Hack the Circle',
-    project: 'Project: Chronova',
-    description: 'Won with an AR app that brings Nepali history to life on-site.',
-    year: '2025',
-    image: Hackthecircle,
-    badge: 'Winner',
-    link: 'https://drive.google.com/file/d/1WFoeC9w77ENXA6zz2ppfxMgq0bJSwh24/view?usp=sharing',
-  },
-  {
-    icon: Trophy,
-    title: 'Ed-Tech Winner — DeerHack',
-    project: 'Project: Histoury',
-    description: "Won the Ed-Tech track with Histoury.",
-    year: '2025',
-    image: Deerhack,
-    badge: 'Winner',
-    link: 'https://drive.google.com/file/d/11T8k8LCvDc2KE2P-JZ38TpMEJFcDxDrw/view?usp=sharing',
-  },
-  {
-    icon: Trophy,
-    title: 'Winner — Hult Prize On-Campus',
-    project: 'Project: NOOK',
-    description: 'Won the campus round with a social-impact business concept.',
-    year: '2024',
-    image: Hultprize,
-    badge: 'Winner',
-    link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing',
-  },
-  {
-    icon: Star,
-    title: "People's Choice Award — CodeYatra",
-    project: 'Project: Revolv',
-    description: "Won People's Choice with Revolv.",
-    year: '2024',
-    image: Codeyatra,
-    badge: "Winner",
-    link: 'https://drive.google.com/file/d/11ZfLULkGij1dKI3AXDKrcM39bD_l-9O4/view?usp=sharing',
-  },
-  {
-    icon: Star,
-    title: 'Finalist — IEEE Climate Tech Idea Pitch',
-    project: 'Project: Ecoflare',
-    description: 'Reached the finals of the IEEE WIE climate technology pitch competition.',
-    year: '2024',
-    image: IEEE,
-    badge: 'Finalist',
-    link: 'https://drive.google.com/file/d/1f9N-uWpvE1-q1bs3mzkV2hKIctsqh2G2/view?usp=sharing',
-  },
-  {
-    icon: Star,
-    title: "Top 16 — SheQual, Nepal's Largest All-Female Hackathon",
-    project: 'Project: DiagHer',
-    description: 'Reached the Top 16 with DiagHer, a gender-aware diagnosis support tool.',
-    image: Shequal,
-    year: '2025',
-    badge: 'Top 16',
-    link: 'https://drive.google.com/file/d/11Uv7My8LcxcLhSACKUKTlPWzYBQe9Dzi/view?usp=sharing',
-  },
-  {
-    icon: Star,
-    title: 'Best Poster Award — Khwopa CEEL',
-    project: 'Final-year research poster',
-    description: 'Awarded best poster at the Khwopa Center for Engineering Education & Learning showcase.',
-    year: '2026',
-    image: null,
-    badge: 'Winner',
-    link: null,
-  },
-  {
-    icon: Star,
-    title: 'Finalist — Hacking for a Carbon-Neutral Future',
-    project: 'Shequal & UNESCO',
-    description: 'Reached the finals of a climate-focused hackathon run with UNESCO.',
-    year: '2026',
-    image: null,
-    badge: 'Finalist',
-    link: null,
-  },
-]
+import { achievements } from '../data/content'
 
 function CertificateModal({ item, onClose }) {
   React.useEffect(() => {
@@ -202,6 +103,7 @@ function AchievementCard({ item, index, onClick }) {
           <img
             src={item.image}
             alt={item.title}
+            loading="lazy"
             className="w-full h-full object-cover object-top opacity-80"
           />
         ) : (
@@ -240,11 +142,11 @@ export default function Achievements() {
     <SectionWrapper id="achievements">
       <SectionTitle
         title="Achievements"
-        subtitle="Competitions won, stages reached, since 2024."
+        subtitle={achievements.sectionSubtitle}
       />
 
       <div className="grid md:grid-cols-3 gap-4">
-        {achievements.map((item, i) => (
+        {achievements.items.map((item, i) => (
           <AchievementCard
             key={item.title}
             item={item}
