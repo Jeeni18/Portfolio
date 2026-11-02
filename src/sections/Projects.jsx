@@ -19,7 +19,7 @@ function ProjectCard({ project, index }) {
     >
       <div className="flex items-start justify-between mb-4 gap-4">
         <div>
-          <p className="font-mono text-[10px] text-rust-500 tracking-wide uppercase mb-1.5">
+          <p className="font-mono text-xs text-rust-500 tracking-wide uppercase mb-1.5">
             {project.tagline}
           </p>
           <h3 className="font-display font-semibold text-xl text-ink-100">
@@ -27,11 +27,11 @@ function ProjectCard({ project, index }) {
           </h3>
         </div>
         {project.badge ? (
-          <span className="text-[9px] font-mono px-2 py-1 border border-rust-500/50 text-rust-500 uppercase tracking-wide text-right flex-shrink-0">
+          <span className="text-xs font-mono px-2 py-1 border border-rust-500/50 text-rust-500 uppercase tracking-wide text-right flex-shrink-0">
             {project.badge}
           </span>
         ) : project.featured && (
-          <span className="text-[9px] font-mono px-2 py-1 border border-ink-700 text-ink-500 uppercase tracking-wide">
+          <span className="text-xs font-mono px-2 py-1 border border-ink-700 text-ink-500 uppercase tracking-wide">
             Featured
           </span>
         )}
@@ -55,7 +55,7 @@ function ProjectCard({ project, index }) {
         {project.stack.map((tech) => (
           <span
             key={tech}
-            className="font-mono text-[10px] px-2.5 py-1 bg-ink-900 text-ink-500 border border-ink-800"
+            className="font-mono text-xs px-2.5 py-1 bg-ink-900 text-ink-500 border border-ink-800"
           >
             {tech}
           </span>

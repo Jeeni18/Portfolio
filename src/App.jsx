@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Hero from './sections/Hero'
 import About from './sections/About'
@@ -18,29 +19,31 @@ function App() {
   const [contactOpen, setContactOpen] = useState(false)
 
   return (
-    <div className="relative min-h-screen bg-[#121110] overflow-x-hidden noise-bg">
-      <div className="relative z-10">
-        <Navbar onContactOpen={() => setContactOpen(true)} />
-        <Hero onContactOpen={() => setContactOpen(true)} />
-        <About />
-        <TechStack />
-        <Experience />
-        <Projects />
-        <Achievements />
-        <Leadership />
-        <Education onCertClick={setSelectedCert} />
-        <Footer />
-        <FloatingContact onClick={() => setContactOpen(true)} />
+    <MotionConfig reducedMotion="user">
+      <div className="relative min-h-screen bg-[#121110] overflow-x-hidden noise-bg">
+        <div className="relative z-10">
+          <Navbar onContactOpen={() => setContactOpen(true)} />
+          <Hero onContactOpen={() => setContactOpen(true)} />
+          <About />
+          <TechStack />
+          <Experience />
+          <Projects />
+          <Achievements />
+          <Leadership />
+          <Education onCertClick={setSelectedCert} />
+          <Footer />
+          <FloatingContact onClick={() => setContactOpen(true)} />
+        </div>
+
+        {selectedCert && (
+          <CertModal cert={selectedCert} onClose={() => setSelectedCert(null)} />
+        )}
+
+        {contactOpen && (
+          <ContactModal onClose={() => setContactOpen(false)} />
+        )}
       </div>
-
-      {selectedCert && (
-        <CertModal cert={selectedCert} onClose={() => setSelectedCert(null)} />
-      )}
-
-      {contactOpen && (
-        <ContactModal onClose={() => setContactOpen(false)} />
-      )}
-    </div>
+    </MotionConfig>
   )
 }
 

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import { X, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react'
 import { contact } from '../data/content'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 const EMAILJS_CONFIG = {
   SERVICE_ID: 'service_t52sujt',
@@ -15,16 +16,7 @@ export default function ContactModal({ onClose }) {
   const [status, setStatus] = useState('idle')
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [errors, setErrors] = useState({})
-
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      window.removeEventListener('keydown', handler)
-      document.body.style.overflow = ''
-    }
-  }, [onClose])
+  const dialogRef = useModalA11y(onClose)
 
   const validate = () => {
     const e = {}
@@ -62,7 +54,7 @@ export default function ContactModal({ onClose }) {
   }
 
   const inputBase =
-    'w-full bg-ink-950 border rounded-sm px-4 py-3 font-body text-sm text-ink-100 placeholder-ink-600 outline-none transition-all duration-200'
+    'w-full bg-ink-950 border rounded-sm px-4 py-3 font-body text-sm text-ink-100 placeholder-ink-600 transition-all duration-200'
 
   return (
     <AnimatePresence>
@@ -74,19 +66,24 @@ export default function ContactModal({ onClose }) {
         className="fixed inset-0 z-[100] bg-black/75 flex items-center justify-center p-4"
       >
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="contact-modal-heading"
+          tabIndex={-1}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-md bg-ink-900 border border-ink-700 rounded-md overflow-hidden"
+          className="relative w-full max-w-md bg-ink-900 border border-ink-700 rounded-md overflow-hidden outline-none"
         >
           <div className="flex items-start justify-between p-7 pb-5">
             <div>
-              <p className="font-mono text-[10px] text-rust-500 tracking-wide uppercase mb-1">
+              <p className="font-mono text-xs text-rust-500 tracking-wide uppercase mb-1">
                 Contact
               </p>
-              <h2 className="font-display font-semibold text-xl text-ink-100">
+              <h2 id="contact-modal-heading" className="font-display font-semibold text-xl text-ink-100">
                 {contact.heading}
               </h2>
               <p className="font-body text-ink-500 text-xs mt-1">
@@ -95,6 +92,7 @@ export default function ContactModal({ onClose }) {
             </div>
             <button
               onClick={onClose}
+              aria-label="Close contact form"
               className="w-8 h-8 bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
             >
               <X size={14} />
@@ -122,54 +120,63 @@ export default function ContactModal({ onClose }) {
             ) : (
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div>
-                  <label className="font-mono text-[10px] text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-name" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
                     Name
                   </label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Jeeni Shrestha"
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     className={`${inputBase} ${
                       errors.name ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
                     }`}
                   />
-                  {errors.name && <p className="font-mono text-[10px] text-red-400 mt-1">{errors.name}</p>}
+                  {errors.name && <p id="contact-name-error" className="font-mono text-xs text-red-400 mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="font-mono text-[10px] text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-email" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
                     Email
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="hello@example.com"
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     className={`${inputBase} ${
                       errors.email ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
                     }`}
                   />
-                  {errors.email && <p className="font-mono text-[10px] text-red-400 mt-1">{errors.email}</p>}
+                  {errors.email && <p id="contact-email-error" className="font-mono text-xs text-red-400 mt-1">{errors.email}</p>}
                 </div>
 
                 <div>
-                  <label className="font-mono text-[10px] text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-message" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
                     Message
                   </label>
                   <textarea
+                    id="contact-message"
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     rows={4}
                     placeholder="Tell me about your project or just say hello..."
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? 'contact-message-error' : undefined}
                     className={`${inputBase} resize-none ${
                       errors.message ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
                     }`}
                   />
-                  {errors.message && <p className="font-mono text-[10px] text-red-400 mt-1">{errors.message}</p>}
+                  {errors.message && <p id="contact-message-error" className="font-mono text-xs text-red-400 mt-1">{errors.message}</p>}
                 </div>
 
                 {status === 'error' && (

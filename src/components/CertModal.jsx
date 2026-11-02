@@ -1,18 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Award } from 'lucide-react'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 export default function CertModal({ cert, onClose }) {
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [onClose])
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
-  }, [])
+  const dialogRef = useModalA11y(onClose)
 
   return (
     <AnimatePresence>
@@ -24,15 +16,21 @@ export default function CertModal({ cert, onClose }) {
         className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
       >
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cert-modal-heading"
+          tabIndex={-1}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-lg bg-ink-900 border border-ink-700 rounded-md overflow-hidden"
+          className="relative w-full max-w-lg bg-ink-900 border border-ink-700 rounded-md overflow-hidden outline-none"
         >
           <button
             onClick={onClose}
+            aria-label="Close certificate"
             className="absolute top-4 right-4 z-10 w-8 h-8 bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
           >
             <X size={14} />
@@ -51,11 +49,11 @@ export default function CertModal({ cert, onClose }) {
           <div className="p-7">
             <div className="flex items-center gap-2 mb-1">
               <Award size={14} className="text-rust-500" />
-              <p className="font-mono text-[10px] text-rust-500 tracking-wide uppercase">
+              <p className="font-mono text-xs text-rust-500 tracking-wide uppercase">
                 {cert.org} · {cert.year}
               </p>
             </div>
-            <h2 className="font-display font-semibold text-xl text-ink-100 mt-1 mb-3">
+            <h2 id="cert-modal-heading" className="font-display font-semibold text-xl text-ink-100 mt-1 mb-3">
               {cert.title}
             </h2>
             <p className="font-body text-ink-400 text-sm leading-relaxed">

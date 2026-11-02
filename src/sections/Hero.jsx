@@ -133,7 +133,7 @@ export default function Hero({ onContactOpen }) {
           onClick={() => scrollTo('#about')}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group"
         >
-          <span className="font-mono text-[10px] text-ink-500 tracking-widest uppercase group-hover:text-ink-100 transition-colors">
+          <span className="font-mono text-xs text-ink-500 tracking-widest uppercase group-hover:text-ink-100 transition-colors">
             Scroll
           </span>
           <ArrowDown size={14} className="text-ink-500 group-hover:text-ink-100 transition-colors" />

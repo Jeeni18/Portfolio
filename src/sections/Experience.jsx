@@ -44,7 +44,7 @@ function ExperienceItem({ job, index }) {
           {job.tech.map((t) => (
             <span
               key={t}
-              className="font-mono text-[10px] px-2.5 py-1 bg-ink-900 text-ink-500 border border-ink-800"
+              className="font-mono text-xs px-2.5 py-1 bg-ink-900 text-ink-500 border border-ink-800"
             >
               {t}
             </span>

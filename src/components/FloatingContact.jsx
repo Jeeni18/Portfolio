@@ -25,6 +25,7 @@ export default function FloatingContact({ onClick }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={onClick}
+        aria-label="Open contact form"
         className="w-12 h-12 bg-ink-900 border border-ink-700 hover:border-rust-500 flex items-center justify-center text-ink-300 hover:text-rust-500 transition-all duration-200"
       >
         <MessageCircle size={18} />

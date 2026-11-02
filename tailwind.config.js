@@ -12,8 +12,10 @@ export default {
           900: '#171615',
           800: '#1e1c1a',
           700: '#2d2a26',
-          600: '#4a4338',
-          500: '#6b655c',
+          // 600/500 raised from #4a4338/#6b655c to meet ~4.5:1 contrast
+          // against the #121110 background (WCAG AA for normal text)
+          600: '#857e71',
+          500: '#938c7f',
           400: '#a39c8f',
           100: '#ece6da',
         },

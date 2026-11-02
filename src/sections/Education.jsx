@@ -37,6 +37,15 @@ function CertCard({ cert, onClick }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5 }}
       onClick={() => onClick(cert)}
+      role="button"
+      tabIndex={0}
+      aria-label={`View certificate: ${cert.title}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick(cert)
+        }
+      }}
       className="card relative rounded-md overflow-hidden cursor-pointer"
     >
       <div className="relative h-44 flex items-center justify-center overflow-hidden bg-ink-900">
@@ -62,7 +71,7 @@ function CertCard({ cert, onClick }) {
       </div>
 
       <div className="p-5">
-        <p className="font-mono text-[9px] text-ink-500 tracking-wide uppercase mb-1.5">
+        <p className="font-mono text-xs text-ink-500 tracking-wide uppercase mb-1.5">
           {cert.org} · {cert.year}
         </p>
         <h3 className="font-display font-semibold text-ink-100 text-sm leading-snug mb-2">

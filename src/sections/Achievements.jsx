@@ -4,17 +4,10 @@ import { useInView } from 'react-intersection-observer'
 import { X, ExternalLink } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 import { achievements } from '../data/content'
+import { useModalA11y } from '../hooks/useModalA11y'
 
 function CertificateModal({ item, onClose }) {
-  React.useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      window.removeEventListener('keydown', handler)
-      document.body.style.overflow = ''
-    }
-  }, [onClose])
+  const dialogRef = useModalA11y(onClose)
 
   return (
     <AnimatePresence>
@@ -26,15 +19,21 @@ function CertificateModal({ item, onClose }) {
         className="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-4"
       >
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="achievement-modal-heading"
+          tabIndex={-1}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl bg-ink-900 border border-ink-700 rounded-md overflow-hidden"
+          className="relative w-full max-w-2xl bg-ink-900 border border-ink-700 rounded-md overflow-hidden outline-none"
         >
           <button
             onClick={onClose}
+            aria-label="Close certificate"
             className="absolute top-4 right-4 z-10 w-8 h-8 rounded-sm bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
           >
             <X size={14} />
@@ -58,14 +57,14 @@ function CertificateModal({ item, onClose }) {
           <div className="p-6 flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-[10px] text-rust-500 tracking-wide uppercase">
+                <span className="font-mono text-xs text-rust-500 tracking-wide uppercase">
                   {item.badge} · {item.year}
                 </span>
               </div>
-              <h3 className="font-display font-semibold text-ink-100 text-base leading-snug mb-1">
+              <h3 id="achievement-modal-heading" className="font-display font-semibold text-ink-100 text-base leading-snug mb-1">
                 {item.title}
               </h3>
-              <p className="font-mono text-[11px] text-ink-500">{item.project}</p>
+              <p className="font-mono text-xs text-ink-500">{item.project}</p>
             </div>
 
             {item.link && (
@@ -96,6 +95,15 @@ function AchievementCard({ item, index, onClick }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.06 }}
       onClick={() => onClick(item)}
+      role="button"
+      tabIndex={0}
+      aria-label={`View certificate: ${item.title}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick(item)
+        }
+      }}
       className="card rounded-md overflow-hidden cursor-pointer"
     >
       <div className="relative h-32 overflow-hidden bg-ink-900 flex items-center justify-center">
@@ -110,10 +118,10 @@ function AchievementCard({ item, index, onClick }) {
           <item.icon size={22} className="text-ink-700" />
         )}
 
-        <div className="absolute top-3 right-3 text-[10px] font-mono px-2 py-1 bg-ink-950/80 border border-ink-700 text-rust-500 uppercase tracking-wide">
+        <div className="absolute top-3 right-3 text-xs font-mono px-2 py-1 bg-ink-950/80 border border-ink-700 text-rust-500 uppercase tracking-wide">
           {item.badge}
         </div>
-        <span className="absolute top-3 left-4 font-mono text-[9px] text-ink-400 tracking-wide uppercase">
+        <span className="absolute top-3 left-4 font-mono text-xs text-ink-400 tracking-wide uppercase">
           {item.year}
         </span>
       </div>
@@ -126,7 +134,7 @@ function AchievementCard({ item, index, onClick }) {
           </h3>
         </div>
 
-        <p className="font-mono text-[10px] text-ink-500 mb-1.5 ml-[26px]">{item.project}</p>
+        <p className="font-mono text-xs text-ink-500 mb-1.5 ml-[26px]">{item.project}</p>
         <p className="font-body text-ink-400 text-[13px] leading-relaxed ml-[26px]">
           {item.description}
         </p>

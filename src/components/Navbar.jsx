@@ -58,6 +58,8 @@ export default function Navbar({ onContactOpen }) {
           <button
             className="md:hidden text-ink-400 hover:text-ink-100 transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>

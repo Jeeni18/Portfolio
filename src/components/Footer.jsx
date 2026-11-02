@@ -16,7 +16,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <p className="font-mono text-[11px] text-ink-600 text-center">
+          <p className="font-mono text-xs text-ink-600 text-center">
             © {new Date().getFullYear()} {site.name}
           </p>
 
