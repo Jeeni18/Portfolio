@@ -269,8 +269,9 @@ export const projects = {
 }
 
 export const achievements = {
-  sectionSubtitle: 'Competitions won, stages reached, since 2024.',
+  sectionSubtitle: 'Wins first, then finalist and ranked stages.',
   items: [
+    // -- Wins --
     {
       icon: Trophy,
       title: 'Winner — Hack4SafeFood',
@@ -283,7 +284,7 @@ export const achievements = {
     },
     {
       icon: Trophy,
-      title: 'Winner — Hack the Circle',
+      title: 'Winner — HackTheCircle',
       project: 'Project: Chronova',
       description: 'Won with an AR app that brings Nepali history to life on-site.',
       year: '2025',
@@ -293,7 +294,7 @@ export const achievements = {
     },
     {
       icon: Trophy,
-      title: 'Ed-Tech Winner — DeerHack',
+      title: 'Ed-Tech Category Winner — DeerHack',
       project: 'Project: Histoury',
       description: 'Won the Ed-Tech track with Histoury.',
       year: '2025',
@@ -303,26 +304,16 @@ export const achievements = {
     },
     {
       icon: Trophy,
-      title: 'Winner — Hult Prize On-Campus',
-      project: 'Project: NOOK',
-      description: 'Won the campus round with a social-impact business concept.',
-      year: '2024',
-      image: Hultprize,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing',
-    },
-    {
-      icon: Star,
       title: "People's Choice Award — CodeYatra",
       project: 'Project: Revolv',
       description: "Won People's Choice with Revolv.",
-      year: '2024',
+      year: '2025',
       image: Codeyatra,
       badge: 'Winner',
       link: 'https://drive.google.com/file/d/11ZfLULkGij1dKI3AXDKrcM39bD_l-9O4/view?usp=sharing',
     },
     {
-      icon: Star,
+      icon: Trophy,
       title: 'Best Poster Award — Khwopa CEEL',
       project: 'Final-year research poster',
       description: 'Awarded best poster at the Khwopa Center for Engineering Education & Learning showcase.',
@@ -331,6 +322,17 @@ export const achievements = {
       badge: 'Winner',
       link: null,
     },
+    {
+      icon: Trophy,
+      title: 'On-Campus Winner — Hult Prize',
+      project: 'Project: NOOK',
+      description: 'Won the campus round with a social-impact business concept.',
+      year: '2024',
+      image: Hultprize,
+      badge: 'Winner',
+      link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing',
+    },
+    // -- Finalist / ranked (newest first) --
     {
       icon: Star,
       title: 'Finalist — Hacking for a Carbon-Neutral Future',
@@ -343,7 +345,7 @@ export const achievements = {
     },
     {
       icon: Star,
-      title: "Top 16 — SheQual, Nepal's Largest All-Female Hackathon",
+      title: "Top 16 — SheQual Foundation's All-Female Hackathon",
       project: 'Project: DiagHer',
       description: 'Reached the Top 16 with DiagHer, a gender-aware diagnosis support tool.',
       image: Shequal,

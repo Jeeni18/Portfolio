@@ -6,7 +6,8 @@ import TechStack from './sections/TechStack'
 import Experience from './sections/Experience'
 import Projects from './sections/Projects'
 import Achievements from './sections/Achievements'
-import Certifications from './sections/Certifications'
+import Leadership from './sections/Leadership'
+import Education from './sections/Education'
 import Footer from './components/Footer'
 import FloatingContact from './components/FloatingContact'
 import CertModal from './components/CertModal'
@@ -26,7 +27,8 @@ function App() {
         <Experience />
         <Projects />
         <Achievements />
-        <Certifications onCertClick={setSelectedCert} />
+        <Leadership />
+        <Education onCertClick={setSelectedCert} />
         <Footer />
         <FloatingContact onClick={() => setContactOpen(true)} />
       </div>
