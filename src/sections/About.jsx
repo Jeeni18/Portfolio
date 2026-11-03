@@ -14,7 +14,7 @@ export default function About() {
 
   return (
     <SectionWrapper id="about">
-      <div ref={ref} className="grid md:grid-cols-2 gap-16 items-start">
+      <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
         {/* Left: Text */}
         <div>
           <SectionTitle apiLabel="GET /about" title={title} />

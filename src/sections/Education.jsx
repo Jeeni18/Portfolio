@@ -101,7 +101,7 @@ export default function Education({ onCertClick }) {
         subtitle={education.sectionSubtitle}
       />
 
-      <div className="grid sm:grid-cols-2 gap-3 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
         {education.entries.map((entry, i) => (
           <EducationCard key={entry.degree} entry={entry} index={i} />
         ))}
