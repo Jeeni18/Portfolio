@@ -31,6 +31,8 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         localStorage: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
       },
     },
     plugins: {
