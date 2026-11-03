@@ -211,6 +211,7 @@ export const projects = {
       stack: ['Flask', 'REST APIs', 'React', 'TypeScript', 'Scikit-learn'],
       github: 'https://github.com/Jeeni18/DiagHer-AI',
       featured: true,
+      categories: ['fullstack', 'ai', 'hackathon'],
     },
     {
       number: '02',
@@ -224,6 +225,7 @@ export const projects = {
       ],
       stack: ['Flask', 'REST APIs', 'React', 'Axios', 'Scikit-learn'],
       github: 'https://github.com/Jeeni18/Revolv',
+      categories: ['fullstack', 'ai'],
     },
     {
       number: '03',
@@ -238,6 +240,7 @@ export const projects = {
       ],
       stack: ['Python', 'React', 'ML', 'Data Analysis'],
       github: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
+      categories: ['ai'],
     },
     {
       number: '04',
@@ -251,6 +254,7 @@ export const projects = {
       ],
       stack: ['React Native', 'Python', 'ML'],
       github: 'https://github.com/Jeeni18/Chronova',
+      categories: ['ai', 'hackathon'],
     },
     {
       number: '05',
@@ -264,9 +268,17 @@ export const projects = {
       ],
       stack: ['React Native', 'Python', 'Behavior ML'],
       github: 'https://github.com/jeenishrestha',
+      categories: ['ai'],
     },
   ],
 }
+
+export const projectFilters = [
+  { id: 'all', label: 'All' },
+  { id: 'fullstack', label: 'Full-Stack' },
+  { id: 'ai', label: 'AI / ML' },
+  { id: 'hackathon', label: 'Hackathon' },
+]
 
 export const achievements = {
   sectionSubtitle: 'Wins first, then finalist and ranked stages.',
@@ -401,6 +413,8 @@ export const certifications = {
 
 export const footer = {
   tagline: 'Full-stack by day, AI by obsession',
+  closingLine: "Let's build something reliable.",
+  email: 'Jenyshrestha31@gmail.com',
 }
 
 export const socials = [
@@ -411,4 +425,86 @@ export const socials = [
 export const contact = {
   heading: "Let's Work Together",
   subtext: "I'll get back to you within 24 hours.",
+}
+
+// -- Interactive component data --------------------------------------
+
+export const diagherDiagram = {
+  boxes: [
+    {
+      id: 'frontend',
+      label: 'React + TypeScript',
+      title: 'Frontend',
+      explanation:
+        'Pages for symptom input, diagnosis results with charts (Recharts) and drug side-effect analysis. Sends JSON to the API and shows clear errors when something fails.',
+      code: 'fetch("/api/v1/diagnosis", { method: "POST" })',
+    },
+    {
+      id: 'api',
+      label: 'Flask REST API',
+      title: 'REST API (12 versioned endpoints)',
+      explanation:
+        'Every request is validated before it reaches the model. Errors come back in one standard format, rate limiting protects the service, and logging plus a /health endpoint make debugging easier.',
+      code: 'POST /api/v1/diagnosis -> 200 { "top_conditions": [...] }',
+      default: true,
+    },
+    {
+      id: 'ml',
+      label: 'Scikit-learn models',
+      title: 'Machine learning',
+      explanation:
+        'Random Forest and Logistic Regression were compared; the model predicts 22 conditions from 97 symptom features. It is loaded once and served through the API.',
+      code: 'model.predict_proba(features)  # 22 classes',
+    },
+  ],
+}
+
+export const apiTerminal = {
+  sectionTitle: 'Send me a request',
+  idleText: '// pick an endpoint above to send a request',
+  endpoints: [
+    { id: 'skills', method: 'GET', path: '/skills' },
+    { id: 'experience', method: 'GET', path: '/experience' },
+    {
+      id: 'awards',
+      method: 'GET',
+      path: '/awards?status=won',
+      response: { count: 6, latest: ['Hack4SafeFood', 'HackTheCircle', 'DeerHack', 'CodeYatra'], status: 200 },
+    },
+    {
+      id: 'hire',
+      method: 'POST',
+      path: '/hire',
+      response: { status: 201, message: "Request received! Let's talk.", email: 'Jenyshrestha31@gmail.com' },
+    },
+  ],
+}
+
+// Nepali drafts below are starting points, not verified translations.
+// Compare against the source English copy in `hero` and `about` --
+// flagged as [TODO: verify Nepali translation] in the final report.
+export const translations = {
+  heroGreeting: { ne: 'नमस्ते,' },
+  heroHeading: {
+    ne: 'म जीनी हुँ। म मानिसहरूले भरोसा गर्न सक्ने वेब एप र API बनाउँछु।',
+  },
+  heroIntro: {
+    en: hero.bio,
+    ne: 'क्लाउड हिमालयमा फुल-स्ट्याक डेभलपर, कम्प्युटर इन्जिनियरिङ स्नातक, र चार पटक ह्याकाथन विजेता।',
+  },
+  sectionTitle: {
+    about: { en: about.sectionTitle, ne: 'मेरो बारेमा' },
+    techstack: { en: 'Tech Stack', ne: 'सीपहरू' },
+    experience: { en: 'Experience', ne: 'अनुभव' },
+    projects: { en: 'Projects', ne: 'परियोजनाहरू' },
+    achievements: { en: 'Achievements', ne: 'उपलब्धिहरू' },
+    education: { en: education.sectionTitle, ne: 'शिक्षा तथा तालिम' },
+  },
+  aboutParagraphs: {
+    en: about.paragraphs,
+    ne: [
+      'म ख्वप कलेज अफ इन्जिनियरिङबाट कम्प्युटर इन्जिनियरिङमा स्नातक हुँ र क्लाउड हिमालयमा फुल-स्ट्याक डेभलपरको रूपमा काम गर्छु। म React, Next.js र Python ब्याकइन्ड प्रयोग गरी वेब एप्लिकेसनहरू बनाउँछु, उचित validation र error handling सहितका REST API डिजाइन गर्छु, र जहाँ वास्तविक मूल्य थपिन्छ त्यहाँ मेसिन लर्निङ एकीकृत गर्छु।',
+      'ह्याकाथनहरूले मलाई कडा समयसीमाभित्र काम गर्ने सफ्टवेयर बनाउन र टोलीमा मिलेर काम गर्न सिकायो। म नेपालका सार्वजनिक सेवाहरूका लागि भरपर्दो र राम्रोसँग कागजात गरिएको सफ्टवेयर बनाउनमा विशेष रुचि राख्छु।',
+    ],
+  },
 }
