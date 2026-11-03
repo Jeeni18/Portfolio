@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { hero } from '../data/content'
+import WashiTape from './WashiTape'
 
 export default function PolaroidPhoto() {
   const [flipped, setFlipped] = useState(false)
@@ -30,9 +31,11 @@ export default function PolaroidPhoto() {
               boxShadow: '8px 8px 0 #EBC4D5',
             }}
           >
-            <div
-              className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-lilac/80 rotate-2"
-              aria-hidden="true"
+            <WashiTape
+              className="-top-3 left-1/2"
+              color="lilac"
+              rotate={2}
+              center
             />
             <div className="w-full h-full overflow-hidden">
               <img

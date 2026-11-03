@@ -5,6 +5,7 @@ import { hero, site, translations } from '../data/content'
 import { useLanguage } from '../hooks/useLanguage'
 import Highlight from '../components/Highlight'
 import PolaroidPhoto from '../components/PolaroidPhoto'
+import { CurvedArrow } from '../components/Doodles'
 
 const container = {
   hidden: {},
@@ -88,8 +89,8 @@ export default function Hero({ onContactOpen }) {
               <>
                 <motion.h1
                   variants={item}
-                  className="font-display leading-[1.05] tracking-tight mb-5 text-plum"
-                  style={{ fontSize: 'clamp(2.75rem, 7vw, 4.75rem)' }}
+                  className="font-display leading-[0.98] tracking-tight mb-5 text-plum"
+                  style={{ fontSize: 'clamp(2.75rem, 9vw, 6rem)' }}
                 >
                   {hero.firstName} {hero.lastName}
                 </motion.h1>
@@ -131,29 +132,51 @@ export default function Hero({ onContactOpen }) {
               </>
             )}
 
-            <motion.div variants={item} className="relative flex flex-wrap items-center gap-4">
-              <button onClick={() => scrollTo(hero.ctaPrimary.href)} className="btn-primary">
-                {hero.ctaPrimary.label}
-              </button>
-              <a
-                href={hero.ctaDownload.href}
-                download
-                className="btn-secondary"
+            <motion.div variants={item} className="relative pt-8 sm:pt-0">
+              <span
+                className="hidden sm:block absolute -top-7 left-[calc(100%-2rem)] font-hand text-xl text-plum/80 -rotate-2 whitespace-nowrap"
+                aria-hidden="true"
               >
-                <Download size={14} />
-                {hero.ctaDownload.label}
-              </a>
-              <button onClick={onContactOpen} className="btn-secondary">
-                {hero.ctaSecondary.label}
-              </button>
-              <span className="hidden sm:block font-hand text-xl text-plum/80 -rotate-3 ml-1" aria-hidden="true">
+                {hero.handwrittenNote}
+              </span>
+              <CurvedArrow
+                className="hidden sm:block absolute -top-1 left-[calc(100%-2.5rem)] w-20 h-10"
+                delay={1.3}
+              />
+
+              <div className="flex flex-wrap items-center gap-4">
+                <button onClick={() => scrollTo(hero.ctaPrimary.href)} className="btn-primary">
+                  {hero.ctaPrimary.label}
+                </button>
+                <a
+                  href={hero.ctaDownload.href}
+                  download
+                  className="btn-secondary"
+                >
+                  <Download size={14} />
+                  {hero.ctaDownload.label}
+                </a>
+                <button onClick={onContactOpen} className="btn-secondary">
+                  {hero.ctaSecondary.label}
+                </button>
+              </div>
+
+              <span className="sm:hidden mt-4 block font-hand text-xl text-plum/80 -rotate-2" aria-hidden="true">
                 ← {hero.handwrittenNote}
               </span>
             </motion.div>
           </div>
 
           {/* Photo column */}
-          <motion.div variants={item} className="order-1 md:order-2 min-w-0 flex justify-center md:justify-end">
+          <motion.div variants={item} className="order-1 md:order-2 min-w-0 flex justify-center md:justify-end relative">
+            <div
+              aria-hidden="true"
+              className="absolute w-[230px] h-[270px] md:w-[260px] md:h-[300px] bg-blush -z-10"
+              style={{
+                borderRadius: '42% 58% 70% 30% / 45% 45% 55% 55%',
+                transform: 'rotate(8deg) translate(34px, 26px)',
+              }}
+            />
             <PolaroidPhoto />
           </motion.div>
         </motion.div>

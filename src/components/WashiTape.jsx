@@ -5,7 +5,11 @@ const COLORS = {
   rose: 'rgba(235, 196, 213, 0.8)',
 }
 
-export default function WashiTape({ className = '', color = 'lilac', rotate = -3, width = 64, height = 24 }) {
+export default function WashiTape({ className = '', color = 'lilac', rotate = -3, width = 64, height = 24, center = false }) {
+  const transform = center
+    ? `translateX(-50%) rotate(${rotate}deg)`
+    : `rotate(${rotate}deg)`
+
   return (
     <div
       aria-hidden="true"
@@ -14,7 +18,7 @@ export default function WashiTape({ className = '', color = 'lilac', rotate = -3
         background: COLORS[color] || color,
         width,
         height,
-        transform: `rotate(${rotate}deg)`,
+        transform,
       }}
     />
   )
