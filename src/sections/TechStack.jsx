@@ -1,24 +1,33 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { Check } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 import { techStack } from '../data/content'
+import { SquiggleUnderline } from '../components/Doodles'
 
-function SkillPill({ skill, delay }) {
-  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
+function SpecimenColumn({ cat, index }) {
+  const { ref, inView } = useInView({ threshold: 0.15, triggerOnce: true })
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay }}
-      className="card flex flex-col items-center gap-2 p-4"
+      transition={{ duration: 0.5, delay: index * 0.08 }}
     >
-      <skill.icon size={22} className="text-plum" aria-hidden="true" />
-      <span className="font-mono text-[11px] text-plum/80 text-center leading-tight">
-        {skill.name}
-      </span>
+      <h3 className="font-hand text-2xl text-plum leading-none">{cat.name}</h3>
+      <SquiggleUnderline className="w-24 h-3 mb-4 mt-1.5" delay={index * 0.08 + 0.3} />
+      <ul className="space-y-2.5">
+        {cat.skills.map((skill) => (
+          <li key={skill.name} className="flex items-center gap-2.5">
+            <span className="w-4 h-4 rounded-[3px] border-2 border-plum flex items-center justify-center flex-shrink-0">
+              <Check size={10} strokeWidth={3} className="text-plum" aria-hidden="true" />
+            </span>
+            <span className="font-mono text-[13px] text-plum/85">{skill.name}</span>
+          </li>
+        ))}
+      </ul>
     </motion.div>
   )
 }
@@ -32,22 +41,9 @@ export default function TechStack() {
         subtitle={techStack.sectionSubtitle}
       />
 
-      <div className="space-y-9">
-        {techStack.categories.map((cat, ci) => (
-          <div key={cat.name}>
-            <p className="tag-chip mb-4">
-              {cat.name}
-            </p>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-              {cat.skills.map((skill, si) => (
-                <SkillPill
-                  key={skill.name}
-                  skill={skill}
-                  delay={ci * 0.06 + si * 0.04}
-                />
-              ))}
-            </div>
-          </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-10">
+        {techStack.categories.map((cat, i) => (
+          <SpecimenColumn key={cat.name} cat={cat} index={i} />
         ))}
       </div>
     </SectionWrapper>
