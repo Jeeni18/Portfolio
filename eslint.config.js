@@ -45,7 +45,7 @@ export default [
     },
   },
   {
-    // One-off Node scripts (e.g. the image-compression tool), not app code
+    // One-off Node scripts (image compression, CDP screenshot tool), not app code
     files: ['scripts/**/*.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
@@ -53,6 +53,12 @@ export default [
       globals: {
         console: 'readonly',
         process: 'readonly',
+        fetch: 'readonly',
+        WebSocket: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        setTimeout: 'readonly',
+        Buffer: 'readonly',
       },
     },
   },

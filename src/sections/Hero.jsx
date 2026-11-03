@@ -61,10 +61,10 @@ export default function Hero({ onContactOpen }) {
           initial="hidden"
           animate="show"
           className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-28 md:pt-0
-            grid md:grid-cols-[1.3fr_0.9fr] items-center gap-14 md:gap-10"
+            grid grid-cols-1 md:grid-cols-[1.3fr_0.9fr] items-center gap-14 md:gap-10"
         >
           {/* Text column */}
-          <div className="order-2 md:order-1">
+          <div className="order-2 md:order-1 min-w-0">
             <motion.p
               variants={item}
               className="font-mono text-xs text-ink-500 tracking-wide mb-6"
@@ -114,7 +114,7 @@ export default function Hero({ onContactOpen }) {
           </div>
 
           {/* Photo column */}
-          <motion.div variants={item} className="order-1 md:order-2 flex justify-center md:justify-end">
+          <motion.div variants={item} className="order-1 md:order-2 min-w-0 flex justify-center md:justify-end">
             <div className="relative w-[220px] h-[270px] md:w-[260px] md:h-[320px]">
               <div className="absolute -top-2.5 -left-2.5 w-6 h-6 border-t-2 border-l-2 border-rust-500" />
               <div className="absolute -bottom-2.5 -right-2.5 w-6 h-6 border-b-2 border-r-2 border-rust-500" />
@@ -131,7 +131,7 @@ export default function Hero({ onContactOpen }) {
 
         <div
           onClick={() => scrollTo('#about')}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group"
+          className="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer group"
         >
           <span className="font-mono text-xs text-ink-500 tracking-widest uppercase group-hover:text-ink-100 transition-colors">
             Scroll
