@@ -1,6 +1,6 @@
 # Jeeni Shrestha — Portfolio
 
-A one-page developer portfolio positioning Jeeni as a full-stack developer with hands-on AI/ML experience. Dark theme, serif/sans type pairing, single terracotta accent, subtle scroll-reveal animation.
+A one-page developer portfolio positioning Jeeni as a full-stack developer with hands-on AI/ML experience. "Engineer's notebook" visual style — warm cream/blush/plum palette, Instrument Serif + Work Sans + IBM Plex Mono + Caveat type, Dhaka-pattern section dividers — with eight interactive pieces: an EN/नेपाली language toggle, a self-drawing highlighter underline, a flip-to-reveal polaroid photo, a clickable architecture diagram, a "try my API" terminal, project category filters, stamp-style achievement badges, and a copy-email button.
 
 ## Tech stack
 
@@ -73,7 +73,9 @@ vercel --prod   # production deploy
 
 Nearly all text on the site — hero copy, about, tech stack, experience, projects, achievements, leadership, education, certifications, socials — lives in **`src/data/content.js`**. Components read from it; you shouldn't need to touch component files for a copy change.
 
-A `[TODO: ...]` placeholder anywhere on the site (e.g. the Experience dates) means real content hasn't been filled in yet — it renders as a visible dashed rust-colored tag so it's easy to spot. Search `content.js` for `TODO` to find every one.
+A `[TODO: ...]` placeholder anywhere on the site (e.g. the Experience dates, the polaroid's back-side facts, Nepali translations) means real content hasn't been filled in or verified yet — it renders as a visible dashed plum-colored tag so it's easy to spot. Search `content.js` for `TODO` to find every one.
+
+Nepali translations live in `content.js`'s `translations` export as `{en, ne}` pairs, covering the hero greeting/heading/intro, the six main section titles, and the About paragraphs (the only scope the Nepali toggle covers). They're drafts, not verified by a Nepali speaker — the site shows a standing "[TODO: verify translation]" tag next to the language toggle whenever Nepali is selected.
 
 ### Adding a certificate/achievement image
 
@@ -105,17 +107,24 @@ Portfolio/
 │   └── Jeeni_Shrestha_CV.pdf   ← referenced by the Download CV button; add this file
 ├── src/
 │   ├── data/
-│   │   └── content.js           ← all site copy/data lives here
+│   │   └── content.js           ← all site copy/data lives here (incl. translations,
+│   │                               diagram/terminal/project-filter data)
+│   ├── context/
+│   │   └── LanguageContext.jsx  ← EN/NE state, persisted to localStorage
 │   ├── hooks/
-│   │   └── useModalA11y.js      ← shared modal a11y (focus trap, Escape, focus restore)
+│   │   ├── useModalA11y.js      ← shared modal a11y (focus trap, Escape, focus restore)
+│   │   └── useLanguage.js
 │   ├── assets/
 │   │   ├── me/, achievements/, certificates/, techStack/
 │   ├── components/
 │   │   ├── Navbar.jsx, Footer.jsx, SectionWrapper.jsx
 │   │   ├── FloatingContact.jsx, ContactModal.jsx, CertModal.jsx
+│   │   ├── LanguageToggle.jsx, CopyEmailButton.jsx, Highlight.jsx,
+│   │   │   PolaroidPhoto.jsx, ArchitectureDiagram.jsx
 │   ├── sections/
 │   │   ├── Hero.jsx, About.jsx, TechStack.jsx, Experience.jsx,
-│   │   │   Projects.jsx, Achievements.jsx, Leadership.jsx, Education.jsx
+│   │   │   Projects.jsx, ApiTerminal.jsx, Achievements.jsx,
+│   │   │   Leadership.jsx, Education.jsx
 │   ├── App.jsx, index.css, main.jsx
 ├── scripts/
 │   ├── compress-images.mjs      ← one-off: JPG/PNG -> WebP (needs sharp, not a saved dep)
