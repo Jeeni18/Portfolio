@@ -80,6 +80,28 @@ export function SquiggleUnderline({ className = '', color = 'var(--plum)', delay
   )
 }
 
+export function TimelineDot({ className = '', color = 'var(--plum)', delay = 0 }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <motion.path
+        d="M12,3 C 18,2.5 21,7 20.5,12 C 20,18 15,21 10,20.5 C 4.5,20 2,15 3,10 C 3.8,5.5 7.5,3.3 12,3.2"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        {...drawIn(delay, 0.5)}
+      />
+      <motion.circle
+        cx="12" cy="12" r="4"
+        fill={color}
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ duration: 0.3, delay: delay + 0.45 }}
+      />
+    </svg>
+  )
+}
+
 export function HandDrawnBracket({ className = '', color = 'var(--plum)', delay = 0, flip = false }) {
   return (
     <svg

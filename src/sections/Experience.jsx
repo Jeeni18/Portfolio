@@ -4,21 +4,19 @@ import { useInView } from 'react-intersection-observer'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 import { experience, translations } from '../data/content'
 import { useLanguage } from '../hooks/useLanguage'
+import { TimelineDot } from '../components/Doodles'
 
 function Period({ value }) {
   const isTodo = value.includes('[TODO')
   if (!isTodo) {
     return <span className="font-mono text-xs text-plum/70">{value}</span>
   }
-  return (
-    <span className="tag border-dashed">
-      {value}
-    </span>
-  )
+  return <span className="tag border-dashed text-[11px]">{value}</span>
 }
 
 function ExperienceItem({ job, index }) {
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
+  const isCurrent = job.org.includes('Cloud Himalaya')
 
   return (
     <motion.div
@@ -26,19 +24,36 @@ function ExperienceItem({ job, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative pl-8"
+      className="relative grid grid-cols-[auto_auto_minmax(0,1fr)] gap-x-4 sm:gap-x-6"
     >
-      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full bg-plum border-2 border-cream" />
-      {index !== experience.items.length - 1 && (
-        <div className="absolute left-[5.5px] top-6 bottom-[-2.5rem] w-px bg-plum/30" />
-      )}
+      <div className="w-20 sm:w-28 pt-3 text-right">
+        <Period value={job.period} />
+      </div>
 
-      <div className="card p-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+      <div className="relative flex justify-center">
+        <TimelineDot className="w-6 h-6 mt-1" delay={index * 0.1 + 0.2} />
+        {index !== experience.items.length - 1 && (
+          <div
+            className="absolute top-8 bottom-[-2.5rem] left-1/2 -translate-x-1/2 w-0 border-l-2 border-dashed"
+            style={{ borderColor: 'rgba(73,55,68,0.4)' }}
+            aria-hidden="true"
+          />
+        )}
+      </div>
+
+      <div className="relative card p-6" style={{ boxShadow: '5px 5px 0 var(--rose, #EBC4D5)' }}>
+        {isCurrent && (
+          <span
+            className="hidden sm:block absolute -top-6 right-2 font-hand text-lg text-plum/80 rotate-2"
+            aria-hidden="true"
+          >
+            ← current!
+          </span>
+        )}
+        <div className="mb-1">
           <h3 className="font-display text-plum text-xl">
             {job.role} <span className="text-plum/60 font-body text-base">— {job.org}</span>
           </h3>
-          <Period value={job.period} />
         </div>
 
         <div className="flex flex-wrap gap-1.5 my-4">
