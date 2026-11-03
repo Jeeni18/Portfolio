@@ -51,7 +51,7 @@ export const hero = {
   ctaPrimary: { label: 'View Projects', href: '#projects' },
   ctaSecondary: { label: "Let's Connect" },
   ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
-  handwrittenNote: '6x hackathon winner!',
+  handwrittenNote: '4x hackathon winner!',
   polaroidBackFacts: [
     '[TODO: 3-4 short personal facts]',
   ],
@@ -67,7 +67,7 @@ export const about = {
     { icon: Code2, label: 'Full-Stack Developer', desc: 'React, Next.js, Python' },
     { icon: Network, label: 'REST APIs & Integration', desc: 'Validation & error handling' },
     { icon: Brain, label: 'AI/ML Experience', desc: 'Scikit-learn, TensorFlow' },
-    { icon: Trophy, label: '6 Awards Won', desc: 'Hackathons since 2025' },
+    { icon: Trophy, label: '6 Awards Won', desc: 'Wins since 2025' },
   ],
 }
 
@@ -492,7 +492,7 @@ export const apiTerminal = {
 // Compare against the source English copy in `hero` and `about` --
 // flagged as [TODO: verify Nepali translation] in the final report.
 export const translations = {
-  heroGreeting: { ne: 'नमस्ते,' },
+  heroGreeting: { en: 'Hello,', ne: 'नमस्ते,' },
   heroHeading: {
     ne: 'म जीनी हुँ। म मानिसहरूले भरोसा गर्न सक्ने वेब एप र API बनाउँछु।',
   },

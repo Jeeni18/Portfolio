@@ -78,10 +78,10 @@ export default function Hero({ onContactOpen }) {
 
             <motion.p
               variants={item}
-              lang="ne"
-              className="font-devanagari text-2xl text-plum/80 mb-2"
+              lang={lang === 'ne' ? 'ne' : undefined}
+              className={`text-2xl text-plum/80 mb-2 ${lang === 'ne' ? 'font-devanagari' : 'font-hand'}`}
             >
-              {translations.heroGreeting.ne}
+              {translations.heroGreeting[lang]}
             </motion.p>
 
             {lang === 'en' ? (
