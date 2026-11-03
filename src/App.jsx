@@ -8,6 +8,7 @@ import About from './sections/About'
 import TechStack from './sections/TechStack'
 import Experience from './sections/Experience'
 import Projects from './sections/Projects'
+import ApiTerminal from './sections/ApiTerminal'
 import Achievements from './sections/Achievements'
 import Leadership from './sections/Leadership'
 import Education from './sections/Education'
@@ -33,7 +34,7 @@ function App() {
             <Dhaka />
             <Experience />
             <Projects />
-            {/* TODO(dev): ApiTerminal section slots in here once built */}
+            <ApiTerminal />
             <Dhaka />
             <Achievements />
             <Leadership />
