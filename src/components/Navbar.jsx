@@ -95,7 +95,7 @@ export default function Navbar({ onContactOpen }) {
                   {link.label}
                 </button>
               ))}
-              <LanguageToggle />
+              <LanguageToggle floating={false} />
               <a
                 href={hero.ctaDownload.href}
                 download

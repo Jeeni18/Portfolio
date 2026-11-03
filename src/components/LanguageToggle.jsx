@@ -1,11 +1,11 @@
 import React from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 
-export default function LanguageToggle({ className = '' }) {
+export default function LanguageToggle({ className = '', floating = true }) {
   const { lang, setLang } = useLanguage()
 
   return (
-    <div className={className}>
+    <div className={`${floating ? 'relative' : ''} ${className}`}>
       <div
         className="inline-flex items-center border-2 border-plum rounded-full p-0.5"
         role="group"
@@ -35,10 +35,12 @@ export default function LanguageToggle({ className = '' }) {
       </div>
       {lang === 'ne' && (
         <span
-          className="tag border-dashed mt-1.5 block w-fit"
+          className={`tag border-dashed mt-1.5 whitespace-nowrap ${
+            floating ? 'absolute top-full right-0 z-50 bg-cream' : 'block w-fit'
+          }`}
           title="Nepali text on this page is a draft translation, not yet verified by a Nepali speaker"
         >
-          [TODO: verify Nepali translation]
+          [TODO: verify translation]
         </span>
       )}
     </div>

@@ -39,14 +39,22 @@ export const navLinks = [
 
 export const hero = {
   photo: jeeniPhoto,
+  photoCaption: 'Kathmandu, Nepal',
   locationLine: 'Bhaktapur, Nepal — Open to full-stack & AI engineering roles',
   firstName: 'Jeeni',
   lastName: 'Shrestha.',
   roleLine: 'Full-Stack Developer',
+  bioPre: 'Building ',
+  bioHighlight: 'reliable',
+  bioPost: ' web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
   bio: 'Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
   ctaPrimary: { label: 'View Projects', href: '#projects' },
   ctaSecondary: { label: "Let's Connect" },
   ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
+  handwrittenNote: '6x hackathon winner!',
+  polaroidBackFacts: [
+    '[TODO: 3-4 short personal facts]',
+  ],
 }
 
 export const about = {
