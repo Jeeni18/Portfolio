@@ -13,10 +13,10 @@ function SkillPill({ skill, delay }) {
       initial={{ opacity: 0, y: 10 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay }}
-      className="card rounded-md flex flex-col items-center gap-2 p-4"
+      className="card flex flex-col items-center gap-2 p-4"
     >
-      <skill.icon size={22} className="text-rust-500" aria-hidden="true" />
-      <span className="font-mono text-[11px] text-ink-400 text-center leading-tight">
+      <skill.icon size={22} className="text-plum" aria-hidden="true" />
+      <span className="font-mono text-[11px] text-plum/80 text-center leading-tight">
         {skill.name}
       </span>
     </motion.div>
@@ -27,6 +27,7 @@ export default function TechStack() {
   return (
     <SectionWrapper id="techstack">
       <SectionTitle
+        apiLabel="GET /skills"
         title="Tech Stack"
         subtitle={techStack.sectionSubtitle}
       />
@@ -34,7 +35,7 @@ export default function TechStack() {
       <div className="space-y-9">
         {techStack.categories.map((cat, ci) => (
           <div key={cat.name}>
-            <p className="font-mono text-[11px] text-ink-500 tracking-[0.15em] uppercase mb-4">
+            <p className="tag-chip mb-4">
               {cat.name}
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
