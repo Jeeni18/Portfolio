@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { X, ExternalLink } from 'lucide-react'
+import { X, ExternalLink, Check } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
 import { achievements } from '../data/content'
 import { useModalA11y } from '../hooks/useModalA11y'
 
 const STAMP_FILLS = ['#F7EEDB', '#EBC4D5', '#D8DCEB']
-const STAMP_ROTATIONS = [-7, 5, -4, 8, -6, 3, -8, 6, -3, 9]
+const STAMP_ROTATIONS = [-9, 6, -5, 8, -7, 4, -8, 7, -4, 9]
+const STAMP_OFFSETS = [0, 22, -14, 10, -20, 16, -8, 24, -16, 6]
 
 function eventName(title) {
   const parts = title.split(' — ')
@@ -96,6 +97,7 @@ function CertificateModal({ item, onClose }) {
 function Stamp({ item, index, onClick }) {
   const { ref, inView } = useInView({ threshold: 0.2, triggerOnce: true })
   const rotation = STAMP_ROTATIONS[index % STAMP_ROTATIONS.length]
+  const offsetY = STAMP_OFFSETS[index % STAMP_OFFSETS.length]
   const fill = STAMP_FILLS[index % STAMP_FILLS.length]
   const clickable = !!item.image
 
@@ -108,7 +110,11 @@ function Stamp({ item, index, onClick }) {
       onClick={clickable ? () => onClick(item) : undefined}
       aria-label={clickable ? `View certificate: ${eventName(item.title)}` : undefined}
       initial={{ scale: 0, opacity: 0 }}
-      animate={inView ? { scale: [1.7, 0.94, 1], opacity: 1, rotate: rotation } : { scale: 0, opacity: 0, rotate: rotation }}
+      animate={
+        inView
+          ? { scale: [1.7, 0.94, 1], opacity: 1, rotate: rotation, y: offsetY }
+          : { scale: 0, opacity: 0, rotate: rotation, y: offsetY }
+      }
       transition={{ duration: 0.55, delay: index * 0.18, times: [0, 0.65, 1] }}
       className={`relative flex-shrink-0 w-[168px] h-[168px] rounded-full flex flex-col items-center justify-center text-center px-4 ${
         clickable ? 'cursor-pointer' : ''
@@ -144,12 +150,14 @@ function FinalistRow({ item, onClick }) {
         clickable ? 'hover:bg-paper cursor-pointer' : ''
       } transition-colors duration-150 px-2 -mx-2`}
     >
-      <item.icon size={16} className="text-plum mt-1 flex-shrink-0" aria-hidden="true" />
+      <span className="mt-1.5 w-5 h-5 rounded-[3px] border-2 border-plum flex items-center justify-center flex-shrink-0" aria-hidden="true">
+        <Check size={13} strokeWidth={3} className="text-plum" />
+      </span>
       <div className="min-w-0">
         <p className="font-mono text-xs text-plum/60 uppercase tracking-wide mb-1">
           {item.badge} · {item.year}
         </p>
-        <h3 className="font-display text-plum text-lg leading-snug">{item.title}</h3>
+        <h3 className="font-hand text-2xl text-plum leading-snug">{item.title}</h3>
         <p className="font-body text-plum/70 text-sm leading-relaxed mt-1">{item.description}</p>
       </div>
     </Tag>
@@ -170,7 +178,7 @@ export default function Achievements() {
         subtitle={achievements.sectionSubtitle}
       />
 
-      <div className="flex flex-wrap justify-center gap-6 mb-14">
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-10 pt-6 pb-10 mb-8">
         {wins.map((item, i) => (
           <Stamp key={item.title} item={item} index={i} onClick={setSelectedItem} />
         ))}
