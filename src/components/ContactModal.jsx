@@ -54,7 +54,7 @@ export default function ContactModal({ onClose }) {
   }
 
   const inputBase =
-    'w-full bg-ink-950 border rounded-sm px-4 py-3 font-body text-sm text-ink-100 placeholder-ink-600 transition-all duration-200'
+    'w-full bg-cream border-2 rounded-sm px-4 py-3 font-body text-sm text-plum placeholder-plum/40 transition-all duration-200'
 
   return (
     <AnimatePresence>
@@ -63,7 +63,7 @@ export default function ContactModal({ onClose }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 z-[100] bg-black/75 flex items-center justify-center p-4"
+        className="fixed inset-0 z-[100] bg-plum-dark/70 flex items-center justify-center p-4"
       >
         <motion.div
           ref={dialogRef}
@@ -76,24 +76,24 @@ export default function ContactModal({ onClose }) {
           exit={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-md bg-ink-900 border border-ink-700 rounded-md overflow-hidden outline-none"
+          className="relative w-full max-w-md bg-paper border-2 border-plum rounded-sm overflow-hidden outline-none"
         >
           <div className="flex items-start justify-between p-7 pb-5">
             <div>
-              <p className="font-mono text-xs text-rust-500 tracking-wide uppercase mb-1">
-                Contact
+              <p className="api-label mb-1">
+                POST /contact
               </p>
-              <h2 id="contact-modal-heading" className="font-display font-semibold text-xl text-ink-100">
+              <h2 id="contact-modal-heading" className="font-display text-plum text-2xl">
                 {contact.heading}
               </h2>
-              <p className="font-body text-ink-500 text-xs mt-1">
+              <p className="font-body text-plum/60 text-xs mt-1">
                 {contact.subtext}
               </p>
             </div>
             <button
               onClick={onClose}
               aria-label="Close contact form"
-              className="w-8 h-8 bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
+              className="w-8 h-8 rounded-full bg-cream hover:bg-rose border-2 border-plum flex items-center justify-center text-plum transition-all"
             >
               <X size={14} />
             </button>
@@ -106,11 +106,11 @@ export default function ContactModal({ onClose }) {
                 animate={{ opacity: 1 }}
                 className="flex flex-col items-center gap-3 py-8 text-center"
               >
-                <div className="w-14 h-14 rounded-full bg-[var(--accent-soft)] border border-rust-500/40 flex items-center justify-center">
-                  <CheckCircle className="text-rust-500" size={26} />
+                <div className="w-14 h-14 rounded-full bg-lilac border-2 border-plum flex items-center justify-center">
+                  <CheckCircle className="text-plum" size={26} />
                 </div>
-                <h3 className="font-display font-semibold text-ink-100">Message Sent!</h3>
-                <p className="font-body text-ink-400 text-sm">
+                <h3 className="font-display text-plum text-xl">Message Sent!</h3>
+                <p className="font-body text-plum/70 text-sm">
                   Thanks for reaching out. I&rsquo;ll be in touch soon.
                 </p>
                 <button onClick={onClose} className="mt-3 btn-primary text-xs py-2 px-5">
@@ -120,7 +120,7 @@ export default function ContactModal({ onClose }) {
             ) : (
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div>
-                  <label htmlFor="contact-name" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-name" className="font-mono text-xs text-plum/70 tracking-wide uppercase block mb-1.5">
                     Name
                   </label>
                   <input
@@ -133,14 +133,14 @@ export default function ContactModal({ onClose }) {
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     className={`${inputBase} ${
-                      errors.name ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
+                      errors.name ? 'border-red-500/60' : 'border-plum/30 focus:border-plum'
                     }`}
                   />
-                  {errors.name && <p id="contact-name-error" className="font-mono text-xs text-red-400 mt-1">{errors.name}</p>}
+                  {errors.name && <p id="contact-name-error" className="font-mono text-xs text-red-600 mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="contact-email" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-email" className="font-mono text-xs text-plum/70 tracking-wide uppercase block mb-1.5">
                     Email
                   </label>
                   <input
@@ -153,14 +153,14 @@ export default function ContactModal({ onClose }) {
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     className={`${inputBase} ${
-                      errors.email ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
+                      errors.email ? 'border-red-500/60' : 'border-plum/30 focus:border-plum'
                     }`}
                   />
-                  {errors.email && <p id="contact-email-error" className="font-mono text-xs text-red-400 mt-1">{errors.email}</p>}
+                  {errors.email && <p id="contact-email-error" className="font-mono text-xs text-red-600 mt-1">{errors.email}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="contact-message" className="font-mono text-xs text-ink-500 tracking-wide uppercase block mb-1.5">
+                  <label htmlFor="contact-message" className="font-mono text-xs text-plum/70 tracking-wide uppercase block mb-1.5">
                     Message
                   </label>
                   <textarea
@@ -173,16 +173,16 @@ export default function ContactModal({ onClose }) {
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? 'contact-message-error' : undefined}
                     className={`${inputBase} resize-none ${
-                      errors.message ? 'border-red-500/60' : 'border-ink-700 focus:border-rust-500'
+                      errors.message ? 'border-red-500/60' : 'border-plum/30 focus:border-plum'
                     }`}
                   />
-                  {errors.message && <p id="contact-message-error" className="font-mono text-xs text-red-400 mt-1">{errors.message}</p>}
+                  {errors.message && <p id="contact-message-error" className="font-mono text-xs text-red-600 mt-1">{errors.message}</p>}
                 </div>
 
                 {status === 'error' && (
-                  <div className="flex items-center gap-2 p-3 border border-red-500/30 bg-red-500/5">
-                    <AlertCircle size={13} className="text-red-400 flex-shrink-0" />
-                    <p className="font-mono text-[11px] text-red-400">
+                  <div className="flex items-center gap-2 p-3 border-2 border-red-500/40 bg-red-500/5">
+                    <AlertCircle size={13} className="text-red-600 flex-shrink-0" />
+                    <p className="font-mono text-[11px] text-red-600">
                       Something went wrong. Please try again or email me directly.
                     </p>
                   </div>
@@ -191,7 +191,7 @@ export default function ContactModal({ onClose }) {
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="btn-primary w-full flex items-center justify-center gap-2 mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="btn-primary w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {status === 'sending' ? (
                     <>

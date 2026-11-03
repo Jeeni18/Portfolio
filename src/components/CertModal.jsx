@@ -13,7 +13,7 @@ export default function CertModal({ cert, onClose }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
+        className="fixed inset-0 z-[100] bg-plum-dark/70 flex items-center justify-center p-4"
       >
         <motion.div
           ref={dialogRef}
@@ -26,21 +26,21 @@ export default function CertModal({ cert, onClose }) {
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-lg bg-ink-900 border border-ink-700 rounded-md overflow-hidden outline-none"
+          className="relative w-full max-w-lg bg-paper border-2 border-plum rounded-sm overflow-hidden outline-none"
         >
           <button
             onClick={onClose}
             aria-label="Close certificate"
-            className="absolute top-4 right-4 z-10 w-8 h-8 bg-ink-800 hover:bg-ink-700 border border-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-100 transition-all"
+            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-cream hover:bg-rose border-2 border-plum flex items-center justify-center text-plum transition-all"
           >
             <X size={14} />
           </button>
 
-          <div className="relative h-56 bg-ink-950 flex items-center justify-center">
+          <div className="relative h-56 bg-lilac/30 flex items-center justify-center">
             {cert.image ? (
               <img src={cert.image} alt={cert.title} className="w-full h-full object-contain" />
             ) : (
-              <div className="w-24 h-24 flex items-center justify-center text-3xl font-display font-bold text-ink-100 border border-ink-700 bg-ink-800">
+              <div className="w-24 h-24 flex items-center justify-center text-3xl font-display text-plum border-2 border-plum bg-paper">
                 {cert.initials}
               </div>
             )}
@@ -48,15 +48,15 @@ export default function CertModal({ cert, onClose }) {
 
           <div className="p-7">
             <div className="flex items-center gap-2 mb-1">
-              <Award size={14} className="text-rust-500" />
-              <p className="font-mono text-xs text-rust-500 tracking-wide uppercase">
+              <Award size={14} className="text-plum" />
+              <p className="api-label">
                 {cert.org} · {cert.year}
               </p>
             </div>
-            <h2 id="cert-modal-heading" className="font-display font-semibold text-xl text-ink-100 mt-1 mb-3">
+            <h2 id="cert-modal-heading" className="font-display text-plum text-2xl mt-1 mb-3">
               {cert.title}
             </h2>
-            <p className="font-body text-ink-400 text-sm leading-relaxed">
+            <p className="font-body text-plum/80 text-sm leading-relaxed">
               {cert.description}
             </p>
           </div>
