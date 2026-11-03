@@ -1,220 +1,134 @@
-# Jeeni Shrestha — Developer Portfolio
+# Jeeni Shrestha — Portfolio
 
-A modern, minimal, dark-themed developer portfolio built with React + Vite + Tailwind CSS + Framer Motion.
+A one-page developer portfolio positioning Jeeni as a full-stack developer with hands-on AI/ML experience. Dark theme, serif/sans type pairing, single terracotta accent, subtle scroll-reveal animation.
+
+## Tech stack
+
+- **Framework:** React 18 + Vite
+- **Styling:** Tailwind CSS (utility classes + a handful of custom utilities in `src/index.css`)
+- **Animation:** Framer Motion (scroll-reveal via `react-intersection-observer`, respects `prefers-reduced-motion` through `MotionConfig`)
+- **Icons:** lucide-react
+- **Contact form:** EmailJS (client-side, no backend)
+- **Linting:** ESLint (flat config)
 
 ---
 
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
-- Node.js v18+ installed
-- npm v9+ installed
+- Node.js v18+
+- npm v9+
 
-### Installation
+### Install & run
 
 ```bash
-# 1. Navigate into the project folder
-cd Portfolio
-
-# 2. Install dependencies
 npm install
-
-# 3. Start the development server
 npm run dev
 ```
 
-Visit **http://localhost:5173** in your browser.
+Visit **http://localhost:5173**.
 
-### Build for Production
-
-```bash
-npm run build
-```
-
-Output will be in the `dist/` folder.
-
-### Preview Production Build Locally
+### Other scripts
 
 ```bash
-npm run preview
+npm run build    # production build -> dist/
+npm run preview  # serve the production build locally
+npm run lint      # ESLint
 ```
 
 ---
 
-## 📦 Deploying to Vercel
+## Deploying to Vercel
 
-### Option 1 — Vercel CLI (Recommended)
+### Option 1 — Vercel CLI
 
 ```bash
-# Install Vercel CLI globally
 npm install -g vercel
-
-# Login to Vercel
 vercel login
-
-# Deploy from project root
-vercel
-
-# For production deployment
-vercel --prod
+vercel          # preview deploy
+vercel --prod   # production deploy
 ```
 
-### Option 2 — GitHub Integration
+### Option 2 — GitHub integration
 
-1. Push this project to a GitHub repository
-2. Go to [vercel.com](https://vercel.com) → **New Project**
-3. Import your GitHub repository
-4. Vercel auto-detects Vite — click **Deploy**
-5. Done! Your site is live on a `.vercel.app` URL
+1. Push this repo to GitHub
+2. [vercel.com](https://vercel.com) → **New Project** → import the repo
+3. Vercel auto-detects Vite — click **Deploy**
 
----
+### Custom domain (jeenishrestha.com.np)
 
-## 🌐 Custom Domain Setup (jeenishrestha.com.np)
+1. Vercel project → **Settings → Domains** → add `jeenishrestha.com.np` and `www.jeenishrestha.com.np`
+2. At your domain registrar, add:
 
-### Step 1 — Add Domain in Vercel
+   | Type  | Name | Value |
+   |-------|------|-------|
+   | A     | @    | 76.76.21.21 |
+   | CNAME | www  | cname.vercel-dns.com |
 
-1. Go to your Vercel project dashboard
-2. Click **Settings** → **Domains**
-3. Type `jeenishrestha.com.np` and click **Add**
-4. Also add `www.jeenishrestha.com.np`
-
-### Step 2 — Configure DNS Records
-
-Log in to your domain registrar (where you bought `jeenishrestha.com.np`) and add these DNS records:
-
-| Type  | Name  | Value            | TTL  |
-|-------|-------|------------------|------|
-| A     | @     | 76.76.21.21      | 3600 |
-| CNAME | www   | cname.vercel-dns.com | 3600 |
-
-> **Note:** DNS propagation can take 5 minutes to 48 hours.
-
-### Step 3 — Verify in Vercel
-
-- After adding DNS records, go back to Vercel → Domains
-- Vercel will automatically verify and provision an SSL certificate
+3. DNS propagation can take up to 48 hours; Vercel auto-provisions SSL once it verifies.
 
 ---
 
-## 📧 EmailJS Setup (Contact Form)
+## Editing content
 
-The contact form uses [EmailJS](https://emailjs.com) to send emails without a backend.
+Nearly all text on the site — hero copy, about, tech stack, experience, projects, achievements, leadership, education, certifications, socials — lives in **`src/data/content.js`**. Components read from it; you shouldn't need to touch component files for a copy change.
 
-### Step 1 — Create an EmailJS Account
+A `[TODO: ...]` placeholder anywhere on the site (e.g. the Experience dates) means real content hasn't been filled in yet — it renders as a visible dashed rust-colored tag so it's easy to spot. Search `content.js` for `TODO` to find every one.
 
-Go to [emailjs.com](https://emailjs.com) and sign up for a free account.
+### Adding a certificate/achievement image
 
-### Step 2 — Create an Email Service
+1. Drop the image in `src/assets/certificates/` or `src/assets/achievements/`
+2. Compress it first (see below) — the existing images are all WebP, ≤800px wide
+3. Import it at the top of `src/data/content.js` and reference it in the relevant entry's `image` field
 
-1. Dashboard → **Email Services** → **Add New Service**
-2. Choose Gmail, Outlook, or any SMTP provider
-3. Authorize your email account
-4. Copy the **Service ID** (e.g., `service_abc123`)
+### Compressing images
 
-### Step 3 — Create an Email Template
-
-1. Dashboard → **Email Templates** → **Create New Template**
-2. Use these template variables (must match exactly):
-   ```
-   From: {{name}} ({{email}})
-   Message: {{message}}
-   ```
-3. Copy the **Template ID** (e.g., `template_xyz789`)
-
-### Step 4 — Get Your Public Key
-
-1. Dashboard → **Account** → **API Keys**
-2. Copy your **Public Key** (e.g., `user_XXXXXXXXXXXXXXX`)
-
-### Step 5 — Update the Config
-
-Open `src/components/ContactModal.jsx` and replace the placeholders:
-
-```js
-const EMAILJS_CONFIG = {
-  SERVICE_ID: 'service_abc123',    // ← Your Service ID
-  TEMPLATE_ID: 'template_xyz789', // ← Your Template ID
-  PUBLIC_KEY: 'user_XXXXXXX',     // ← Your Public Key
-}
+```bash
+npm install --no-save sharp   # sharp is intentionally not a saved dependency
+node scripts/compress-images.mjs
 ```
 
----
+Converts everything in `src/assets/achievements/` and `src/assets/certificates/` to WebP (≤800px wide, quality 80).
 
-## 🖼️ Adding Certificate Images
+### Contact form (EmailJS)
 
-1. Place your certificate images in `src/assets/certificates/`
-   ```
-   src/assets/certificates/
-     data-science.jpg
-     ml-course.jpg
-     ...
-   ```
-
-2. Open `src/sections/Certifications.jsx`
-
-3. Import the image at the top:
-   ```js
-   import dataScienceCert from '../assets/certificates/data-science.jpg'
-   ```
-
-4. Update the certificate data:
-   ```js
-   {
-     id: 1,
-     title: 'Data Science Certification',
-     org: 'Online Platform',
-     year: '2024',
-     image: dataScienceCert,  // ← Use the imported image
-     ...
-   }
-   ```
+Config lives in `src/components/ContactModal.jsx` (`EMAILJS_CONFIG`). To use your own EmailJS account: create a service + template at [emailjs.com](https://emailjs.com) (template needs `{{name}}`, `{{email}}`, `{{message}}` variables), then swap in your `SERVICE_ID`, `TEMPLATE_ID`, and `PUBLIC_KEY`.
 
 ---
 
-## 📁 Project Structure
+## Project structure
 
 ```
 Portfolio/
 ├── public/
-│   └── favicon.svg
+│   ├── favicon.svg
+│   └── Jeeni_Shrestha_CV.pdf   ← referenced by the Download CV button; add this file
 ├── src/
+│   ├── data/
+│   │   └── content.js           ← all site copy/data lives here
+│   ├── hooks/
+│   │   └── useModalA11y.js      ← shared modal a11y (focus trap, Escape, focus restore)
 │   ├── assets/
-│   │   └── certificates/       ← Add certificate images here
+│   │   ├── me/, achievements/, certificates/, techStack/
 │   ├── components/
-│   │   ├── CertModal.jsx       ← Certificate popup modal
-│   │   ├── ContactModal.jsx    ← Contact form modal
-│   │   ├── FloatingContact.jsx ← Floating button (bottom-right)
-│   │   ├── Footer.jsx
-│   │   ├── Navbar.jsx
-│   │   └── SectionWrapper.jsx  ← Reusable scroll-animate wrapper
+│   │   ├── Navbar.jsx, Footer.jsx, SectionWrapper.jsx
+│   │   ├── FloatingContact.jsx, ContactModal.jsx, CertModal.jsx
 │   ├── sections/
-│   │   ├── About.jsx
-│   │   ├── Achievements.jsx
-│   │   ├── Certifications.jsx
-│   │   ├── Hero.jsx
-│   │   ├── Projects.jsx
-│   │   └── TechStack.jsx
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
+│   │   ├── Hero.jsx, About.jsx, TechStack.jsx, Experience.jsx,
+│   │   │   Projects.jsx, Achievements.jsx, Leadership.jsx, Education.jsx
+│   ├── App.jsx, index.css, main.jsx
+├── scripts/
+│   ├── compress-images.mjs      ← one-off: JPG/PNG -> WebP (needs sharp, not a saved dep)
+│   └── cdp-screenshot.mjs       ← one-off: screenshot the dev/preview server via DevTools
+│                                   Protocol (Node's native WebSocket, no extra dependency)
+├── eslint.config.js
 ├── index.html
-├── package.json
 ├── tailwind.config.js
-├── vite.config.js
-└── README.md
+└── vite.config.js
 ```
 
 ---
 
-## 🎨 Customization
+## License
 
-- **Colors:** Edit CSS variables in `src/index.css` and `tailwind.config.js`
-- **Content:** Update data arrays in each section file under `src/sections/`
-- **Projects:** Add/edit objects in the `projects` array in `Projects.jsx`
-- **Socials:** Update links in `Footer.jsx` and `Navbar.jsx`
-
----
-
-## 📄 License
-
-MIT — Free to use and adapt for your own portfolio.
+MIT — free to use and adapt.
