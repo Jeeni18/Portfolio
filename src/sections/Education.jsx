@@ -15,15 +15,13 @@ function EducationCard({ entry, index }) {
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="card p-5 flex items-start gap-4"
+      className="bg-paper text-center px-6 py-8"
+      style={{ border: '6px double var(--plum, #493744)' }}
     >
-      <div className="mt-0.5 w-8 h-8 rounded-sm bg-lilac flex items-center justify-center flex-shrink-0">
-        <GraduationCap size={15} className="text-plum" />
-      </div>
-      <div>
-        <p className="font-display text-plum text-base">{entry.degree}</p>
-        <p className="text-plum/60 text-xs mt-0.5">{entry.org} · {entry.period}</p>
-      </div>
+      <GraduationCap size={20} className="text-plum mx-auto mb-3" aria-hidden="true" />
+      <p className="font-display text-plum text-xl">{entry.degree}</p>
+      <p className="text-plum/60 text-xs mt-2 font-mono tracking-wide uppercase">{entry.org}</p>
+      <p className="text-plum/50 text-xs mt-1 font-mono">{entry.period}</p>
     </motion.div>
   )
 }
