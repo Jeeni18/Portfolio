@@ -1,18 +1,29 @@
 import React from 'react'
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Mail } from 'lucide-react'
 import { site, footer, socials } from '../data/content'
 import CopyEmailButton from './CopyEmailButton'
 
 export default function Footer() {
   return (
-    <footer className="relative border-t-2 border-plum bg-paper">
+    <footer className="relative border-t-2 border-plum bg-paper overflow-hidden">
+      {/* Postage stamp */}
+      <div
+        className="hidden sm:flex absolute top-8 right-8 md:right-14 w-16 h-20 bg-rose items-center justify-center rotate-3"
+        style={{ border: '2px dashed var(--plum, #493744)' }}
+        aria-hidden="true"
+      >
+        <Mail size={22} className="text-plum" />
+      </div>
+
       <div className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="font-display text-4xl md:text-5xl text-plum mb-3">
+        <h2 className="font-display text-4xl md:text-5xl text-plum mb-3 max-w-xl">
           Let&rsquo;s build something <em className="italic">reliable</em>.
         </h2>
         <p className="font-mono text-xs text-plum/70 mb-8">
           {footer.tagline}
         </p>
+
+        <div className="border-t-2 border-dashed border-plum/30 max-w-sm mb-8" aria-hidden="true" />
 
         <div className="flex flex-wrap items-center gap-4 mb-12">
           <CopyEmailButton />
