@@ -49,6 +49,14 @@ export default [
     },
   },
   {
+    // react-three-fiber renders Three.js primitives (mesh, group, position, args...)
+    // as JSX, not DOM elements, so react/no-unknown-property doesn't apply here.
+    files: ['src/three/**/*.jsx'],
+    rules: {
+      'react/no-unknown-property': 'off',
+    },
+  },
+  {
     // One-off Node scripts (image compression, CDP screenshot tool), not app code
     files: ['scripts/**/*.mjs'],
     languageOptions: {

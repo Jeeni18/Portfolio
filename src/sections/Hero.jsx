@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { Suspense, lazy, useEffect, useState } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ArrowDown, Download } from 'lucide-react'
 import { hero, site, translations } from '../data/content'
 import { useLanguage } from '../hooks/useLanguage'
+import { useWebglSupport } from '../hooks/useWebglSupport'
 import Highlight from '../components/Highlight'
 import PolaroidPhoto from '../components/PolaroidPhoto'
 import { CurvedArrow } from '../components/Doodles'
+
+const HeroScene = lazy(() => import('../three/HeroScene'))
 
 const container = {
   hidden: {},
@@ -22,6 +25,9 @@ const item = {
 export default function Hero({ onContactOpen }) {
   const [scrolled, setScrolled] = useState(false)
   const { lang } = useLanguage()
+  const prefersReducedMotion = useReducedMotion()
+  const webglSupported = useWebglSupport()
+  const screenLines = [`> whoami`, hero.firstName + ' ' + hero.lastName.replace('.', ''), `> role`, hero.roleLine]
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80)
@@ -167,7 +173,7 @@ export default function Hero({ onContactOpen }) {
             </motion.div>
           </div>
 
-          {/* Photo column */}
+          {/* 3D scene column */}
           <motion.div variants={item} className="order-1 md:order-2 min-w-0 flex justify-center md:justify-end relative">
             <div
               aria-hidden="true"
@@ -177,7 +183,15 @@ export default function Hero({ onContactOpen }) {
                 transform: 'rotate(8deg) translate(34px, 26px)',
               }}
             />
-            <PolaroidPhoto />
+            <div className="w-[260px] h-[300px] md:w-[300px] md:h-[340px]" aria-hidden="true">
+              {webglSupported ? (
+                <Suspense fallback={<PolaroidPhoto />}>
+                  <HeroScene reducedMotion={!!prefersReducedMotion} lines={screenLines} />
+                </Suspense>
+              ) : (
+                <PolaroidPhoto />
+              )}
+            </div>
           </motion.div>
         </motion.div>
 
