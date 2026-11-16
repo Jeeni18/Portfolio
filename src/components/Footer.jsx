@@ -1,39 +1,35 @@
 import React from 'react'
-import { ArrowUp, Mail } from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
 import { site, footer, socials } from '../data/content'
 import CopyEmailButton from './CopyEmailButton'
 
+const iconLink =
+  'w-10 h-10 border border-ink/25 rounded-full flex items-center justify-center text-ink/80 hover:bg-wine hover:text-cream hover:border-wine transition-colors duration-200'
+
 export default function Footer() {
   return (
-    <footer className="relative border-t-2 border-plum bg-paper overflow-hidden">
-      {/* Postage stamp */}
-      <div
-        className="hidden sm:flex absolute top-8 right-8 md:right-14 w-16 h-20 bg-rose items-center justify-center rotate-3"
-        style={{ border: '2px dashed var(--plum, #493744)' }}
-        aria-hidden="true"
-      >
-        <Mail size={22} className="text-plum" />
-      </div>
+    <footer className="tone-light bg-cream relative overflow-hidden">
+      {/* A single nod to Nepali dhaka weave */}
+      <div className="dhaka" aria-hidden="true" />
 
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="font-display text-4xl md:text-5xl text-plum mb-3 max-w-xl">
-          Let&rsquo;s build something <em className="italic">reliable</em>.
+      <div className="max-w-5xl mx-auto px-6 pt-24 pb-12">
+        <p className="api-label mb-6">09 — Contact</p>
+        <h2 className="font-display text-ink leading-[0.95] tracking-tight mb-6 max-w-3xl" style={{ fontSize: 'clamp(2.75rem, 7vw, 5.5rem)' }}>
+          Let&rsquo;s build something <em className="italic text-wine">reliable</em>.
         </h2>
-        <p className="font-mono text-xs text-plum/70 mb-8">
+        <p className="font-body text-ink/70 text-[16px] mb-12 max-w-md">
           {footer.tagline}
         </p>
 
-        <div className="border-t-2 border-dashed border-plum/30 max-w-sm mb-8" aria-hidden="true" />
-
-        <div className="flex flex-wrap items-center gap-4 mb-12">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mb-24">
           <CopyEmailButton />
-          <a href={`mailto:${footer.email}`} className="font-body text-sm text-plum/80 hover:text-plum underline underline-offset-4">
+          <a href={`mailto:${footer.email}`} className="btn-secondary">
             {footer.email}
           </a>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-plum/20">
-          <p className="font-mono text-xs text-plum/60 text-center">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-ink/15">
+          <p className="font-mono text-[11px] uppercase tracking-wider text-ink/50 text-center">
             © {new Date().getFullYear()} {site.name}
           </p>
 
@@ -45,18 +41,18 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="w-9 h-9 border-2 border-plum rounded-full flex items-center justify-center text-plum hover:bg-plum hover:text-cream transition-all duration-200"
+                className={iconLink}
               >
-                <social.icon size={15} />
+                <social.icon size={15} strokeWidth={1.5} />
               </a>
             ))}
 
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="w-9 h-9 border-2 border-plum rounded-full flex items-center justify-center text-plum hover:bg-plum hover:text-cream transition-all duration-200"
+              className={iconLink}
               aria-label="Back to top"
             >
-              <ArrowUp size={15} />
+              <ArrowUp size={15} strokeWidth={1.5} />
             </button>
           </div>
         </div>

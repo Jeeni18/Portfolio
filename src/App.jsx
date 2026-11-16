@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { MotionConfig } from 'framer-motion'
-import { LanguageProvider } from './context/LanguageContext'
-import { Dhaka } from './components/SectionWrapper'
 import Navbar from './components/Navbar'
 import Hero from './sections/Hero'
 import About from './sections/About'
@@ -22,38 +20,32 @@ function App() {
   const [contactOpen, setContactOpen] = useState(false)
 
   return (
-    <LanguageProvider>
-      <MotionConfig reducedMotion="user">
-        <div className="relative min-h-screen bg-cream overflow-x-hidden">
-          <div className="relative z-10">
-            <Navbar onContactOpen={() => setContactOpen(true)} />
-            <Hero onContactOpen={() => setContactOpen(true)} />
-            <Dhaka />
-            <About />
-            <TechStack />
-            <Dhaka />
-            <Experience />
-            <Projects />
-            <ApiTerminal />
-            <Dhaka />
-            <Achievements />
-            <Leadership />
-            <Dhaka />
-            <Education onCertClick={setSelectedCert} />
-            <Footer />
-            <FloatingContact onClick={() => setContactOpen(true)} />
-          </div>
-
-          {selectedCert && (
-            <CertModal cert={selectedCert} onClose={() => setSelectedCert(null)} />
-          )}
-
-          {contactOpen && (
-            <ContactModal onClose={() => setContactOpen(false)} />
-          )}
+    <MotionConfig reducedMotion="user">
+      <div className="relative min-h-screen bg-cream overflow-x-hidden">
+        <div className="relative z-10">
+          <Navbar onContactOpen={() => setContactOpen(true)} />
+          <Hero onContactOpen={() => setContactOpen(true)} />
+          <About />
+          <TechStack />
+          <Experience />
+          <Projects />
+          <ApiTerminal />
+          <Achievements />
+          <Leadership />
+          <Education onCertClick={setSelectedCert} />
+          <Footer />
+          <FloatingContact onClick={() => setContactOpen(true)} />
         </div>
-      </MotionConfig>
-    </LanguageProvider>
+
+        {selectedCert && (
+          <CertModal cert={selectedCert} onClose={() => setSelectedCert(null)} />
+        )}
+
+        {contactOpen && (
+          <ContactModal onClose={() => setContactOpen(false)} />
+        )}
+      </div>
+    </MotionConfig>
   )
 }
 

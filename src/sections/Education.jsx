@@ -1,10 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Award, GraduationCap, ZoomIn } from 'lucide-react'
+import { GraduationCap, ZoomIn } from 'lucide-react'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
-import { education, certifications, translations } from '../data/content'
-import { useLanguage } from '../hooks/useLanguage'
+import { education, certifications } from '../data/content'
 
 function EducationCard({ entry, index }) {
   const { ref, inView } = useInView({ threshold: 0.15, triggerOnce: true })
@@ -15,13 +14,14 @@ function EducationCard({ entry, index }) {
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="bg-paper text-center px-6 py-8"
-      style={{ border: '6px double var(--plum, #493744)' }}
+      className="border-t border-ink/15 pt-6 flex gap-5"
     >
-      <GraduationCap size={20} className="text-plum mx-auto mb-3" aria-hidden="true" />
-      <p className="font-display text-plum text-xl">{entry.degree}</p>
-      <p className="text-plum/60 text-xs mt-2 font-mono tracking-wide uppercase">{entry.org}</p>
-      <p className="text-plum/50 text-xs mt-1 font-mono">{entry.period}</p>
+      <GraduationCap size={18} strokeWidth={1.5} className="text-wine mt-1 flex-shrink-0" aria-hidden="true" />
+      <div>
+        <p className="font-display text-ink text-2xl leading-snug">{entry.degree}</p>
+        <p className="text-rose text-[11px] mt-2 font-mono tracking-wider uppercase">{entry.org}</p>
+        <p className="text-ink/50 text-[11px] mt-1 font-mono">{entry.period}</p>
+      </div>
     </motion.div>
   )
 }
@@ -47,7 +47,7 @@ function CertCard({ cert, onClick }) {
       }}
       className="card relative overflow-hidden cursor-pointer"
     >
-      <div className="relative h-44 flex items-center justify-center overflow-hidden bg-lilac/30">
+      <div className="relative h-44 flex items-center justify-center overflow-hidden bg-cream">
         {cert.image ? (
           <img
             src={cert.image}
@@ -56,13 +56,13 @@ function CertCard({ cert, onClick }) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-16 h-16 flex items-center justify-center text-xl font-display text-plum border-2 border-plum bg-paper">
+          <div className="w-16 h-16 flex items-center justify-center text-xl font-display text-ink border border-ink/15 bg-paper">
             {cert.initials}
           </div>
         )}
 
-        <div className="absolute inset-0 bg-plum-dark/60 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-          <div className="flex items-center gap-2 px-4 py-2 border-2 border-cream text-cream text-xs font-mono tracking-wide">
+        <div className="absolute inset-0 bg-wine-deep/75 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+          <div className="flex items-center gap-2 px-4 py-2 border border-bone/60 text-bone text-[11px] uppercase font-mono tracking-wide">
             <ZoomIn size={13} />
             <span>View Certificate</span>
           </div>
@@ -70,36 +70,32 @@ function CertCard({ cert, onClick }) {
       </div>
 
       <div className="p-5">
-        <p className="font-mono text-xs text-plum/60 tracking-wide uppercase mb-1.5">
+        <p className="font-mono text-[11px] text-rose tracking-wider uppercase mb-1.5">
           {cert.org} · {cert.year}
         </p>
-        <h3 className="font-display text-plum text-lg leading-snug mb-2">
+        <h3 className="font-display text-ink text-lg leading-snug mb-2">
           {cert.title}
         </h3>
-        <p className="font-body text-plum/70 text-[13px] leading-relaxed">
+        <p className="font-body text-ink/75 text-[13px] leading-relaxed">
           {cert.description}
         </p>
       </div>
 
-      <div className="absolute top-3 right-3 w-7 h-7 bg-paper border-2 border-plum rounded-full flex items-center justify-center">
-        <Award size={13} className="text-plum" />
-      </div>
     </motion.div>
   )
 }
 
 export default function Education({ onCertClick }) {
-  const { lang } = useLanguage()
-
   return (
     <SectionWrapper id="education">
       <SectionTitle
         apiLabel="GET /education"
-        title={translations.sectionTitle.education[lang]}
+        index="08"
+        title={education.sectionTitle}
         subtitle={education.sectionSubtitle}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 mb-16">
         {education.entries.map((entry, i) => (
           <EducationCard key={entry.degree} entry={entry} index={i} />
         ))}

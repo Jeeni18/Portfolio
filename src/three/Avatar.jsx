@@ -17,43 +17,12 @@ const PALETTE = {
   headband: '#FFFDF8',
 }
 
-// A long strand built from two capsule segments joined at a gentle kink,
-// so it reads as a soft wave instead of a perfectly straight rod. The
-// second segment hangs from a pivot group at the end of the first.
-function WavyStrand({ side, radius, length1, length2, x, y, z, tiltZ, tiltX, kinkZ, kinkX, color = PALETTE.hair }) {
+function HairStrand({ side, radius, length, x, y, z, tiltZ, tiltX, color = PALETTE.hair }) {
   return (
-    <group position={[x * side, y, z]} rotation={[tiltX, 0, tiltZ * side]}>
-      <mesh position={[0, -length1 / 2, 0]} castShadow>
-        <capsuleGeometry args={[radius, length1 - radius * 1.2, 4, 8]} />
-        <meshStandardMaterial color={color} flatShading />
-      </mesh>
-      <group position={[0, -length1, 0]} rotation={[kinkX, 0, kinkZ * side]}>
-        <mesh position={[0, -length2 / 2, 0]} castShadow>
-          <capsuleGeometry args={[radius * 0.88, length2 - radius * 1.1, 4, 8]} />
-          <meshStandardMaterial color={color} flatShading />
-        </mesh>
-      </group>
-    </group>
-  )
-}
-
-// A short face-framing wisp: a rounded capsule root anchored to the head,
-// then a second segment tapering to a sharp point, bent in toward the
-// face at the kink instead of hanging straight down.
-function FaceWisp({ side, radius, length1, length2, x, y, z, tiltZ, tiltX, kinkZ, kinkX, color = PALETTE.hair }) {
-  return (
-    <group position={[x * side, y, z]} rotation={[tiltX, 0, tiltZ * side]}>
-      <mesh position={[0, -length1 / 2, 0]} castShadow>
-        <capsuleGeometry args={[radius, length1 - radius * 1.2, 4, 8]} />
-        <meshStandardMaterial color={color} flatShading />
-      </mesh>
-      <group position={[0, -length1, 0]} rotation={[kinkX, 0, kinkZ * side]}>
-        <mesh position={[0, -length2 / 2, 0]} castShadow>
-          <cylinderGeometry args={[radius * 0.85, 0, length2, 8]} />
-          <meshStandardMaterial color={color} flatShading />
-        </mesh>
-      </group>
-    </group>
+    <mesh position={[x * side, y, z]} rotation={[tiltX, 0, tiltZ * side]} castShadow>
+      <capsuleGeometry args={[radius, length, 4, 8]} />
+      <meshStandardMaterial color={color} flatShading />
+    </mesh>
   )
 }
 
@@ -65,43 +34,24 @@ function HairSide({ side }) {
     <>
       {/* shortest layer -- pulled further to the side and back, off the
           cheek, so more of the face shows. Tops still overlap the
-          (slightly enlarged) crown so there's no gap. A gentle kink partway
-          down gives it a soft wave instead of a straight rod. */}
-      <WavyStrand side={side} radius={0.058} length1={0.26} length2={0.2} x={0.098} y={-0.192} z={-0.063} tiltZ={0.04} tiltX={0.06} kinkZ={-0.16} kinkX={0.08} color={PALETTE.hairShine} />
-      {/* mid layer -- fills the gap between the other layers for extra body */}
-      <WavyStrand side={side} radius={0.048} length1={0.32} length2={0.26} x={0.1} y={-0.215} z={-0.045} tiltZ={0.045} tiltX={0.1} kinkZ={0.2} kinkX={0.1} />
+          (slightly enlarged) crown so there's no gap. */}
+      <HairStrand side={side} radius={0.046} length={0.448} x={0.16} y={-0.215} z={-0.09} tiltZ={0.04} tiltX={0.06} color={PALETTE.hairShine} />
       {/* longest layer -- falls well past the elbow, toward the hip */}
-      <WavyStrand side={side} radius={0.062} length1={0.36} length2={0.3} x={0.093} y={-0.26} z={-0.067} tiltZ={0.03} tiltX={0.09} kinkZ={-0.22} kinkX={0.12} />
+      <HairStrand side={side} radius={0.048} length={0.634} x={0.175} y={-0.285} z={-0.08} tiltZ={0.03} tiltX={0.09} />
       {/* front piece -- starts closer to the back of the head and leans
           forward as it falls, reaching the chest without draping across
           the cheek near the top */}
-      <WavyStrand side={side} radius={0.064} length1={0.3} length2={0.26} x={0.095} y={-0.229} z={-0.012} tiltZ={0.06} tiltX={0.13} kinkZ={0.18} kinkX={-0.08} color={PALETTE.hairShine} />
-      {/* loose wisps breaking the headband's line at the temple -- rounded
-          where they meet the head, tapering to a sharp point that curls
-          in toward the face instead of hanging straight. */}
-      <FaceWisp side={side} radius={0.016} length1={0.05} length2={0.045} x={0.115} y={0.05} z={0.085} tiltZ={0.08} tiltX={0.3} kinkZ={0.05} kinkX={-0.5} color={PALETTE.hairShine} />
-      <FaceWisp side={side} radius={0.014} length1={0.045} length2={0.04} x={0.12} y={0.02} z={0.09} tiltZ={0.1} tiltX={0.32} kinkZ={0.08} kinkX={-0.52} />
+      <HairStrand side={side} radius={0.046} length={0.538} x={0.15} y={-0.235} z={0.0} tiltZ={0.06} tiltX={0.13} color={PALETTE.hairShine} />
     </>
   )
 }
 
-// Small ribbon bow clipped in near the part, instead of a full headband.
-function Ribbon() {
+function Headband() {
   return (
-    <group position={[-0.065, 0.195, 0.075]} rotation={[-0.3, -0.1, 0.25]}>
-      <mesh position={[-0.026, 0, 0]} rotation={[0, 0, 0.5]} scale={[1, 0.62, 0.45]} castShadow>
-        <sphereGeometry args={[0.026, 8, 8]} />
-        <meshStandardMaterial color={PALETTE.headband} flatShading />
-      </mesh>
-      <mesh position={[0.026, 0, 0]} rotation={[0, 0, -0.5]} scale={[1, 0.62, 0.45]} castShadow>
-        <sphereGeometry args={[0.026, 8, 8]} />
-        <meshStandardMaterial color={PALETTE.headband} flatShading />
-      </mesh>
-      <mesh castShadow>
-        <sphereGeometry args={[0.012, 8, 8]} />
-        <meshStandardMaterial color={PALETTE.headband} flatShading />
-      </mesh>
-    </group>
+    <mesh position={[0, 0.05, -0.03]} rotation={[0.85, 0, 0]} scale={[0.6, 0.6, 1.7]} castShadow>
+      <torusGeometry args={[0.295, 0.011, 8, 24, Math.PI]} />
+      <meshStandardMaterial color={PALETTE.headband} flatShading />
+    </mesh>
   )
 }
 
@@ -146,14 +96,24 @@ function ShoeLaces({ y, z }) {
 function Face() {
   return (
     <group position={[0, -0.01, 0]}>
-      {/* Eyes */}
-      <mesh position={[-0.052, 0, 0.138]} scale={[1, 1.1, 0.4]} castShadow>
+      {/* Eyes -- slightly wider, softer almond shape than a plain vertical
+          oval, with a small catchlight on each so they read with depth
+          instead of flat dark blobs */}
+      <mesh position={[-0.052, 0, 0.138]} scale={[1.05, 0.95, 0.42]} castShadow>
         <sphereGeometry args={[0.017, 8, 8]} />
         <meshStandardMaterial color={PALETTE.hair} flatShading />
       </mesh>
-      <mesh position={[0.052, 0, 0.138]} scale={[1, 1.1, 0.4]} castShadow>
+      <mesh position={[0.052, 0, 0.138]} scale={[1.05, 0.95, 0.42]} castShadow>
         <sphereGeometry args={[0.017, 8, 8]} />
         <meshStandardMaterial color={PALETTE.hair} flatShading />
+      </mesh>
+      <mesh position={[-0.047, 0.005, 0.1465]}>
+        <sphereGeometry args={[0.0045, 6, 6]} />
+        <meshStandardMaterial color="#FFFDF8" flatShading />
+      </mesh>
+      <mesh position={[0.047, 0.005, 0.1465]}>
+        <sphereGeometry args={[0.0045, 6, 6]} />
+        <meshStandardMaterial color="#FFFDF8" flatShading />
       </mesh>
 
       {/* Eyebrows */}
@@ -166,6 +126,12 @@ function Face() {
         <meshStandardMaterial color={PALETTE.hair} flatShading />
       </mesh>
 
+      {/* Nose -- a small soft bump, same skin tone, for subtle definition */}
+      <mesh position={[0, -0.028, 0.144]} scale={[0.55, 0.85, 0.6]}>
+        <sphereGeometry args={[0.013, 8, 8]} />
+        <meshStandardMaterial color={PALETTE.skin} flatShading />
+      </mesh>
+
       {/* Blush */}
       <mesh position={[-0.085, -0.035, 0.11]} scale={[1, 0.6, 0.3]}>
         <sphereGeometry args={[0.022, 8, 8]} />
@@ -176,11 +142,59 @@ function Face() {
         <meshStandardMaterial color={PALETTE.blush} flatShading transparent opacity={0.55} />
       </mesh>
 
-      {/* Mouth */}
-      <mesh position={[0, -0.065, 0.135]}>
-        <boxGeometry args={[0.028, 0.006, 0.006]} />
+      {/* Mouth -- a gentle curved smile instead of a flat straight line */}
+      <mesh position={[0, -0.033, 0.137]} rotation={[0, 0, -2.0208]}>
+        <torusGeometry args={[0.032, 0.0035, 6, 12, 0.9]} />
         <meshStandardMaterial color="#8A5A52" flatShading />
       </mesh>
+    </group>
+  )
+}
+
+// Anatomical-ish hand: a flattened palm paddle, four fingers of varying
+// length with a knuckle bump where each meets the palm, and an angled
+// thumb attached to the side rather than a single blob or stiff rods.
+function Hand({ side }) {
+  const fingers = [
+    { x: -0.027, len: 0.029, radius: 0.0075, tilt: -0.09 }, // index
+    { x: -0.009, len: 0.035, radius: 0.0085, tilt: -0.02 }, // middle -- longest & thickest
+    { x: 0.009, len: 0.032, radius: 0.0078, tilt: 0.03 }, // ring
+    { x: 0.027, len: 0.023, radius: 0.0062, tilt: 0.14 }, // pinky -- shortest & thinnest
+  ]
+  return (
+    <group position={[0, -0.006, 0.004]}>
+      {/* Palm -- fuller, flattened, rounded paddle shape */}
+      <mesh scale={[1.35, 1.05, 0.62]} castShadow>
+        <capsuleGeometry args={[0.022, 0.017, 4, 8]} />
+        <meshStandardMaterial color={PALETTE.skin} flatShading />
+      </mesh>
+
+      {fingers.map((f, i) => (
+        <group key={i} position={[f.x, -0.026, 0.008]} rotation={[0.14, 0, f.tilt]}>
+          {/* Knuckle -- soft, slightly bulged transition from palm into finger */}
+          <mesh castShadow>
+            <sphereGeometry args={[f.radius * 1.15, 6, 6]} />
+            <meshStandardMaterial color={PALETTE.skin} flatShading />
+          </mesh>
+          <mesh position={[0, -f.len / 2, 0]} castShadow>
+            <capsuleGeometry args={[f.radius, Math.max(f.len - f.radius * 1.6, f.radius), 4, 6]} />
+            <meshStandardMaterial color={PALETTE.skin} flatShading />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Thumb -- clearly offset beyond the finger row, shorter, thicker,
+          angled out from the side of the palm so it reads as its own digit */}
+      <group position={[0.036 * side, 0.002, 0.018]} rotation={[0.42, 0, 0.78 * side]}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.0098, 6, 6]} />
+          <meshStandardMaterial color={PALETTE.skin} flatShading />
+        </mesh>
+        <mesh position={[0, -0.012, 0]} castShadow>
+          <capsuleGeometry args={[0.0084, 0.013, 4, 6]} />
+          <meshStandardMaterial color={PALETTE.skin} flatShading />
+        </mesh>
+      </group>
     </group>
   )
 }
@@ -243,8 +257,8 @@ export default function Avatar({ rig }) {
   const hipHeight = 0.5
   const upperLeg = 0.3
   const lowerLeg = 0.28
-  const upperArm = 0.26
-  const lowerArm = 0.24
+  const upperArm = 0.23
+  const lowerArm = 0.17
 
   return (
     <group ref={root}>
@@ -317,8 +331,10 @@ export default function Avatar({ rig }) {
       {/* Torso -- oversized chunky-knit crewneck sweater, drapes loose and
           independent of the body underneath instead of hugging it */}
       <group ref={torso} position={[0, hipHeight, 0]}>
-        {/* Rounded shoulder/chest volume */}
-        <mesh position={[0, 0.34, 0]} castShadow>
+        {/* Rounded shoulder/chest volume -- lowered so it doesn't crowd the
+            neck, which flattens the shoulder silhouette where it pokes
+            above the A-line drape */}
+        <mesh position={[0, 0.22, 0]} castShadow>
           <capsuleGeometry args={[0.15, 0.05, 4, 12]} />
           <meshStandardMaterial color={PALETTE.sweater} flatShading />
         </mesh>
@@ -327,34 +343,55 @@ export default function Avatar({ rig }) {
           <cylinderGeometry args={[0.16, 0.225, 0.32, 14, 1]} />
           <meshStandardMaterial color={PALETTE.sweater} flatShading />
         </mesh>
+        {/* Subtle fabric fold partway down the drape */}
+        <mesh position={[0, 0.08, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <torusGeometry args={[0.205, 0.006, 6, 20]} />
+          <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
+        </mesh>
         {/* Ribbed hem */}
         <mesh position={[0, -0.01, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
           <torusGeometry args={[0.225, 0.024, 6, 20]} />
           <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
         </mesh>
-        {/* Short neck so the head doesn't float off the shoulders */}
-        <mesh position={[0, 0.46, 0]} castShadow>
-          <capsuleGeometry args={[0.046, 0.02, 4, 8]} />
+        {/* Neck -- top stays fixed under the jaw; extended downward so its
+            base is solidly embedded in the chest capsule below, with no
+            gap between the neck and the torso. Same skin colour and
+            material as the head; segment count raised to match the
+            head sphere's smoothness so flat-shaded facets don't catch
+            light differently and read as a different skin tone. */}
+        <mesh position={[0, 0.443, 0]} castShadow>
+          <capsuleGeometry args={[0.046, 0.054, 8, 16]} />
           <meshStandardMaterial color={PALETTE.skin} flatShading />
         </mesh>
-        {/* Ribbed crewneck collar, sitting loose off the neck */}
-        <mesh position={[0, 0.415, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <torusGeometry args={[0.08, 0.02, 6, 16]} />
+        {/* Ribbed crewneck collar -- a clean, modest ring right at the base
+            of the neck, low enough to leave the neck itself visible */}
+        <mesh position={[0, 0.398, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <torusGeometry args={[0.072, 0.014, 6, 16]} />
           <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
         </mesh>
 
-        {/* Arms -- slim sleeves, just enough drape to not hug the arm,
-            tapering to ribbed cuffs. The oversized look stays on the body,
-            not the arms. */}
-        <group position={[-0.155, 0.33, 0]}>
-          <Limb pivotRef={shoulderL} length={upperArm} radius={0.052} jointRadius={0.055} color={PALETTE.sweater}>
+        {/* Arms -- oversized dropped-shoulder sleeves with a smooth, flat
+            transition from the torso, tapering through the forearm to a
+            flared cuff opening and gathered rib at the wrist. */}
+        <group position={[-0.16, 0.33, 0]} rotation={[0, 0, -0.2]}>
+          <Limb pivotRef={shoulderL} length={upperArm} radius={0.05} jointRadius={0.06} color={PALETTE.sweater}>
             <group ref={elbowL}>
               <mesh castShadow>
-                <sphereGeometry args={[0.046, 10, 10]} />
+                <sphereGeometry args={[0.043, 10, 10]} />
                 <meshStandardMaterial color={PALETTE.sweater} flatShading />
               </mesh>
               <mesh position={[0, -lowerArm / 2, 0]} castShadow>
-                <capsuleGeometry args={[0.044, lowerArm - 0.07, 4, 8]} />
+                <capsuleGeometry args={[0.041, lowerArm - 0.07, 4, 8]} />
+                <meshStandardMaterial color={PALETTE.sweater} flatShading />
+              </mesh>
+              {/* Forearm fold crease */}
+              <mesh position={[0, -lowerArm * 0.45, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                <torusGeometry args={[0.039, 0.005, 6, 12]} />
+                <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
+              </mesh>
+              {/* Flared cuff opening, just above the gathered rib */}
+              <mesh position={[0, -lowerArm + 0.048, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                <torusGeometry args={[0.046, 0.007, 6, 12]} />
                 <meshStandardMaterial color={PALETTE.sweater} flatShading />
               </mesh>
               {/* Ribbed cuff, gathered in tight at the wrist */}
@@ -362,23 +399,32 @@ export default function Avatar({ rig }) {
                 <torusGeometry args={[0.036, 0.014, 6, 12]} />
                 <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
               </mesh>
-              <mesh position={[0, -lowerArm - 0.018, 0]} scale={[0.78, 1.25, 0.82]} castShadow>
-                <sphereGeometry args={[0.026, 8, 8]} />
-                <meshStandardMaterial color={PALETTE.skin} flatShading />
-              </mesh>
+              <group position={[0, -lowerArm, 0]}>
+                <Hand side={-1} />
+              </group>
             </group>
           </Limb>
         </group>
 
-        <group position={[0.155, 0.33, 0]}>
-          <Limb pivotRef={shoulderR} length={upperArm} radius={0.052} jointRadius={0.055} color={PALETTE.sweater}>
+        <group position={[0.16, 0.33, 0]} rotation={[0, 0, 0.2]}>
+          <Limb pivotRef={shoulderR} length={upperArm} radius={0.05} jointRadius={0.06} color={PALETTE.sweater}>
             <group ref={elbowR}>
               <mesh castShadow>
-                <sphereGeometry args={[0.046, 10, 10]} />
+                <sphereGeometry args={[0.043, 10, 10]} />
                 <meshStandardMaterial color={PALETTE.sweater} flatShading />
               </mesh>
               <mesh position={[0, -lowerArm / 2, 0]} castShadow>
-                <capsuleGeometry args={[0.044, lowerArm - 0.07, 4, 8]} />
+                <capsuleGeometry args={[0.041, lowerArm - 0.07, 4, 8]} />
+                <meshStandardMaterial color={PALETTE.sweater} flatShading />
+              </mesh>
+              {/* Forearm fold crease */}
+              <mesh position={[0, -lowerArm * 0.45, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                <torusGeometry args={[0.039, 0.005, 6, 12]} />
+                <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
+              </mesh>
+              {/* Flared cuff opening, just above the gathered rib */}
+              <mesh position={[0, -lowerArm + 0.048, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                <torusGeometry args={[0.046, 0.007, 6, 12]} />
                 <meshStandardMaterial color={PALETTE.sweater} flatShading />
               </mesh>
               {/* Ribbed cuff, gathered in tight at the wrist */}
@@ -386,19 +432,24 @@ export default function Avatar({ rig }) {
                 <torusGeometry args={[0.036, 0.014, 6, 12]} />
                 <meshStandardMaterial color={PALETTE.sweaterRib} flatShading />
               </mesh>
-              <mesh position={[0, -lowerArm - 0.018, 0]} scale={[0.78, 1.25, 0.82]} castShadow>
-                <sphereGeometry args={[0.026, 8, 8]} />
-                <meshStandardMaterial color={PALETTE.skin} flatShading />
-              </mesh>
+              <group position={[0, -lowerArm, 0]}>
+                <Hand side={1} />
+              </group>
             </group>
           </Limb>
         </group>
 
         {/* Head */}
         <group ref={head} position={[0, 0.58, 0]}>
+          {/* The head is a full sphere, so parts of its surface always face
+              away from both lights and fall back to ambient-only shading,
+              reading darker overall than the neck's small, mostly
+              front-facing capsule. A touch of matching emissive lifts that
+              shadowed falloff so the face's skin tone reads as evenly as
+              the neck's, without touching geometry or the scene lights. */}
           <mesh castShadow>
             <sphereGeometry args={[0.15, 14, 14]} />
-            <meshStandardMaterial color={PALETTE.skin} flatShading />
+            <meshStandardMaterial color={PALETTE.skin} flatShading emissive={PALETTE.skin} emissiveIntensity={0.18} />
           </mesh>
 
           <Face />
@@ -407,24 +458,15 @@ export default function Avatar({ rig }) {
               forehead, no fringe. Covers the temples/sides so the long
               strands below plug into one continuous mass with no gap. */}
           <mesh position={[0, 0.05, -0.03]} castShadow>
-            <sphereGeometry args={[0.17, 12, 12]} />
+            <sphereGeometry args={[0.182, 12, 12]} />
             <meshStandardMaterial color={PALETTE.hair} flatShading />
           </mesh>
-
-          {/* A soft poof of volume rising just behind the headband, like
-              hair that naturally puffs up over a band instead of lying
-              flat against the scalp. */}
-          <mesh position={[0, 0.185, -0.05]} scale={[1.5, 0.3, 0.9]} castShadow>
-            <sphereGeometry args={[0.07, 10, 10]} />
-            <meshStandardMaterial color={PALETTE.hair} flatShading />
-          </mesh>
-
           <mesh position={[0, -0.335, -0.1]} rotation={[0.08, 0, 0]} castShadow>
-            <capsuleGeometry args={[0.13, 0.34, 4, 8]} />
+            <capsuleGeometry args={[0.095, 0.34, 4, 8]} />
             <meshStandardMaterial color={PALETTE.hair} flatShading />
           </mesh>
           <mesh position={[0, -0.18, -0.2]} rotation={[0.18, 0, 0]} castShadow>
-            <capsuleGeometry args={[0.135, 0.2, 4, 8]} />
+            <capsuleGeometry args={[0.1, 0.2, 4, 8]} />
             <meshStandardMaterial color={PALETTE.hairShine} flatShading />
           </mesh>
 
@@ -434,31 +476,38 @@ export default function Avatar({ rig }) {
               every strand reads as part of one connected head of hair. */}
           <HairSide side={-1} />
           <HairSide side={1} />
+          {/* Fill strand -- the left side's hair narrows away from the
+              head faster than the neck does, leaving a sliver of bald
+              coverage near the jaw/shoulder transition. This single
+              extra strand, matching the others in colour, material and
+              tilt, closes that gap without touching the right side. */}
+          <HairStrand side={-1} radius={0.042} length={0.11} x={0.1} y={-0.155} z={-0.07} tiltZ={0.05} tiltX={0.08} />
 
-          {/* Small ribbon bow clipped in near the part, matching the
-              wavy-hair reference photo instead of a full headband */}
-          <Ribbon />
+          {/* Plain headband -- no clips or sparkles, matching the real
+              reference photo's simple cream band */}
+          <Headband />
 
-          {/* Glasses (thin wire frames) */}
+          {/* Glasses -- thin round wire frames */}
           <group position={[0, -0.01, 0.15]}>
             <mesh position={[-0.052, 0, 0]}>
-              <torusGeometry args={[0.034, 0.005, 6, 20]} />
+              <torusGeometry args={[0.034, 0.0038, 8, 28]} />
               <meshStandardMaterial color={PALETTE.glasses} flatShading />
             </mesh>
             <mesh position={[0.052, 0, 0]}>
-              <torusGeometry args={[0.034, 0.005, 6, 20]} />
+              <torusGeometry args={[0.034, 0.0038, 8, 28]} />
               <meshStandardMaterial color={PALETTE.glasses} flatShading />
             </mesh>
+            {/* Bridge -- spans cleanly between the inner lens edges */}
             <mesh position={[0, 0.003, -0.003]}>
-              <boxGeometry args={[0.022, 0.005, 0.005]} />
+              <boxGeometry args={[0.028, 0.0038, 0.0038]} />
               <meshStandardMaterial color={PALETTE.glasses} flatShading />
             </mesh>
             <mesh position={[-0.11, 0.006, -0.02]} rotation={[0, 0.5, 0]}>
-              <boxGeometry args={[0.07, 0.005, 0.005]} />
+              <boxGeometry args={[0.07, 0.0038, 0.0038]} />
               <meshStandardMaterial color={PALETTE.glasses} flatShading />
             </mesh>
             <mesh position={[0.11, 0.006, -0.02]} rotation={[0, -0.5, 0]}>
-              <boxGeometry args={[0.07, 0.005, 0.005]} />
+              <boxGeometry args={[0.07, 0.0038, 0.0038]} />
               <meshStandardMaterial color={PALETTE.glasses} flatShading />
             </mesh>
           </group>

@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
-import WashiTape from '../components/WashiTape'
 import { apiTerminal, techStack, experience } from '../data/content'
 
 function skillsByCategory(name) {
@@ -69,38 +68,38 @@ export default function ApiTerminal() {
   }
 
   return (
-    <SectionWrapper id="api-terminal">
-      <SectionTitle apiLabel="GET /playground" title={apiTerminal.sectionTitle} />
+    <SectionWrapper id="api-terminal" tone="light">
+      <SectionTitle index="05" apiLabel="GET /playground" title={apiTerminal.sectionTitle} />
 
-      <div className="relative">
-        <WashiTape className="-top-3 left-6" color="lilac" rotate={-5} width={56} height={22} />
-        <WashiTape className="-top-3 right-8" color="rose" rotate={4} width={56} height={22} />
+      <div className="border border-ink/15 rounded-[2px]">
+        <div className="flex items-center gap-4 px-4 py-3 border-b border-ink/15">
+          <div className="flex gap-1.5" aria-hidden="true">
+            <span className="w-2.5 h-2.5 rounded-full bg-ink/20" />
+            <span className="w-2.5 h-2.5 rounded-full bg-ink/20" />
+            <span className="w-2.5 h-2.5 rounded-full bg-ink/20" />
+          </div>
+          <span className="font-mono text-[11px] text-ink/50 tracking-wider">jeeni@portfolio — try an endpoint</span>
+        </div>
 
-        <span
-          className="hidden sm:block absolute -right-2 -top-10 font-hand text-lg text-plum/80 rotate-2"
-          aria-hidden="true"
-        >
-          go on, click one ↓
-        </span>
-
-        <div className="bg-rose/40 border-2 border-plum border-b-0 p-3 flex flex-wrap gap-2">
+        <div className="px-4 py-4 flex flex-wrap gap-2 border-b border-ink/15">
           {apiTerminal.endpoints.map((ep) => (
             <button
               key={ep.id}
               type="button"
               onClick={() => handleEndpointClick(ep)}
               aria-pressed={activeId === ep.id}
-              className={`font-mono text-xs px-3 py-1.5 border-2 border-plum transition-colors duration-150 ${
-                activeId === ep.id ? 'bg-plum text-cream' : 'bg-paper text-plum hover:bg-plum/10'
+              className={`font-mono text-xs px-3 py-1.5 border rounded-[2px] transition-colors duration-150 ${
+                activeId === ep.id ? 'bg-wine text-cream border-wine' : 'border-ink/20 text-ink/80 hover:border-ink/60 hover:text-ink'
               }`}
             >
-              {ep.method} {ep.path}
+              <span className="text-rose mr-1.5">{ep.method}</span>
+              {ep.path}
             </button>
           ))}
         </div>
 
-        <div className="bg-lilac/40 border-2 border-plum p-5 min-h-[180px] overflow-x-auto">
-          <pre aria-hidden="true" className="font-mono text-sm text-plum whitespace-pre-wrap break-words">
+        <div className="p-5 min-h-[200px] overflow-x-auto">
+          <pre aria-hidden="true" className="font-mono text-sm text-ink/90 whitespace-pre-wrap break-words leading-relaxed">
             {displayedText || apiTerminal.idleText}
           </pre>
           <span className="sr-only" role="status" aria-live="polite">

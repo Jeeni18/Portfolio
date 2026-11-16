@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { hero } from '../data/content'
-import WashiTape from './WashiTape'
 
 export default function PolaroidPhoto() {
   const [flipped, setFlipped] = useState(false)
 
   return (
-    <div style={{ perspective: '1200px' }}>
+    <div className="tone-light" style={{ perspective: "1200px" }}>
       <button
         type="button"
         onClick={() => setFlipped((f) => !f)}
@@ -24,19 +23,13 @@ export default function PolaroidPhoto() {
           {/* Front: photo */}
           <div
             aria-hidden={flipped}
-            className="absolute inset-0 bg-paper border border-plum/15 p-3.5 pb-9"
+            className="absolute inset-0 bg-paper border border-ink/15 p-3.5 pb-9"
             style={{
               backfaceVisibility: 'hidden',
-              transform: 'rotate(-4deg)',
-              boxShadow: '8px 8px 0 #EBC4D5',
+              transform: 'none',
+              boxShadow: '0 1px 2px rgba(53,16,30,0.06), 0 14px 36px rgba(53,16,30,0.08)',
             }}
           >
-            <WashiTape
-              className="-top-3 left-1/2"
-              color="lilac"
-              rotate={2}
-              center
-            />
             <div className="w-full h-full overflow-hidden">
               <img
                 src={hero.photo}
@@ -44,7 +37,7 @@ export default function PolaroidPhoto() {
                 className="w-full h-full object-cover object-top"
               />
             </div>
-            <p className="font-hand text-xl text-plum text-center absolute bottom-1.5 left-0 right-0">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-rose text-center absolute bottom-3 left-0 right-0">
               {hero.photoCaption}
             </p>
           </div>
@@ -52,15 +45,15 @@ export default function PolaroidPhoto() {
           {/* Back: handwritten facts */}
           <div
             aria-hidden={!flipped}
-            className="absolute inset-0 bg-paper border border-plum/15 p-6 flex flex-col justify-center gap-3"
+            className="absolute inset-0 bg-paper border border-ink/15 p-6 flex flex-col justify-center gap-3"
             style={{
               backfaceVisibility: 'hidden',
-              transform: 'rotate(-4deg) rotateY(180deg)',
-              boxShadow: '8px 8px 0 #EBC4D5',
+              transform: 'rotateY(180deg)',
+              boxShadow: '0 1px 2px rgba(53,16,30,0.06), 0 14px 36px rgba(53,16,30,0.08)',
             }}
           >
             {hero.polaroidBackFacts.map((fact, i) => (
-              <p key={i} className="font-hand text-xl text-plum leading-snug text-center">
+              <p key={i} className="font-display text-xl text-ink leading-snug text-center">
                 {fact}
               </p>
             ))}

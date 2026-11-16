@@ -2,15 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Burgundy & Architectural Cream
+ *
+ * Palette            Role
+ * #35101E deep wine  dark sections, overlays, projector hardware, 3D floor
+ * #641D35 rich wine  primary actions, the 3D alcove, active states
+ * #8D5365 muted rose small labels / metadata on cream (4.9:1)
+ * #D5B7B8 dusty pink highlights & hairline accents; text only on dark
+ * #F1E8DD cream      page background
+ * #29232A charcoal   text, lines, furniture details (12.6:1 on cream)
+ *
+ * Colours are stored as RGB channels so Tailwind can apply alpha
+ * (`text-ink/70`). `.tone-dark` / `.tone-ink` re-map the same roles for
+ * dark sections, so components never need a separate dark class list.
+ */
 @layer base {
+  /* Base: deep burgundy ground with cream type */
   :root {
-    --bg: #F7EEDB;
-    --paper: #FFFDF8;
-    --blush: #F8DDE8;
-    --rose: #EBC4D5;
-    --plum: #493744;
-    --plum-dark: #2E222B;
-    --lilac: #D8DCEB;
+    --ink: 241 232 221;       /* cream text */
+    --cream: 53 16 30;        /* deep burgundy page */
+    --paper: 67 24 40;        /* lifted burgundy for cards on the base */
+    --wine: 213 183 184;      /* primary action: dusty pink */
+    --wine-strong: 241 232 221;
+    --rose: 213 183 184;      /* labels: dusty pink */
+    --dusty: 141 83 101;      /* highlights: muted rose */
+    --line: 241 232 221;      /* hairlines */
+  }
+
+  /* Light panels: architectural cream with charcoal type. Used for the
+     cream sections, the projector screen, modals and the photo frame. */
+  .tone-light {
+    --ink: 41 35 42;          /* charcoal */
+    --cream: 241 232 221;     /* architectural cream */
+    --paper: 248 243 236;     /* lifted cream for reading surfaces */
+    --wine: 100 29 53;        /* rich burgundy */
+    --wine-strong: 53 16 30;  /* deep burgundy (hover) */
+    --rose: 141 83 101;       /* muted rose */
+    --dusty: 213 183 184;     /* dusty pink */
+    --line: 41 35 42;
+    color: rgb(var(--ink));
   }
 
   * {
@@ -21,25 +52,24 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: var(--bg);
+    background-color: rgb(var(--cream));
   }
 
   body {
     font-family: 'Work Sans', sans-serif;
-    background-color: var(--bg);
-    background-image:
-      radial-gradient(rgba(73, 55, 68, 0.13) 1px, transparent 1.2px),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-    background-size: 24px 24px, 180px 180px;
-    color: var(--plum);
+    background-color: rgb(var(--cream));
+    /* Fine paper grain only -- no pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    color: rgb(var(--ink));
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background: var(--rose);
-    color: var(--plum);
+    background: rgb(var(--dusty));
+    color: #29232A;
   }
 
   ::-webkit-scrollbar {
@@ -47,35 +77,36 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg);
+    background: #35101E;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--plum);
+    background: #8D5365;
     border-radius: 10px;
   }
 
   :focus-visible {
-    outline: 3px solid var(--plum);
+    outline: 2px solid rgb(var(--wine));
     outline-offset: 3px;
   }
 }
 
 @layer utilities {
+  /* Reading surface: lifted cream, single hairline, no hard shadow */
   .card {
-    background: var(--paper);
-    border: 2px solid var(--plum);
-    border-radius: 10px;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    background: rgb(var(--paper));
+    border: 1px solid rgb(var(--line) / 0.12);
+    border-radius: 2px;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
   }
 
-  .card-featured {
-    box-shadow: 8px 8px 0 var(--rose);
+  .card:hover {
+    border-color: rgb(var(--line) / 0.24);
   }
 
-  .card-featured:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 10px 10px 0 var(--rose);
+  /* The one soft elevation in the system -- featured work and modals */
+  .shadow-soft {
+    box-shadow: 0 1px 2px rgba(20, 5, 11, 0.12), 0 16px 40px rgba(20, 5, 11, 0.22);
   }
 
   .section-padding {
@@ -84,79 +115,91 @@
 
   .btn-primary {
     @apply relative inline-flex items-center justify-center gap-2 px-7 font-body font-medium text-[15px];
-    min-height: 44px;
-    background: var(--plum);
-    color: var(--bg);
-    border: 2px solid var(--plum);
-    border-radius: 999px;
-    transition: all 0.2s ease;
+    min-height: 46px;
+    background: rgb(var(--wine));
+    color: rgb(var(--cream));
+    border: 1px solid rgb(var(--wine));
+    border-radius: 2px;
+    letter-spacing: 0.01em;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 
   .btn-primary:hover {
-    background: var(--plum-dark);
-    border-color: var(--plum-dark);
+    background: rgb(var(--wine-strong));
+    border-color: rgb(var(--wine-strong));
   }
 
+  /* Editorial text action: underline that thickens and shifts to wine */
   .btn-secondary {
-    @apply relative inline-flex items-center justify-center gap-2 px-7 font-body font-medium text-[15px];
-    min-height: 44px;
-    background: transparent;
-    border: 2px solid var(--plum);
-    color: var(--plum);
-    border-radius: 999px;
-    transition: all 0.2s ease;
+    @apply relative inline-flex items-center justify-center gap-2 px-1 font-body font-medium text-[15px];
+    min-height: 46px;
+    color: rgb(var(--ink));
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 calc(50% + 0.85em);
+    background-size: 100% 1px;
+    transition: color 0.2s ease, background-size 0.2s ease;
   }
 
   .btn-secondary:hover {
-    background: var(--plum);
-    color: var(--bg);
+    color: rgb(var(--wine));
+    background-size: 100% 2px;
   }
 
   .tag {
-    @apply inline-flex items-center font-mono text-xs px-2.5 py-1;
-    border: 1.5px solid var(--plum);
-    border-radius: 999px;
-    color: var(--plum);
+    @apply inline-flex items-center font-mono text-[11px] px-2.5 py-1 uppercase tracking-wider;
+    border: 1px solid rgb(var(--line) / 0.25);
+    border-radius: 2px;
+    color: rgb(var(--ink) / 0.8);
   }
 
   .tag-chip {
-    @apply inline-flex items-center font-mono text-xs px-2.5 py-1;
-    background: var(--lilac);
-    border-radius: 999px;
-    color: var(--plum);
+    @apply inline-flex items-center font-mono text-[11px] px-2.5 py-1;
+    border: 1px solid rgb(var(--dusty) / 0.9);
+    border-radius: 2px;
+    color: rgb(var(--ink) / 0.8);
   }
 
   .api-label {
-    @apply font-mono text-xs tracking-wide;
-    color: var(--plum-dark);
+    @apply font-mono text-[11px] uppercase tracking-[0.16em];
+    color: rgb(var(--rose));
   }
 
+  /* Dhaka weave -- kept once, as a slim band at the top of the footer */
   .dhaka {
-    height: 30px;
-    background-color: #F8DDE8;
+    height: 8px;
+    background-color: #35101E;
     background-image:
-      linear-gradient(135deg, #493744 25%, transparent 25%),
-      linear-gradient(225deg, #493744 25%, transparent 25%),
-      linear-gradient(315deg, #EBC4D5 25%, transparent 25%),
-      linear-gradient(45deg, #EBC4D5 25%, transparent 25%);
-    background-size: 30px 30px;
-    background-position: -15px 0, -15px 0, 0 0, 0 0;
+      linear-gradient(135deg, #641D35 25%, transparent 25%),
+      linear-gradient(225deg, #641D35 25%, transparent 25%),
+      linear-gradient(315deg, #8D5365 25%, transparent 25%),
+      linear-gradient(45deg, #8D5365 25%, transparent 25%);
+    background-size: 8px 8px;
+    background-position: -4px 0, -4px 0, 0 0, 0 0;
+    opacity: 0.9;
   }
 
-  .washi-tape {
-    position: absolute;
-    clip-path: polygon(8% 0%, 0% 50%, 8% 100%, 92% 100%, 100% 50%, 92% 0%);
-    box-shadow: 0 2px 4px rgba(73, 55, 68, 0.15);
-    pointer-events: none;
+  /* Hero projector screen */
+  .cursor-blink {
+    animation: cursor-blink 1s steps(2, start) infinite;
   }
 
-  .lined-paper {
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 31px,
-      rgba(235, 196, 213, 0.6) 31px,
-      rgba(235, 196, 213, 0.6) 32px
-    );
+  .beam-flicker {
+    animation: beam-flicker 4.5s ease-in-out infinite;
+  }
+
+  @keyframes cursor-blink {
+    to { visibility: hidden; }
+  }
+
+  @keyframes beam-flicker {
+    0%, 100% { opacity: 1; }
+    37% { opacity: 0.9; }
+    41% { opacity: 1; }
+    72% { opacity: 0.94; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beam-flicker { animation: none; }
   }
 }

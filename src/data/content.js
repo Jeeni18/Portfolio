@@ -42,16 +42,24 @@ export const hero = {
   photoCaption: 'Kathmandu, Nepal',
   locationLine: 'Bhaktapur, Nepal — Open to full-stack & AI engineering roles',
   firstName: 'Jeeni',
+  greeting: "Hello, I'm",
   lastName: 'Shrestha.',
   roleLine: 'Full-Stack Developer',
   bioPre: 'Building ',
   bioHighlight: 'reliable',
   bioPost: ' web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
   bio: 'Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
-  ctaPrimary: { label: 'View Projects', href: '#projects' },
-  ctaSecondary: { label: "Let's Connect" },
+  // Projector screen copy
+  screenLabel: '01 — Bhaktapur, Nepal',
+  statementPre: 'Full-stack developer building ',
+  statementMark: 'reliable',
+  statementPost: ' web applications and AI tools.',
+  ctaPrimary: { label: 'view projects', href: '#projects' },
+  ctaSecondary: { label: "let's connect" },
+  availability: 'Open to full-stack & AI engineering roles',
   ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
   handwrittenNote: '4x hackathon winner!',
+  hackathonLabel: '4× hackathon winner',
   polaroidBackFacts: [
     '[TODO: 3-4 short personal facts]',
   ],
@@ -486,33 +494,4 @@ export const apiTerminal = {
       response: { status: 201, message: "Request received! Let's talk.", email: 'Jenyshrestha31@gmail.com' },
     },
   ],
-}
-
-// Nepali drafts below are starting points, not verified translations.
-// Compare against the source English copy in `hero` and `about` --
-// flagged as [TODO: verify Nepali translation] in the final report.
-export const translations = {
-  heroGreeting: { en: 'Hello,', ne: 'नमस्ते,' },
-  heroHeading: {
-    ne: 'म जीनी हुँ। म मानिसहरूले भरोसा गर्न सक्ने वेब एप र API बनाउँछु।',
-  },
-  heroIntro: {
-    en: hero.bio,
-    ne: 'क्लाउड हिमालयमा फुल-स्ट्याक डेभलपर, कम्प्युटर इन्जिनियरिङ स्नातक, र चार पटक ह्याकाथन विजेता।',
-  },
-  sectionTitle: {
-    about: { en: about.sectionTitle, ne: 'मेरो बारेमा' },
-    techstack: { en: 'Tech Stack', ne: 'सीपहरू' },
-    experience: { en: 'Experience', ne: 'अनुभव' },
-    projects: { en: 'Projects', ne: 'परियोजनाहरू' },
-    achievements: { en: 'Achievements', ne: 'उपलब्धिहरू' },
-    education: { en: education.sectionTitle, ne: 'शिक्षा तथा तालिम' },
-  },
-  aboutParagraphs: {
-    en: about.paragraphs,
-    ne: [
-      'म ख्वप कलेज अफ इन्जिनियरिङबाट कम्प्युटर इन्जिनियरिङमा स्नातक हुँ र क्लाउड हिमालयमा फुल-स्ट्याक डेभलपरको रूपमा काम गर्छु। म React, Next.js र Python ब्याकइन्ड प्रयोग गरी वेब एप्लिकेसनहरू बनाउँछु, उचित validation र error handling सहितका REST API डिजाइन गर्छु, र जहाँ वास्तविक मूल्य थपिन्छ त्यहाँ मेसिन लर्निङ एकीकृत गर्छु।',
-      'ह्याकाथनहरूले मलाई कडा समयसीमाभित्र काम गर्ने सफ्टवेयर बनाउन र टोलीमा मिलेर काम गर्न सिकायो। म नेपालका सार्वजनिक सेवाहरूका लागि भरपर्दो र राम्रोसँग कागजात गरिएको सफ्टवेयर बनाउनमा विशेष रुचि राख्छु।',
-    ],
-  },
 }

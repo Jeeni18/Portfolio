@@ -2,80 +2,42 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import SectionWrapper, { SectionTitle } from '../components/SectionWrapper'
-import { about, translations } from '../data/content'
-import { useLanguage } from '../hooks/useLanguage'
-import { ScribbleCircle } from '../components/Doodles'
-
-const NOTE_COLORS = ['bg-blush', 'bg-rose', 'bg-lilac', 'bg-blush']
-const NOTE_ROTATIONS = ['-rotate-2', 'rotate-3', '-rotate-1', 'rotate-2']
-
-function circleWord(text) {
-  const word = text.includes('APIs') ? 'APIs' : text.includes('API') ? 'API' : null
-  if (!word) return text
-  const idx = text.indexOf(word)
-  return (
-    <>
-      {text.slice(0, idx)}
-      <span className="relative inline-block">
-        {word}
-        <ScribbleCircle
-          className="absolute -left-2 -right-2 -top-2 -bottom-1 w-[calc(100%+1rem)] h-[calc(100%+0.75rem)] pointer-events-none"
-          delay={0.3}
-        />
-      </span>
-      {text.slice(idx + word.length)}
-    </>
-  )
-}
+import { about } from '../data/content'
 
 export default function About() {
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
-  const { lang } = useLanguage()
-
-  const title = translations.sectionTitle.about[lang]
-  const paragraphs = translations.aboutParagraphs[lang]
+  const [lead, ...rest] = about.paragraphs
 
   return (
     <SectionWrapper id="about">
-      <SectionTitle apiLabel="GET /about" title={title} />
+      <SectionTitle index="01" apiLabel="GET /about" title={about.sectionTitle} />
 
-      <div ref={ref} className="relative md:pr-16">
-        <div className="lined-paper bg-paper border-2 border-plum relative px-8 py-9 md:pl-12">
-          <span
-            className="hidden md:block absolute left-7 top-0 bottom-0 w-px bg-rose"
-            style={{ background: 'rgba(235,196,213,0.9)' }}
-            aria-hidden="true"
-          />
-          <div
-            lang={lang === 'ne' ? 'ne' : undefined}
-            className={`space-y-6 text-plum/90 leading-[32px] text-[17px] md:pr-48 ${
-              lang === 'ne' ? 'font-devanagari' : 'font-body'
-            }`}
-          >
-            {paragraphs.map((p, i) => (
-              <p key={i}>{i === 0 ? circleWord(p) : p}</p>
-            ))}
-          </div>
-        </div>
-
-        {/* Sticky notes -- stacked below the page on mobile, overlapping its right edge from md up */}
-        <div className="mt-6 flex flex-wrap gap-4 md:mt-0 md:flex-col md:gap-5 md:absolute md:-right-4 md:top-10 md:w-44">
-          {about.highlights.map((h, i) => (
-            <motion.div
-              key={h.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
-              className={`${NOTE_COLORS[i % 4]} ${NOTE_ROTATIONS[i % 4]} w-36 md:w-full p-4 shadow-[3px_4px_8px_rgba(73,55,68,0.18)]`}
-            >
-              <div className="w-7 h-7 rounded-sm bg-paper/70 flex items-center justify-center mb-2">
-                <h.icon size={14} className="text-plum" />
-              </div>
-              <p className="font-hand text-lg text-plum leading-tight">{h.label}</p>
-              <p className="font-body text-plum/70 text-[11px] mt-0.5 leading-snug">{h.desc}</p>
-            </motion.div>
+      <div className="grid md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] gap-10 md:gap-16">
+        <p className="font-display text-ink text-[1.65rem] md:text-[2rem] leading-[1.25]">
+          {lead}
+        </p>
+        <div className="space-y-5 font-body text-ink/80 text-[16px] leading-[1.8] md:pt-2">
+          {rest.map((p, i) => (
+            <p key={i}>{p}</p>
           ))}
         </div>
+      </div>
+
+      {/* Fact strip */}
+      <div ref={ref} className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
+        {about.highlights.map((h, i) => (
+          <motion.div
+            key={h.label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 + i * 0.08 }}
+            className="border-t border-ink/15 pt-6"
+          >
+            <h.icon size={16} strokeWidth={1.5} className="text-wine mb-4" aria-hidden="true" />
+            <p className="font-display text-ink text-xl leading-tight">{h.label}</p>
+            <p className="font-mono text-[11px] uppercase tracking-wider text-rose mt-2 leading-snug">{h.desc}</p>
+          </motion.div>
+        ))}
       </div>
     </SectionWrapper>
   )

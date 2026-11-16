@@ -24,7 +24,7 @@ export default function CopyEmailButton({ className = '' }) {
 
   return (
     <div className={`relative inline-block ${className}`}>
-      <button type="button" onClick={handleCopy} className="btn-secondary">
+      <button type="button" onClick={handleCopy} className="btn-primary">
         <Copy size={14} />
         Copy my email
       </button>
@@ -32,11 +32,11 @@ export default function CopyEmailButton({ className = '' }) {
       <AnimatePresence>
         {copied && (
           <motion.span
-            initial={{ opacity: 0, scale: 0.7, rotate: -8, y: 4 }}
-            animate={{ opacity: 1, scale: 1, rotate: -6, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 font-hand text-2xl text-plum whitespace-nowrap pointer-events-none"
+            className="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-wider text-rose whitespace-nowrap pointer-events-none"
           >
             copied!
           </motion.span>

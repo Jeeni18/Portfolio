@@ -9,8 +9,8 @@ export default function ArchitectureDiagram() {
   const selected = diagherDiagram.boxes.find((b) => b.id === selectedId)
 
   return (
-    <div className="bg-lilac/50 border-2 border-plum p-5 md:p-7 mt-6">
-      <p className="api-label mb-4">System architecture</p>
+    <div className="border-t border-ink/15 pt-7 mt-8">
+      <p className="api-label mb-5">System architecture</p>
 
       <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3">
         {diagherDiagram.boxes.map((box, i) => {
@@ -21,19 +21,18 @@ export default function ArchitectureDiagram() {
                 type="button"
                 onClick={() => setSelectedId(box.id)}
                 aria-pressed={isSelected}
-                className="flex-1 font-mono text-[13px] sm:text-sm px-3 py-4 border-2 border-plum text-center transition-all duration-150"
-                style={
+                className={`flex-1 font-mono text-[13px] px-3 py-4 border text-center rounded-[2px] transition-colors duration-150 ${
                   isSelected
-                    ? { background: 'var(--plum, #493744)', color: '#F7EEDB', boxShadow: '6px 6px 0 #EBC4D5' }
-                    : { background: '#FFFDF8', color: '#493744' }
-                }
+                    ? 'bg-wine text-cream border-wine'
+                    : 'bg-transparent text-ink border-ink/20 hover:border-ink/50'
+                }`}
               >
                 {box.label}
               </button>
               {i < diagherDiagram.boxes.length - 1 && (
                 <>
-                  <ArrowRight size={20} className="hidden md:block text-plum flex-shrink-0" aria-hidden="true" />
-                  <ArrowDown size={20} className="md:hidden text-plum mx-auto" aria-hidden="true" />
+                  <ArrowRight size={16} strokeWidth={1.5} className="hidden md:block text-ink/40 flex-shrink-0" aria-hidden="true" />
+                  <ArrowDown size={16} strokeWidth={1.5} className="md:hidden text-ink/40 mx-auto" aria-hidden="true" />
                 </>
               )}
             </React.Fragment>
@@ -48,13 +47,15 @@ export default function ArchitectureDiagram() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="mt-6 bg-paper border-2 border-plum p-5"
+          className="mt-5 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5"
         >
-          <p className="api-label mb-1.5">{selected.title}</p>
-          <p className="font-body text-plum/85 text-[15px] leading-relaxed mb-3">
-            {selected.explanation}
-          </p>
-          <pre className="font-mono text-xs text-plum bg-lilac/40 border border-plum/20 p-3 overflow-x-auto">
+          <div>
+            <p className="font-display text-ink text-xl mb-2">{selected.title}</p>
+            <p className="font-body text-ink/80 text-[15px] leading-relaxed">
+              {selected.explanation}
+            </p>
+          </div>
+          <pre className="font-mono text-xs text-bone bg-charcoal p-4 rounded-[2px] overflow-x-auto leading-relaxed">
             {selected.code}
           </pre>
         </motion.div>
