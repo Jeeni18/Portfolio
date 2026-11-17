@@ -1,19 +1,4 @@
-import {
-  Brain, Trophy, Star, Code2, Network, Github, Linkedin,
-  Braces, FileType2, FileCode2, FileCode, Atom, Layers, Globe, Palette, Wind,
-  Server, FlaskConical, Workflow, Component, Database, Table2, Table,
-  TestTube2, Send, BrainCircuit, Sigma, GitBranch, Gitlab, Container,
-  AppWindow, Notebook,
-} from 'lucide-react'
-
-
-import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.webp'
-import Hultprize from '../assets/achievements/hultprize.webp'
-import IEEE from '../assets/achievements/Ecoflare.webp'
-import Deerhack from '../assets/achievements/DeerHack_certificate.webp'
-import Codeyatra from '../assets/achievements/Codeyatra.webp'
-import Shequal from '../assets/achievements/Shequal_certificate.webp'
-import Hackthecircle from '../assets/achievements/hackthecircle.webp'
+import { Github, Linkedin } from 'lucide-react'
 
 import dataScienceCert from '../assets/certificates/data-science.webp'
 import MLCert from '../assets/certificates/ML-cert.webp'
@@ -27,22 +12,23 @@ export const site = {
     "Jeeni Shrestha — Full-stack developer working toward AI engineering, with hackathon-tested AI projects from emotion recognition to gender-aware diagnosis support.",
 }
 
-// Top nav: three destinations + CV. Every section stays reachable by
-// scrolling and from the footer index (`sectionIndex`).
+// Top nav: about, skills, works, awards + CV and the contact button.
 export const navLinks = [
   { label: 'about', href: '#about' },
+  { label: 'skills', href: '#skills' },
   { label: 'works', href: '#projects' },
-  { label: 'experience', href: '#experience' },
+  { label: 'awards', href: '#awards' },
 ]
 
+// Every section, in page order (mobile menu, active-link tracking).
 export const sectionIndex = [
   { label: 'introduction', href: '#hero', number: '01' },
   { label: 'about', href: '#about', number: '02' },
-  { label: 'skills', href: '#techstack', number: '03' },
+  { label: 'skills', href: '#skills', number: '03' },
   { label: 'works', href: '#projects', number: '04' },
-  { label: 'experience', href: '#experience', number: '05' },
-  { label: 'achievements', href: '#achievements', number: '06' },
-  { label: 'education', href: '#education', number: '07' },
+  { label: 'awards', href: '#awards', number: '05' },
+  { label: 'education', href: '#education', number: '06' },
+  { label: 'contact', href: '#contact', number: '07' },
 ]
 
 export const hero = {
@@ -68,337 +54,174 @@ export const hero = {
   ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
 }
 
+// 02 — About
 export const about = {
-  sectionTitle: 'About',
-  paragraphs: [
-    "I'm a Computer Engineering graduate from Khwopa College of Engineering and a full-stack developer at Cloud Himalaya. I build web applications with React, Next.js and Python backends, design REST APIs with proper validation and error handling, and integrate machine learning where it adds real value.",
-    "Hackathons taught me to ship working software under tight deadlines and work closely in teams. I'm especially interested in building reliable, well-documented software for public services in Nepal.",
-  ],
-  highlights: [
-    { icon: Code2, label: 'Full-Stack Developer', desc: 'React, Next.js, Python' },
-    { icon: Network, label: 'REST APIs & Integration', desc: 'Validation & error handling' },
-    { icon: Brain, label: 'AI/ML Experience', desc: 'Scikit-learn, TensorFlow' },
-    { icon: Trophy, label: '6 Awards Won', desc: 'Wins since 2025' },
-  ],
-}
-
-export const education = {
-  sectionTitle: 'Education & Training',
-  sectionSubtitle: 'Degrees first, then courses and programs completed outside the classroom.',
-  entries: [
-    {
-      degree: "Bachelor's in Computer Engineering",
-      org: 'Khwopa College of Engineering, Bhaktapur',
-      period: '2022 – 2026',
-    },
-    {
-      degree: '+2 Science',
-      org: "St. Xavier's College, Kathmandu",
-      period: '2019 – 2022',
-    },
+  // Three lines from 1024px up; wraps naturally on smaller screens.
+  statementLines: ['I build reliable, scalable', 'applications that solve', 'real-world problems.'],
+  body: 'Computer Engineering graduate from Bhaktapur, working across frontend, backend, APIs and databases, alone and in teams, with a growing focus on applied AI/ML.',
+  cvLabel: 'read the full cv',
+  board: [
+    { label: 'based in', value: 'Bhaktapur, Nepal', variant: 'cream' },
+    { label: 'degree', value: 'B.E. Computer Engineering', variant: 'dark' },
+    { label: 'focus', value: 'full-stack · AI/ML', variant: 'dark' },
+    { label: 'status', value: 'open to roles', variant: 'status' },
   ],
 }
 
-export const experience = {
-  items: [
-    {
-      role: 'Full-Stack Developer',
-      org: 'Cloud Himalaya Pvt. Ltd.',
-      period: '[TODO: start month/year] – Present',
-      tech: ['Next.js', 'React', 'TypeScript', 'Payload CMS', 'PostgreSQL'],
-      bullets: [
-        'Built the company website with an integrated CMS, letting non-technical staff update content without code changes.',
-        'Designed the site architecture and developed both frontend and backend, including PostgreSQL database integration.',
-      ],
-    },
-    {
-      role: 'Web Developer (Volunteer)',
-      org: 'AWS Cloud Club TU',
-      period: '[TODO: start – end month/year]',
-      tech: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Zod', 'Docker'],
-      bullets: [
-        "Developed and maintained the club's official website with responsive layouts and reusable UI components.",
-        'Implemented form validation using React Hook Form and Zod.',
-        'Containerized the application with Docker and collaborated through Git.',
-      ],
-    },
-  ],
-}
-
-export const leadership = {
-  items: [
-    {
-      role: 'College Representative',
-      org: 'AWS Cloud Club TU',
-      period: '2025',
-      description: 'Facilitated cloud computing workshops, coordinated community events and connected students with industry.',
-    },
-    {
-      role: 'Campus Ambassador',
-      org: 'LOCUS',
-      period: '2025',
-      description: 'Promoted tech initiatives, organized student events and built engagement across campus.',
-    },
-  ],
-}
-
-export const techStack = {
-  sectionSubtitle: 'Tools I reach for when something needs building.',
-  categories: [
-    {
-      name: 'Programming',
-      skills: [
-        { name: 'Python', icon: Code2 },
-        { name: 'JavaScript', icon: Braces },
-        { name: 'TypeScript', icon: FileType2 },
-        { name: 'C++', icon: FileCode2 },
-        { name: 'C', icon: FileCode },
-      ],
-    },
-    {
-      name: 'Frontend',
-      skills: [
-        { name: 'React.js', icon: Atom },
-        { name: 'Next.js', icon: Layers },
-        { name: 'HTML', icon: Globe },
-        { name: 'CSS', icon: Palette },
-        { name: 'Tailwind CSS', icon: Wind },
-      ],
-    },
-    {
-      name: 'Backend & APIs',
-      skills: [
-        { name: 'FastAPI', icon: Server },
-        { name: 'Flask', icon: FlaskConical },
-        { name: 'Node.js', icon: Workflow },
-        { name: 'REST APIs', icon: Network },
-        { name: 'API Integration', icon: Component },
-      ],
-    },
-    {
-      name: 'Databases',
-      skills: [
-        { name: 'PostgreSQL', icon: Database },
-        { name: 'MySQL', icon: Table2 },
-        { name: 'SQL', icon: Table },
-      ],
-    },
-    {
-      name: 'Testing & Debugging',
-      skills: [
-        { name: 'pytest', icon: TestTube2 },
-        { name: 'Postman', icon: Send },
-      ],
-    },
-    {
-      name: 'AI/ML',
-      skills: [
-        { name: 'TensorFlow', icon: BrainCircuit },
-        { name: 'Scikit-learn', icon: Brain },
-        { name: 'Pandas', icon: Table },
-        { name: 'NumPy', icon: Sigma },
-      ],
-    },
-    {
-      name: 'Tools',
-      skills: [
-        { name: 'Git', icon: GitBranch },
-        { name: 'GitHub', icon: Github },
-        { name: 'GitLab', icon: Gitlab },
-        { name: 'Docker', icon: Container },
-        { name: 'VS Code', icon: AppWindow },
-        { name: 'Jupyter Notebook', icon: Notebook },
-      ],
-    },
-  ],
-}
-
-export const projects = {
-  sectionSubtitle: 'Full-stack builds with APIs, integration and data underneath.',
-  items: [
-    {
-      number: '01',
-      name: 'DiagHer',
-      tagline: 'AI-Powered Clinical Decision Support System',
-      badge: "Top 16 – Nepal's Largest All-Female Hackathon (2025)",
-      description:
-        "Built a full-stack platform that gives gender-aware diagnostic insights; Top 16 at Nepal's largest all-female hackathon (2025).",
-      bullets: [
-        'Developed a versioned Flask REST API (12 endpoints) with request validation, error handling and rate limiting, integrated with a React + TypeScript frontend.',
-        'Integrated Scikit-learn models predicting 22 conditions from 97 symptom features.',
-      ],
-      stack: ['Flask', 'REST APIs', 'React', 'TypeScript', 'Scikit-learn'],
-      github: 'https://github.com/Jeeni18/DiagHer-AI',
-      featured: true,
-      categories: ['fullstack', 'ai', 'hackathon'],
-    },
-    {
-      number: '02',
-      name: 'Revolv',
-      tagline: 'Digital Growth Platform for Small Businesses',
-      description:
-        'Built a web platform that recommends digital tools to small businesses based on a business-profile questionnaire.',
-      bullets: [
-        'Developed a Flask prediction API serving a Random Forest model and integrated it with a React frontend through Axios.',
-        'Built QR code generation and job posting and listing features.',
-      ],
-      stack: ['Flask', 'REST APIs', 'React', 'Axios', 'Scikit-learn'],
-      github: 'https://github.com/Jeeni18/Revolv',
-      categories: ['fullstack', 'ai'],
-    },
-    {
-      number: '03',
-      name: 'FER',
-      tagline: 'Facial Expression Recognition',
-      description:
-        'CNN-based system that classifies human emotion from facial images.',
-      bullets: [
-        'Trained and compared four CNN architectures — VGG19, DenseNet-121, ResNet18, ResNet50 — to find the best-performing model.',
-        'Built the face detection and preprocessing pipeline, including data augmentation to improve accuracy and robustness.',
-        'Integrated the trained model into a real-time interface for live emotion recognition.',
-      ],
-      stack: ['Python', 'React', 'ML', 'Data Analysis'],
-      github: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
-      categories: ['ai'],
-    },
-    {
-      number: '04',
-      name: 'Chronova',
-      tagline: 'AR tourism app',
-      description:
-        "AR app built for Hack the Circle that layers real-time personalization and storytelling onto Nepal's historical sites.",
-      bullets: [
-        'Layered real-time personalization and cultural storytelling onto physical sites via AR, instead of a static plaque or brochure.',
-        'Built with React Native on the frontend and a Python/ML backend driving the personalization.',
-      ],
-      stack: ['React Native', 'Python', 'ML'],
-      github: 'https://github.com/Jeeni18/Chronova',
-      categories: ['ai', 'hackathon'],
-    },
-    {
-      number: '05',
-      name: 'Lumen',
-      tagline: 'Anti-doomscrolling app',
-      description:
-        'Behavioral-tech app that notices when scrolling turns mindless and interrupts the pattern.',
-      bullets: [
-        'Built a behavior-detection model in Python to recognize mindless scrolling patterns rather than just tracking screen time.',
-        'React Native app that nudges the user mid-scroll instead of showing a passive end-of-day report.',
-      ],
-      stack: ['React Native', 'Python', 'Behavior ML'],
-      github: 'https://github.com/jeenishrestha',
-      categories: ['ai'],
-    },
-  ],
-}
-
-export const projectFilters = [
-  { id: 'all', label: 'All' },
-  { id: 'fullstack', label: 'Full-Stack' },
-  { id: 'ai', label: 'AI / ML' },
-  { id: 'hackathon', label: 'Hackathon' },
+// 03 — Skills (from the CV)
+export const skills = [
+  { category: 'programming', items: ['Python', 'JavaScript', 'TypeScript', 'C++', 'C'] },
+  { category: 'frontend', items: ['React', 'Next.js', 'HTML', 'CSS'] },
+  { category: 'backend & apis', items: ['FastAPI', 'Node.js', 'REST APIs', 'API integration'] },
+  { category: 'databases', items: ['PostgreSQL', 'MySQL', 'SQL'] },
+  { category: 'testing', items: ['pytest', 'Postman'] },
+  { category: 'tools', items: ['Git', 'GitLab', 'Docker', 'Jupyter', 'VS Code'] },
 ]
 
-export const achievements = {
-  sectionSubtitle: 'Wins first, then finalist and ranked stages.',
+// 04 — Works. Every project from the previous site. `status` only where
+// the CV / site states a fact; otherwise the row shows an outline "view".
+// No project screenshots exist yet: `image: null` shows a placeholder.
+export const projects = [
+  {
+    number: '01',
+    name: 'DiagHer',
+    tagline: 'AI-powered clinical decision support.',
+    stack: ['Flask', 'React', 'TS', 'sklearn'],
+    status: 'top 16', // Shequal Foundation's all-female hackathon, 2025
+    bullets: [
+      'gender-aware diagnostic insights',
+      'versioned Flask API, 12 endpoints',
+      '22 conditions from 97 symptoms',
+    ],
+    image: null,
+    live: null,
+    code: 'https://github.com/Jeeni18/DiagHer-AI',
+    // The system workflow (click a step for what it does).
+    workflow: [
+      {
+        id: 'frontend',
+        label: 'React + TypeScript',
+        title: 'Frontend',
+        explanation:
+          'Pages for symptom input, diagnosis results with charts (Recharts) and drug side-effect analysis. Sends JSON to the API and shows clear errors when something fails.',
+        code: 'fetch("/api/v1/diagnosis", { method: "POST" })',
+      },
+      {
+        id: 'api',
+        label: 'Flask REST API',
+        title: 'REST API (12 versioned endpoints)',
+        explanation:
+          'Every request is validated before it reaches the model. Errors come back in one standard format, rate limiting protects the service, and logging plus a /health endpoint make debugging easier.',
+        code: 'POST /api/v1/diagnosis -> 200 { "top_conditions": [...] }',
+        default: true,
+      },
+      {
+        id: 'ml',
+        label: 'Scikit-learn models',
+        title: 'Machine learning',
+        explanation:
+          'Random Forest and Logistic Regression were compared; the model predicts 22 conditions from 97 symptom features. It is loaded once and served through the API.',
+        code: 'model.predict_proba(features)  # 22 classes',
+      },
+    ],
+  },
+  {
+    number: '02',
+    name: 'Revolv',
+    tagline: 'Digital growth platform for small businesses.',
+    stack: ['Flask', 'React', 'Axios', 'sklearn'],
+    status: "people's choice", // CodeYatra Hackathon, 2025
+    bullets: [
+      'recommends digital tools from a business-profile questionnaire',
+      'Flask API serving a Random Forest model',
+      'QR codes, job posting and listings',
+    ],
+    image: null,
+    live: null,
+    code: 'https://github.com/Jeeni18/Revolv',
+  },
+  {
+    number: '03',
+    name: 'FER',
+    tagline: 'Facial expression recognition with CNNs.',
+    stack: ['Python', 'React', 'ML'],
+    status: null,
+    bullets: [
+      'compared VGG19, DenseNet-121, ResNet18, ResNet50',
+      'face detection, preprocessing, augmentation',
+      'real-time emotion recognition interface',
+    ],
+    image: null,
+    live: null,
+    code: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
+  },
+  {
+    number: '04',
+    name: 'Chronova',
+    tagline: "AR storytelling at Nepal's historical sites.",
+    stack: ['React Native', 'Python', 'ML'],
+    status: 'winner', // HackTheCircle, 2025
+    bullets: [
+      'built for HackTheCircle',
+      'real-time personalization and storytelling in AR',
+      'React Native app, Python/ML backend',
+    ],
+    image: null,
+    live: null,
+    code: 'https://github.com/Jeeni18/Chronova',
+  },
+  {
+    number: '05',
+    name: 'Lumen',
+    tagline: 'An app that interrupts mindless scrolling.',
+    stack: ['React Native', 'Python', 'Behavior ML'],
+    status: null,
+    bullets: [
+      'detects mindless scrolling patterns',
+      'nudges mid-scroll, not end-of-day',
+      'Python behaviour model, React Native app',
+    ],
+    image: null,
+    live: null,
+    code: 'https://github.com/jeenishrestha',
+  },
+]
+
+// 05 — Awards. `win` = burgundy result blade. Links: certificates from the
+// previous site (the same as in the CV).
+export const awards = {
+  hackathonsWon: '4',
   items: [
-    // -- Wins --
-    {
-      icon: Trophy,
-      title: 'Winner — Hack4SafeFood',
-      project: 'Project: Aahar',
-      description: 'Won the national-level hackathon with a food safety app.',
-      year: '2025',
-      image: Hack4SafeFood,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/11ZebDYPQxgVnsRm4kQnLj1H4X9bQC1GP/view?usp=sharing',
-    },
-    {
-      icon: Trophy,
-      title: 'Winner — HackTheCircle',
-      project: 'Project: Chronova',
-      description: 'Won with an AR app that brings Nepali history to life on-site.',
-      year: '2025',
-      image: Hackthecircle,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/1WFoeC9w77ENXA6zz2ppfxMgq0bJSwh24/view?usp=sharing',
-    },
-    {
-      icon: Trophy,
-      title: 'Ed-Tech Category Winner — DeerHack',
-      project: 'Project: Histoury',
-      description: 'Won the Ed-Tech track with Histoury.',
-      year: '2025',
-      image: Deerhack,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/11T8k8LCvDc2KE2P-JZ38TpMEJFcDxDrw/view?usp=sharing',
-    },
-    {
-      icon: Trophy,
-      title: "People's Choice Award — CodeYatra",
-      project: 'Project: Revolv',
-      description: "Won People's Choice with Revolv.",
-      year: '2025',
-      image: Codeyatra,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/11ZfLULkGij1dKI3AXDKrcM39bD_l-9O4/view?usp=sharing',
-    },
-    {
-      icon: Trophy,
-      title: 'Best Poster Award — Khwopa CEEL',
-      project: 'Final-year research poster',
-      description: 'Awarded best poster at the Khwopa Center for Engineering Education & Learning showcase.',
-      year: '2026',
-      image: null,
-      badge: 'Winner',
-      link: null,
-    },
-    {
-      icon: Trophy,
-      title: 'On-Campus Winner — Hult Prize',
-      project: 'Project: NOOK',
-      description: 'Won the campus round with a social-impact business concept.',
-      year: '2024',
-      image: Hultprize,
-      badge: 'Winner',
-      link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing',
-    },
-    // -- Finalist / ranked (newest first) --
-    {
-      icon: Star,
-      title: 'Finalist — Hacking for a Carbon-Neutral Future',
-      project: 'Shequal & UNESCO',
-      description: 'Reached the finals of a climate-focused hackathon run with UNESCO.',
-      year: '2026',
-      image: null,
-      badge: 'Finalist',
-      link: null,
-    },
-    {
-      icon: Star,
-      title: "Top 16 — SheQual Foundation's All-Female Hackathon",
-      project: 'Project: DiagHer',
-      description: 'Reached the Top 16 with DiagHer, a gender-aware diagnosis support tool.',
-      image: Shequal,
-      year: '2025',
-      badge: 'Top 16',
-      link: 'https://drive.google.com/file/d/11Uv7My8LcxcLhSACKUKTlPWzYBQe9Dzi/view?usp=sharing',
-    },
-    {
-      icon: Star,
-      title: 'Finalist — IEEE Climate Tech Idea Pitch',
-      project: 'Project: Ecoflare',
-      description: 'Reached the finals of the IEEE WIE climate technology pitch competition.',
-      year: '2024',
-      image: IEEE,
-      badge: 'Finalist',
-      link: 'https://drive.google.com/file/d/1f9N-uWpvE1-q1bs3mzkV2hKIctsqh2G2/view?usp=sharing',
-    },
+    { year: '2025', event: 'Hack4SafeFood', result: 'winner', win: true, link: 'https://drive.google.com/file/d/11ZebDYPQxgVnsRm4kQnLj1H4X9bQC1GP/view?usp=sharing' },
+    { year: '2025', event: 'HackTheCircle', result: 'winner', win: true, link: 'https://drive.google.com/file/d/1WFoeC9w77ENXA6zz2ppfxMgq0bJSwh24/view?usp=sharing' },
+    { year: '2025', event: 'DeerHack · ed-tech category', result: 'winner', win: true, link: 'https://drive.google.com/file/d/11T8k8LCvDc2KE2P-JZ38TpMEJFcDxDrw/view?usp=sharing' },
+    { year: '2025', event: 'CodeYatra', result: "people's choice", win: true, link: 'https://drive.google.com/file/d/11ZfLULkGij1dKI3AXDKrcM39bD_l-9O4/view?usp=sharing' },
+    { year: '2026', event: 'Khwopa CEEL', result: 'best poster', win: false, link: null },
+    { year: '2024', event: 'Hult Prize · on-campus', result: 'winner', win: false, link: 'https://drive.google.com/file/d/1fLbW1nDikEGQ-18Xuqc5044vFe31RYoW/view?usp=sharing' },
+  ],
+  also: [
+    { text: "finalist, Hacking for a Carbon-Neutral Future (Shequal & UNESCO) '26", link: null },
+    { text: "finalist, IEEE Climate Tech Idea Pitch '24", link: 'https://drive.google.com/file/d/1f9N-uWpvE1-q1bs3mzkV2hKIctsqh2G2/view?usp=sharing' },
+    { text: "top 16, Shequal Nepal's largest all-female hackathon '25", link: 'https://drive.google.com/file/d/11Uv7My8LcxcLhSACKUKTlPWzYBQe9Dzi/view?usp=sharing' },
   ],
 }
 
+// 06 — Education
+export const education = {
+  rows: [
+    { years: '2022–2026', institution: 'Khwopa College of Engineering', programme: 'B.E. Computer Engineering', status: 'graduated', highlight: true },
+    { years: '2019–2022', institution: "St. Xavier's College", programme: 'High school', status: 'completed', highlight: false },
+  ],
+}
+
+// Training cards. `certId` opens the certificate image (CertModal).
+export const training = [
+  { title: 'Annual Nepal AI School (ANAIS)', meta: '2024 · 69 hrs', line: 'deep learning to LLMs and RL', certId: 2 },
+  { title: 'Data Science with Python', meta: 'specialization · 70 hrs', line: 'analysis and data processing', certId: 1 },
+  { title: 'AI/ML workshop', meta: 'industry-led sessions', line: 'ML and computer vision', certId: 3 },
+]
+
 export const certifications = {
-  sectionSubtitle: 'Courses and programs completed outside the classroom.',
   items: [
     {
       id: 1,
@@ -430,10 +253,16 @@ export const certifications = {
   ],
 }
 
+// 07 — Contact
+export const contactBoard = {
+  heading: "Let's build something.",
+  email: 'jenyshrestha31@gmail.com',
+  location: 'Bhaktapur, Nepal · UTC+5:45',
+}
+
 export const footer = {
-  tagline: 'Full-stack by day, AI by obsession',
-  closingLine: "Let's build something reliable.",
-  email: 'Jenyshrestha31@gmail.com',
+  credit: 'Designed and built by Jeeni Shrestha · Bhaktapur, Nepal · 2026',
+  links: ['#about', '#skills', '#projects', '#awards', '#education', '#contact'],
 }
 
 export const socials = [
@@ -441,60 +270,8 @@ export const socials = [
   { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/jeeni-shrestha-a041912b5/' },
 ]
 
+// Contact form (the chat button's dialog)
 export const contact = {
   heading: "Let's Work Together",
   subtext: "I'll get back to you within 24 hours.",
-}
-
-// -- Interactive component data --------------------------------------
-
-export const diagherDiagram = {
-  boxes: [
-    {
-      id: 'frontend',
-      label: 'React + TypeScript',
-      title: 'Frontend',
-      explanation:
-        'Pages for symptom input, diagnosis results with charts (Recharts) and drug side-effect analysis. Sends JSON to the API and shows clear errors when something fails.',
-      code: 'fetch("/api/v1/diagnosis", { method: "POST" })',
-    },
-    {
-      id: 'api',
-      label: 'Flask REST API',
-      title: 'REST API (12 versioned endpoints)',
-      explanation:
-        'Every request is validated before it reaches the model. Errors come back in one standard format, rate limiting protects the service, and logging plus a /health endpoint make debugging easier.',
-      code: 'POST /api/v1/diagnosis -> 200 { "top_conditions": [...] }',
-      default: true,
-    },
-    {
-      id: 'ml',
-      label: 'Scikit-learn models',
-      title: 'Machine learning',
-      explanation:
-        'Random Forest and Logistic Regression were compared; the model predicts 22 conditions from 97 symptom features. It is loaded once and served through the API.',
-      code: 'model.predict_proba(features)  # 22 classes',
-    },
-  ],
-}
-
-export const apiTerminal = {
-  sectionTitle: 'Send me a request',
-  idleText: '// pick an endpoint above to send a request',
-  endpoints: [
-    { id: 'skills', method: 'GET', path: '/skills' },
-    { id: 'experience', method: 'GET', path: '/experience' },
-    {
-      id: 'awards',
-      method: 'GET',
-      path: '/awards?status=won',
-      response: { count: 6, latest: ['Hack4SafeFood', 'HackTheCircle', 'DeerHack', 'CodeYatra'], status: 200 },
-    },
-    {
-      id: 'hire',
-      method: 'POST',
-      path: '/hire',
-      response: { status: 201, message: "Request received! Let's talk.", email: 'Jenyshrestha31@gmail.com' },
-    },
-  ],
 }

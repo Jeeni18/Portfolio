@@ -12,6 +12,8 @@ import React from 'react'
 //   variant    cream | dark | status | plum | rose | dusty
 //   secondary  dusty-pink text instead of the variant's text colour
 //   center     centre the text
+//   fit        the text is in flow, so the blade sizes to its word (padding
+//              and height come from className); used outside the hero
 const VARIANTS = ['cream', 'dark', 'status', 'plum', 'rose', 'dusty']
 
 export default function Blade({
@@ -19,13 +21,14 @@ export default function Blade({
   text,
   secondary = false,
   center = false,
+  fit = false,
   as: Tag = 'div',
   className = '',
   textClassName = '',
   ...rest
 }) {
   const v = VARIANTS.includes(variant) ? variant : 'dark'
-  const tone = `blade--${v}${secondary ? ' blade--secondary' : ''}`
+  const tone = `blade--${v}${secondary ? ' blade--secondary' : ''}${fit ? ' blade--fit' : ''}`
   const layer = `blade-layer${center ? ' blade-layer--center' : ''} ${textClassName}`
 
   return (
