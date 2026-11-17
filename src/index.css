@@ -496,8 +496,10 @@ a.blade:hover, a.blade:focus-visible, button.blade:hover { filter: brightness(1.
 .works-row:hover .blade--dark { filter: brightness(1.18); }
 .works-panel { background: var(--cream); color: var(--charcoal); position: relative; overflow: hidden; }
 .works-panel__no { position: absolute; top: 0.08em; right: 0.22em; font-family: 'Instrument Serif', Georgia, serif; color: var(--dusty-pink); font-size: clamp(72px, 7.6vw, 136px); line-height: 1; pointer-events: none; }
-.works-shot { background: var(--dusty-pink); color: var(--burgundy); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: clamp(12px, 0.95vw, 16px); aspect-ratio: 16 / 10; }
-.works-shot img { width: 100%; height: 100%; object-fit: cover; }
+.works-shot { background: var(--dusty-pink); color: var(--burgundy); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: clamp(12px, 0.95vw, 16px); aspect-ratio: 16 / 9; overflow: hidden; align-self: center; }
+/* Screenshots are ~2:1 website captures: cover the frame, anchored top-left
+   so their logo and headline stay in view. */
+.works-shot img { width: 100%; height: 100%; object-fit: cover; object-position: left top; display: block; }
 .works-title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; color: var(--burgundy); font-size: clamp(32px, 3vw, 54px); line-height: 1; }
 .works-tagline { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; color: var(--burgundy); font-size: clamp(19px, 1.55vw, 28px); line-height: 1.2; }
 .works-bullets { font-family: 'IBM Plex Mono', monospace; color: var(--charcoal); font-size: clamp(13px, 0.98vw, 16px); line-height: 1.55; }

@@ -7,6 +7,12 @@ import ML from '../assets/certificates/AI_ML.webp'
 // The CV, bundled by Vite (hashed URL); `fileName` is what the download is saved as.
 import cvPdf from '../assets/CV/Jeeni_Shrestha_CV.pdf'
 
+// Project screenshots (Works panels)
+import diagherShot from '../assets/hackathon/Diagher.png'
+import revolvShot from '../assets/hackathon/Revolv.png'
+import ferShot from '../assets/hackathon/FER System .png'
+import chronovaShot from '../assets/hackathon/Chronova.png'
+
 export const site = {
   name: 'Jeeni Shrestha',
   initials: 'JS',
@@ -83,7 +89,8 @@ export const skills = [
 
 // 04 — Works. Every project from the previous site. `status` only where
 // the CV / site states a fact; otherwise the row shows an outline "view".
-// No project screenshots exist yet: `image: null` shows a placeholder.
+// `image`: screenshot (null shows a placeholder); `live`: the project's
+// website ("view live demo"); `code`: its GitHub repo ("github").
 export const projects = [
   {
     number: '01',
@@ -96,8 +103,8 @@ export const projects = [
       'versioned Flask API, 12 endpoints',
       '22 conditions from 97 symptoms',
     ],
-    image: null,
-    live: null,
+    image: diagherShot,
+    live: 'https://diag-her-ai-e2nz.vercel.app/',
     code: 'https://github.com/Jeeni18/DiagHer-AI',
     // The system workflow (click a step for what it does).
     workflow: [
@@ -139,8 +146,8 @@ export const projects = [
       'Flask API serving a Random Forest model',
       'QR codes, job posting and listings',
     ],
-    image: null,
-    live: null,
+    image: revolvShot,
+    live: 'https://revolv-self.vercel.app/',
     code: 'https://github.com/Jeeni18/Revolv',
   },
   {
@@ -154,7 +161,7 @@ export const projects = [
       'face detection, preprocessing, augmentation',
       'real-time emotion recognition interface',
     ],
-    image: null,
+    image: ferShot,
     live: null,
     code: 'https://github.com/Jeeni18/Facial-Expression-Recognition-System-FER',
   },
@@ -169,24 +176,9 @@ export const projects = [
       'real-time personalization and storytelling in AR',
       'React Native app, Python/ML backend',
     ],
-    image: null,
+    image: chronovaShot,
     live: null,
     code: 'https://github.com/Jeeni18/Chronova',
-  },
-  {
-    number: '05',
-    name: 'Lumen',
-    tagline: 'An app that interrupts mindless scrolling.',
-    stack: ['React Native', 'Python', 'Behavior ML'],
-    status: null,
-    bullets: [
-      'detects mindless scrolling patterns',
-      'nudges mid-scroll, not end-of-day',
-      'Python behaviour model, React Native app',
-    ],
-    image: null,
-    live: null,
-    code: 'https://github.com/jeenishrestha',
   },
 ]
 

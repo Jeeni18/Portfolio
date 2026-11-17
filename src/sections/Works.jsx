@@ -68,13 +68,14 @@ function Panel({ project }) {
             <p className="mt-[clamp(16px,1.5vw,26px)] flex flex-wrap gap-x-6 gap-y-2">
               {project.live && (
                 <a href={project.live} target="_blank" rel="noopener noreferrer" className="works-plink">
-                  view project <span aria-hidden="true">→</span>
+                  view live demo <span aria-hidden="true">→</span>
+                  <span className="sr-only"> ({project.name}, opens in a new tab)</span>
                 </a>
               )}
               {project.code && (
                 <a href={project.code} target="_blank" rel="noopener noreferrer" className="works-plink">
-                  code <span aria-hidden="true">→</span>
-                  <span className="sr-only"> (GitHub, {project.name})</span>
+                  github <span aria-hidden="true">→</span>
+                  <span className="sr-only"> ({project.name} repository, opens in a new tab)</span>
                 </a>
               )}
             </p>
