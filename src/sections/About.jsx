@@ -28,7 +28,7 @@ export default function About() {
               ))}
             </h2>
             <p className="about-body mt-[clamp(20px,2vw,32px)]">{about.body}</p>
-            <a href={hero.ctaDownload.href} download className="s-link inline-block mt-[clamp(24px,2.4vw,40px)]">
+            <a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName} className="s-link inline-block mt-[clamp(24px,2.4vw,40px)]">
               {about.cvLabel} <span aria-hidden="true">↓</span>
             </a>
           </div>

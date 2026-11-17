@@ -4,6 +4,9 @@ import dataScienceCert from '../assets/certificates/data-science.webp'
 import MLCert from '../assets/certificates/ML-cert.webp'
 import ML from '../assets/certificates/AI_ML.webp'
 
+// The CV, bundled by Vite (hashed URL); `fileName` is what the download is saved as.
+import cvPdf from '../assets/CV/Jeeni_Shrestha_CV.pdf'
+
 export const site = {
   name: 'Jeeni Shrestha',
   initials: 'JS',
@@ -51,17 +54,17 @@ export const hero = {
   ctaPrimary: { label: 'view projects', href: '#projects' },
   ctaSecondary: { label: "let's connect" },
   availability: 'Open to full-stack & AI engineering roles',
-  ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
+  ctaDownload: { label: 'Download CV', href: cvPdf, fileName: 'Jeeni_Shrestha_CV.pdf' },
 }
 
 // 02 — About
 export const about = {
   // Three lines from 1024px up; wraps naturally on smaller screens.
   statementLines: ['I build reliable, scalable', 'applications that solve', 'real-world problems.'],
-  body: 'Computer Engineering graduate from Bhaktapur, working across frontend, backend, APIs and databases, alone and in teams, with a growing focus on applied AI/ML.',
+  body: 'Computer Engineering graduate from Khwopa College of Engineering, working across frontend, backend, APIs and databases, alone and in teams, with a growing focus on applied AI/ML.',
   cvLabel: 'read the full cv',
   board: [
-    { label: 'based in', value: 'Bhaktapur, Nepal', variant: 'cream' },
+    { label: 'based in', value: 'Kathmandu, Nepal', variant: 'cream' },
     { label: 'degree', value: 'B.E. Computer Engineering', variant: 'dark' },
     { label: 'focus', value: 'full-stack · AI/ML', variant: 'dark' },
     { label: 'status', value: 'open to roles', variant: 'status' },
@@ -257,11 +260,11 @@ export const certifications = {
 export const contactBoard = {
   heading: "Let's build something.",
   email: 'jenyshrestha31@gmail.com',
-  location: 'Bhaktapur, Nepal · UTC+5:45',
+  location: 'Kathmandu, Nepal · UTC+5:45',
 }
 
 export const footer = {
-  credit: 'Designed and built by Jeeni Shrestha · Bhaktapur, Nepal · 2026',
+  credit: 'Designed and built by Jeeni Shrestha · Kathmandu, Nepal · 2026',
   links: ['#about', '#skills', '#projects', '#awards', '#education', '#contact'],
 }
 

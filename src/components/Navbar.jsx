@@ -80,7 +80,7 @@ export default function Navbar({ onContactOpen }) {
                   {link.label}
                 </button>
               ))}
-              <a href={hero.ctaDownload.href} download className="nav-link">
+              <a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName} className="nav-link">
                 cv <span aria-hidden="true">↓</span>
                 <span className="sr-only">download</span>
               </a>
@@ -129,7 +129,7 @@ export default function Navbar({ onContactOpen }) {
                 </button>
               ))}
               <div className="flex items-center gap-6 pt-8">
-                <a href={hero.ctaDownload.href} download className="nav-link">
+                <a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName} className="nav-link">
                   cv <span aria-hidden="true">↓</span>
                 </a>
                 <button type="button" onClick={() => { setMenuOpen(false); onContactOpen() }} className="btn-outline">
