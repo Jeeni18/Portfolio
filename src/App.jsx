@@ -21,7 +21,7 @@ function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="relative min-h-screen bg-cream overflow-x-hidden">
+      <div className="relative min-h-screen bg-charcoal overflow-x-hidden">
         <div className="relative z-10">
           <Navbar onContactOpen={() => setContactOpen(true)} />
           <Hero onContactOpen={() => setContactOpen(true)} />

@@ -1,0 +1,38 @@
+// Workspace layout, fitted to her own proportions (measured from the model in
+// Avatar.roundArms.jsx, seated with thighs level and shins vertical; heights
+// are above the floor she stands on):
+//   lower leg, back of knee to floor ..... 0.297   (knee pivot to sole 0.354)
+//   top of thighs / knees ................ 0.420 / 0.411
+//   seated elbow (upper arm vertical) .... 0.454
+//   eyes ................................. 0.934
+//   sweater front at desk height ......... 0.21 in front of her hips
+// All positions are in the workspace group's local space (see HeroScene.jsx).
+
+// The floor: her soles when she stands (her root is at y = 0, her feet reach
+// below it). The desk, chair and shadows all stand on this.
+export const FLOOR_Y = -0.154
+// Knee pivot to the bottom of her sole: with the shins vertical, her hips
+// sit this far above the floor (feet flat, knees at 90 deg).
+export const KNEE_TO_SOLE = 0.354
+
+// Chair seat top = her lower-leg length.
+export const SEAT_HEIGHT = 0.29
+// Desktop = 1 cm below her seated elbow; underside 1.9 cm above her knees.
+export const DESK_HEIGHT = 0.444
+export const DESK_TOP_THICKNESS = 0.014
+
+// Her hips when seated at the desk (after scooting in); the chair is centred
+// a little behind them. She sits facing slightly to the right (yaw 0.25).
+export const SEAT_HIP_FINAL = [0.08, 0.2]
+export const CHAIR_BEHIND_HIP = 0.11
+// She pulls the chair in this far after sitting: she has to sit down with it
+// pulled out, since standing in front of it there's no room for her before the
+// desk.
+export const SCOOT = 0.24
+export const SEAT_POSITION = [SEAT_HIP_FINAL[0], 0, SEAT_HIP_FINAL[1] - SCOOT - CHAIR_BEHIND_HIP]
+
+// Desk: its front edge just in front of her tummy when she's scooted in, so
+// her wrists rest just past it; long and narrow, running away from her.
+export const DESK = { x: 0.16, frontZ: 0.418, width: 0.5, length: 0.75 }
+// Laptop: same size as before, near the front edge, centred on her hands.
+export const LAPTOP = { x: 0.16, frontZ: 0.428, depth: 0.24, width: 0.34, baseH: 0.015, openTilt: 0.28 }

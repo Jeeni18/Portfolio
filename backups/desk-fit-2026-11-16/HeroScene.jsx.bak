@@ -1,0 +1,669 @@
+import React, { useLayoutEffect, useMemo, useRef } from 'react'
+import * as THREE from 'three'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { ContactShadows } from '@react-three/drei'
+import Avatar from './Avatar.roundArms' // round sleeves; original kept in ./Avatar.jsx
+import Desk from './Desk'
+import { SEAT_POSITION } from './layout'
+import { T, timeline, between } from '../hooks/introTimeline'
+import { IDLE_ELBOW, WALK_ELBOW, SEAT_ELBOW, TAP_ELBOW, WAVE_SWINGS, setWaveArm } from './armPoses'
+
+const SCREEN_W = 0.29
+const SCREEN_H = 0.155
+const CANVAS_W = 320
+const CANVAS_H = 172
+
+// ---- Workspace (unchanged look) ---------------------------------------
+// Her seated yaw (0.25) + SCENE_FACING ~= 1.15 rad: three-quarter profile
+// facing right. The whole workspace group is turned; the lights stay fixed,
+// so the side of her the viewer sees is lit exactly as before.
+const SCENE_FACING = 0.9
+const SCENE_POSITION = [-0.45, 0, 0]
+const DESK_PLACEMENT = { position: [0.06, 0, 0.92], rotationY: Math.PI }
+const CAMERA_POSITION = [-0.2, 0.78, 4.4]
+const CAMERA_TARGET = [-0.2, 0.48, 0]
+const FOV = 27
+const RIM_LIGHT = { position: [0, 0.15, -3.5], intensity: 0.8, color: '#F1E8DD' }
+// Her own soft shadow (a baked radial blob that follows her): size on the
+// floor (world units) and darkness. Fades out as she sits, where the desk's
+// contact shadow takes over.
+const BLOB_SHADOW = { width: 0.62, depth: 0.34, opacity: 0.75 }
+
+// ---- Poses (her existing rig) -------------------------------------------
+const STAND_POSITION = [0.1, 0, 0.32]   // local: where she stands before sitting
+const IDLE_SHOULDER = -0.12
+const SEAT_ROOT = [0.08, -0.22, 0.12]
+const SEAT_HIP = -1.3
+const SEAT_KNEE = 1.2
+const SEAT_SHOULDER = -0.05
+const SEAT_YAW = 0.25                    // local yaw when seated
+const TAP_SHOULDER_X = -0.35
+const TAP_SHOULDER_Z = 1.35
+
+// ---- Typing (loops for as long as the page is open) ----------------------
+// Both hands are placed on the laptop's keyboard by the same two-bone IK as
+// the pull. Points are in the workspace group's local space (Desk.jsx: the
+// laptop base is centred on (0.06, 0.74, 0.67) and spans z 0.55..0.79).
+// After the light tap she scoots her chair in, then brings her hands up.
+const TYPE = {
+  keys: [0.06, 0.77, 0.56],  // between her hands, just above the keys
+  spread: 0.06,              // each hand this far either side of the centre
+  scoot: 0.12,               // chair (and she) move this far in toward the desk
+  look: 0.06,                // head tipped slightly down to the screen
+  settleIn: 1.1,             // seconds: scoot in, then hands onto the keys
+  press: 0.012,              // hand dip on a key press
+  wrist: 0.55,               // fingers dropped from the wrist onto the keys
+  wristPress: 0.25,          // ... and a little further on each press
+  rest: 0.008,               // hands lift slightly off the keys in a pause
+}
+// One loop of the typing (about 18 s), repeated seamlessly: bursts of
+// typing and short pauses; some pauses add a glance at the screen
+// (`glance`, head turn) or a small shoulder shift (`shift`).
+const TYPE_PATTERN = [
+  { d: 3.4, type: true },
+  { d: 0.8 },
+  { d: 4.2, type: true },
+  { d: 1.3, glance: 1 },
+  { d: 2.7, type: true },
+  { d: 0.6 },
+  { d: 3.8, type: true },
+  { d: 1.5, glance: -0.6, shift: 1 },
+]
+const TYPE_PERIOD = TYPE_PATTERN.reduce((a, p) => a + p.d, 0)
+const smooth01 = (x) => { const k = Math.max(0, Math.min(1, x)); return k * k * (3 - 2 * k) }
+// Activity (0 pause .. 1 typing) and the pause gestures at typing time tt.
+function typingAt(tt) {
+  let u = ((tt % TYPE_PERIOD) + TYPE_PERIOD) % TYPE_PERIOD
+  for (const p of TYPE_PATTERN) {
+    if (u < p.d) {
+      const bump = Math.sin((Math.PI * u) / p.d) ** 2
+      return {
+        active: p.type ? smooth01(Math.min(u, p.d - u) / 0.25) : 0,
+        glance: (p.glance || 0) * bump,
+        shift: (p.shift || 0) * bump,
+      }
+    }
+    u -= p.d
+  }
+  return { active: 0, glance: 0, shift: 0 }
+}
+// Short, irregular key presses for one hand (0..1): two hands at different,
+// slowly wandering rates so they never fall into step.
+function pressAt(tt, side) {
+  const phase = tt * (side > 0 ? 9.3 : 8.1) + (side > 0 ? 0 : 1.7) + Math.sin(tt * 1.7 + side) * 1.5
+  return Math.max(0, Math.sin(phase)) ** 4
+}
+
+// ---- Intro choreography --------------------------------------------------
+// She walks in front of the chair (world z), so she never passes through it.
+const WALK_Z = 0.42
+// Two-handed, effortful pull. She faces the board, leans back with knees
+// bent and steps backwards in short steps; both hands are placed on the
+// handle by two-bone IK (shoulder -> elbow -> grip). The body is hand-keyed
+// on her existing rig (she's procedural: there's no clip to retarget).
+const UPPER_ARM = 0.23                   // shoulder -> elbow (Avatar.jsx)
+const FOREARM = 0.2                      // elbow -> grip point
+const HAND_HEIGHT = 0.72                 // world y of the handle's centre on her depth plane
+const GRIP_SPREAD = 9                    // px: hands this far above / below the handle centre
+const HOLD_X = 0.32                      // her root, this far to the right of the handle (world)
+const STEP_IN = 0.08                     // small step toward the board as she grips it
+const LEAN_REST = -0.17                  // torso lean back while holding (negative = back)
+const LEAN_TUG = -0.33                   // ... at the peak of each tug
+const CROUCH_HIP = -0.32                 // knees-bent stance
+const CROUCH_KNEE = 0.5
+const CROUCH_DROP = 0.035                // root lowered by the bent knees
+const STEP_HIP = 0.28                    // backward step on each tug (alternating legs)
+const STEP_KNEE = 0.35
+const TUG_DIP = 0.1                      // head dip on each tug
+const SHOULDER_DIP = 0.008               // shoulders sink on each tug
+const JOLT_PX = 1.5                      // board's tiny jolt at the end of each tug
+const WALK_RATE = 11                     // walk-cycle speed
+// Turns are relative to the direction of the camera from where she stands
+// (the wide view sees her from a steep angle near the left edge, so "face
+// the visitor" means "face the camera", and left/right are either side).
+// 0.98 rad (~56 deg) from the camera = ~34 deg toward the camera from pure
+// profile: a three-quarter view while she walks and pulls, so her face and
+// the depth of her body read, while "left" / "right" still read clearly.
+const TURN_SIDE = 0.98
+const yawToCamera = (wx, wz) => Math.atan2(CAMERA_POSITION[0] - wx, CAMERA_POSITION[2] - wz)
+
+const easeInOutCubic = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3)
+const easeInOutSine = (x) => -(Math.cos(Math.PI * x) - 1) / 2
+const lerp = (a, b, t) => a + (b - a) * t
+
+// Group-local <-> world on the floor plane (the group only turns about y).
+const cosF = Math.cos(SCENE_FACING)
+const sinF = Math.sin(SCENE_FACING)
+const toWorld = (lx, lz) => [lx * cosF + lz * sinF + SCENE_POSITION[0], -lx * sinF + lz * cosF + SCENE_POSITION[2]]
+const toLocal = (wx, wz) => {
+  const dx = wx - SCENE_POSITION[0]
+  const dz = wz - SCENE_POSITION[2]
+  return [dx * cosF - dz * sinF, dx * sinF + dz * cosF]
+}
+const STAND_WORLD = toWorld(STAND_POSITION[0], STAND_POSITION[2])
+
+// Where the pull is at time t: `pos` 0..TUGS (board progress in tugs),
+// `effort` 0..1 (peaks early in each pull), `step` 0..1 (backward step),
+// `jolt` 0..1 (a tiny settle right after each tug), `index` of the tug.
+function tugAt(t) {
+  const cycle = T.TUG_PULL + T.TUG_RESET
+  const e = Math.max(0, t - T.REACH_END)
+  if (!T.TUGS || e >= T.TUGS * cycle) return { pos: T.TUGS, effort: 0, step: 0, jolt: 0, index: Math.max(0, T.TUGS - 1) }
+  const index = Math.floor(e / cycle)
+  const local = e - index * cycle
+  if (local < T.TUG_PULL) {
+    const k = local / T.TUG_PULL
+    return { pos: index + easeOutCubic(k), effort: Math.sin(Math.PI * Math.min(1, k * 1.25)), step: Math.sin(Math.PI * k), jolt: 0, index }
+  }
+  const rk = (local - T.TUG_PULL) / T.TUG_RESET
+  return { pos: index + 1, effort: 0, step: 0, jolt: rk < 1 / 3 ? Math.sin(Math.PI * rk * 3) : 0, index }
+}
+
+// Analytic two-bone IK on her existing joints: the shoulder pivot (any
+// rotation) and the elbow (bends about x). Puts the grip point (FOREARM
+// down the forearm) on `target`, elbow pointing down/out/back, blended in
+// by `weight` over whatever pose the arm already has.
+const IK = {
+  v: new THREE.Vector3(), p0: new THREE.Vector3(), axis: new THREE.Vector3(),
+  e: new THREE.Vector3(), pole: new THREE.Vector3(), c: new THREE.Vector3(),
+  q1: new THREE.Quaternion(), q2: new THREE.Quaternion(),
+}
+function solveArm(shoulder, elbow, target, side, weight) {
+  if (weight <= 0) return
+  const parent = shoulder.parent
+  parent.updateWorldMatrix(true, false)
+  const v = parent.worldToLocal(IK.v.copy(target)).sub(shoulder.position)
+  const a = UPPER_ARM
+  const b = FOREARM
+  const d = Math.min(a + b - 1e-4, Math.max(Math.abs(a - b) + 1e-4, v.length()))
+  const cosC = (a * a + b * b - d * d) / (2 * a * b)
+  const bend = Math.PI - Math.acos(Math.max(-1, Math.min(1, cosC))) // 0 = straight
+  // Hand direction with the elbow bent by -bend (forearm flexes forward).
+  IK.p0.set(0, -a - b * Math.cos(bend), b * Math.sin(bend)).normalize()
+  IK.axis.copy(v).normalize()
+  IK.q1.setFromUnitVectors(IK.p0, IK.axis)
+  // Twist about the reach axis so the elbow points at the pole.
+  IK.e.set(0, -1, 0).applyQuaternion(IK.q1).addScaledVector(IK.axis, -IK.e.set(0, -1, 0).applyQuaternion(IK.q1).dot(IK.axis))
+  IK.pole.set(side * 0.5, -1, -0.5)
+  IK.pole.addScaledVector(IK.axis, -IK.pole.dot(IK.axis))
+  if (IK.e.lengthSq() > 1e-8 && IK.pole.lengthSq() > 1e-8) {
+    IK.e.normalize()
+    IK.pole.normalize()
+    const angle = Math.atan2(IK.axis.dot(IK.c.crossVectors(IK.e, IK.pole)), IK.e.dot(IK.pole))
+    IK.q2.setFromAxisAngle(IK.axis, angle)
+    IK.q1.premultiply(IK.q2)
+  }
+  shoulder.quaternion.slerp(IK.q1, weight)
+  elbow.rotation.x = lerp(elbow.rotation.x, -bend, weight)
+}
+
+// Laptop screen: types out her intro, driven by the shared timeline.
+function ScreenTexture({ lines, reducedMotion }) {
+  const lastDrawRef = useRef({ chars: -1, cursor: null })
+  const fullText = useMemo(() => lines.join('\n'), [lines])
+
+  const { canvas, texture } = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = CANVAS_W
+    canvas.height = CANVAS_H
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    return { canvas, texture }
+  }, [])
+
+  const draw = (text, showCursor) => {
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#FAF6F0'
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
+    ctx.fillStyle = '#29232A'
+    ctx.font = '20px "IBM Plex Mono", monospace'
+    ctx.textBaseline = 'top'
+    const textLines = text.split('\n')
+    textLines.forEach((line, i) => ctx.fillText(line, 14, 14 + i * 28))
+    if (showCursor) {
+      const lastLine = textLines[textLines.length - 1] || ''
+      const width = ctx.measureText(lastLine).width
+      ctx.fillRect(14 + width + 2, 14 + (textLines.length - 1) * 28, 10, 20)
+    }
+    texture.needsUpdate = true
+  }
+
+  useFrame((state) => {
+    const t = timeline.getT()
+    const typed = between(t, T.LAPTOP_TYPE_START, T.LAPTOP_TYPE_END)
+    const chars = Math.round(typed * fullText.length)
+    const started = t >= T.LAPTOP_TYPE_START
+    const cursor = started && (reducedMotion || Math.floor(state.clock.elapsedTime * 2) % 2 === 0)
+
+    const prev = lastDrawRef.current
+    if (prev.chars === chars && prev.cursor === cursor) return
+    lastDrawRef.current = { chars, cursor }
+    draw(fullText.slice(0, chars), cursor)
+  })
+
+  return (
+    <mesh position={[0, 0, 0.001]}>
+      <planeGeometry args={[SCREEN_W, SCREEN_H]} />
+      <meshBasicMaterial map={texture} toneMapped={false} />
+    </mesh>
+  )
+}
+
+// Camera. With `frame` (desktop) the canvas covers the whole hero, and a
+// view offset makes the old mini-me frame (`frame`, in hero px) render with
+// exactly the old projection -- same size, same framing -- while the rest
+// of the canvas extends that view so she can walk in from the left edge.
+function CameraRig({ frame }) {
+  const { camera, size } = useThree()
+  const key = useRef('')
+  useFrame(() => {
+    const k = frame
+      ? `${size.width}x${size.height}|${frame.left},${frame.top},${frame.width},${frame.height}`
+      : `${size.width}x${size.height}`
+    if (k !== key.current || camera.aspect !== (frame ? frame.width / frame.height : size.width / size.height)) {
+      key.current = k
+      camera.fov = FOV
+      if (frame) {
+        camera.aspect = frame.width / frame.height
+        camera.setViewOffset(frame.width, frame.height, -frame.left, -frame.top, size.width, size.height)
+      } else {
+        camera.clearViewOffset()
+        camera.aspect = size.width / size.height
+      }
+      camera.updateProjectionMatrix()
+    }
+    camera.lookAt(...CAMERA_TARGET)
+  })
+  return null
+}
+
+// ---- Rig ----------------------------------------------------------------
+function setStanding(r) {
+  r.hipL.rotation.x = 0
+  r.hipR.rotation.x = 0
+  r.kneeL.rotation.x = 0
+  r.kneeR.rotation.x = 0
+  r.shoulderL.rotation.set(IDLE_SHOULDER, 0, 0)
+  r.shoulderR.rotation.set(IDLE_SHOULDER, 0, 0)
+  r.elbowL.rotation.set(IDLE_ELBOW, 0, 0)
+  r.elbowR.rotation.set(IDLE_ELBOW, 0, 0)
+  if (r.wristL) r.wristL.rotation.set(0, 0, 0)
+  if (r.wristR) r.wristR.rotation.set(0, 0, 0)
+  r.torso.rotation.set(0, 0, 0)
+  r.torso.position.y = 0.5
+  r.head.rotation.set(0, 0, 0)
+}
+
+// Legs + arms of her existing walk cycle; `holdLeft` leaves the left arm
+// free (it holds the board).
+function setWalking(r, cycle, { holdLeft = false } = {}) {
+  const swing = Math.sin(cycle) * 0.55
+  const armSwing = Math.sin(cycle) * 0.4
+  r.hipL.rotation.x = swing
+  r.hipR.rotation.x = -swing
+  r.kneeL.rotation.x = Math.max(0, Math.sin(cycle)) * 0.9
+  r.kneeR.rotation.x = Math.max(0, -Math.sin(cycle)) * 0.9
+  r.shoulderR.rotation.x = armSwing
+  r.shoulderR.rotation.z = 0
+  r.elbowR.rotation.x = WALK_ELBOW
+  if (!holdLeft) {
+    r.shoulderL.rotation.x = -armSwing
+    r.elbowL.rotation.x = WALK_ELBOW
+  }
+  r.torso.position.y = 0.5
+  r.head.rotation.z = Math.sin(cycle * 0.5) * 0.03
+}
+
+const bob = (cycle) => Math.abs(Math.sin(cycle * 2)) * 0.012
+
+// Knees-bent, leaning-back holding stance, blended in by `c` (0..1), with
+// an optional backward step on one leg (`step` 0..1, `leg` 0 = left).
+function setBracing(r, c, { lean = LEAN_REST, step = 0, leg = 0 } = {}) {
+  const stepHip = STEP_HIP * step
+  const stepKnee = STEP_KNEE * step
+  r.hipL.rotation.x = CROUCH_HIP * c + (leg === 0 ? stepHip : -0.3 * stepHip)
+  r.hipR.rotation.x = CROUCH_HIP * c + (leg === 1 ? stepHip : -0.3 * stepHip)
+  r.kneeL.rotation.x = CROUCH_KNEE * c + (leg === 0 ? stepKnee : 0)
+  r.kneeR.rotation.x = CROUCH_KNEE * c + (leg === 1 ? stepKnee : 0)
+  r.torso.rotation.x = lean * c
+}
+
+// World position + world yaw -> her root (group-local).
+function place(r, wx, wz, worldYaw, y = 0) {
+  const [lx, lz] = toLocal(wx, wz)
+  r.root.position.set(lx, y, lz)
+  r.root.rotation.y = worldYaw - SCENE_FACING
+}
+
+// Soft radial shadow texture (black, transparent edge).
+function useBlobTexture() {
+  return useMemo(() => {
+    const c = document.createElement('canvas')
+    c.width = c.height = 128
+    const g = c.getContext('2d')
+    const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64)
+    grad.addColorStop(0, 'rgba(0,0,0,1)')
+    grad.addColorStop(0.45, 'rgba(0,0,0,0.6)')
+    grad.addColorStop(1, 'rgba(0,0,0,0)')
+    g.fillStyle = grad
+    g.fillRect(0, 0, 128, 128)
+    return new THREE.CanvasTexture(c)
+  }, [])
+}
+
+function Rig({ reducedMotion, anchors, chair }) {
+  const rig = useRef({})
+  const blob = useRef(null)
+  const soleY = useRef(0)
+  const blobTexture = useBlobTexture()
+  // Typing loop: its own clock (only advances while she types and frames
+  // render, clamped, so it resumes smoothly after a pause), and how far her
+  // hands are up on the keyboard (0..1).
+  const typing = useRef({ clock: 0, reach: 0, lastT: -1 })
+
+  // Where her soles are when standing (her feet reach below the scene's
+  // floor plane), measured once from her own geometry, so her shadow sits
+  // exactly under her shoes.
+  useLayoutEffect(() => {
+    const r = rig.current
+    if (!r.root) return
+    // Her wrists: the hand's group at the end of each forearm (animated
+    // only; the model is unchanged).
+    r.wristL = r.elbowL.children.find((c) => c.isGroup) || null
+    r.wristR = r.elbowR.children.find((c) => c.isGroup) || null
+    setStanding(r)
+    r.root.position.set(0, 0, 0)
+    r.root.updateWorldMatrix(true, true)
+    const box = new THREE.Box3().setFromObject(r.root)
+    const origin = new THREE.Vector3()
+    r.root.getWorldPosition(origin)
+    soleY.current = box.min.y - origin.y
+  }, [])
+  const { camera, size } = useThree()
+  const tmp = useMemo(() => ({ a: new THREE.Vector3(), b: new THREE.Vector3(), top: new THREE.Vector3(), bottom: new THREE.Vector3(), q: new THREE.Quaternion() }), [])
+
+  // World x at which a point at height y, depth z lands on hero px `px`.
+  // (The camera has no yaw, so screen x is linear in world x.)
+  const worldXAt = (px, y, z) => {
+    const n = (px / size.width) * 2 - 1
+    const a = tmp.a.set(0, y, z).project(camera).x
+    const b = tmp.b.set(1, y, z).project(camera).x
+    return (n - a) / (b - a)
+  }
+  const toPx = (v) => {
+    const p = v.clone().project(camera)
+    return [((p.x + 1) / 2) * size.width, ((1 - p.y) / 2) * size.height]
+  }
+  // Hero px -> the world point on the plane z = depth (unprojection).
+  const worldAtPx = (px, py, depth, out) => {
+    out.set((px / size.width) * 2 - 1, 1 - (py / size.height) * 2, 0.5).unproject(camera)
+    out.sub(camera.position).normalize()
+    const s = (depth - camera.position.z) / out.z
+    return out.multiplyScalar(s).add(camera.position)
+  }
+
+  useFrame((state, delta) => {
+    const r = rig.current
+    if (!r.root) return
+
+    // The intro starts on the first rendered frame, so her walk never runs
+    // behind a loading canvas. No-op if it already started or finished.
+    timeline.start()
+
+    const t = timeline.getT()
+    const desktop = T.layout === 'desktop' && anchors
+
+    // Path anchors (world x on her walking line).
+    const startX = worldXAt(anchors ? anchors.offX : -40, 0, WALK_Z)
+    const p1X = desktop ? worldXAt(anchors.p1X, 0, WALK_Z) : STAND_WORLD[0]
+    const handleFinalPx = desktop ? anchors.handleX : 0
+    // The handle (and so her grip) on screen, and her stance around it.
+    const [, handleYpx] = toPx(tmp.a.set(p1X, HAND_HEIGHT, WALK_Z))
+    const gripRoot = p1X - STEP_IN
+    const [grabPx] = toPx(tmp.a.set(gripRoot - HOLD_X, HAND_HEIGHT, WALK_Z))
+    const p2X = desktop ? worldXAt(handleFinalPx, HAND_HEIGHT, WALK_Z) + HOLD_X : STAND_WORLD[0]
+    let boardPx = null // where the board's handle is (desktop), hero px
+    // Both hands onto the handle at hero px `px` (upper / lower grip).
+    const grip = (px, weight) => {
+      if (!desktop || weight <= 0) return
+      r.root.updateWorldMatrix(true, true)
+      worldAtPx(px, handleYpx - GRIP_SPREAD, WALK_Z, tmp.top)
+      worldAtPx(px, handleYpx + GRIP_SPREAD, WALK_Z, tmp.bottom)
+      solveArm(r.shoulderL, r.elbowL, tmp.top, -1, weight)
+      solveArm(r.shoulderR, r.elbowR, tmp.bottom, 1, weight)
+    }
+
+    setStanding(r)
+    const faceRight = (x) => yawToCamera(x, WALK_Z) + TURN_SIDE
+    const faceLeft = (x) => yawToCamera(x, WALK_Z) - TURN_SIDE
+    const faceVisitor = (x) => yawToCamera(x, WALK_Z)
+
+    if (t < T.FADE_END) {
+      // Waiting just off-screen.
+      place(r, startX, WALK_Z, faceRight(startX))
+      if (desktop) boardPx = anchors.offHandleX
+    } else if (t < T.WALK_END) {
+      // Walk in from beyond the left edge.
+      const k = between(t, T.FADE_END, T.WALK_END)
+      const cycle = t * T.WALK_CADENCE
+      setWalking(r, cycle)
+      const x = lerp(startX, p1X, easeOutCubic(k) * 0.35 + k * 0.65)
+      place(r, x, WALK_Z, faceRight(x), bob(cycle))
+      if (desktop) boardPx = anchors.offHandleX
+    } else if (t < T.WAVE_END) {
+      // Turn to the visitor, then her existing wave.
+      const turn = easeInOutCubic(between(t, T.WALK_END, T.TURN_END))
+      place(r, p1X, WALK_Z, lerp(faceRight(p1X), faceVisitor(p1X), turn))
+      const w = between(t, T.TURN_END, T.WAVE_END)
+      const rise = easeInOutCubic(Math.min(1, w / 0.3))
+      const lower = easeInOutCubic(Math.max(0, (w - 0.72) / 0.28))
+      const lift = t < T.TURN_END ? 0 : rise * (1 - lower)
+      const swing = Math.sin(Math.PI * 2 * WAVE_SWINGS * Math.max(0, Math.min(1, (w - 0.12) / 0.76)))
+      setWaveArm(r.shoulderR, r.elbowR, r.wristR, lift, swing, IDLE_SHOULDER)
+      if (desktop) boardPx = anchors.offHandleX
+    } else if (desktop && t < T.REACH_END) {
+      // Turn to the left edge, take a small step toward it and brace; the
+      // handle peeks into view and both hands close on it.
+      const k = between(t, T.WAVE_END, T.REACH_END)
+      const turn = easeInOutCubic(Math.min(1, k / 0.45))
+      const stepK = easeInOutSine(Math.max(0, Math.min(1, (k - 0.2) / 0.5)))
+      const brace = easeInOutCubic(Math.max(0, (k - 0.55) / 0.45))
+      const x = lerp(p1X, gripRoot, stepK)
+      setBracing(r, brace, { step: Math.sin(Math.PI * stepK) * 0.6, leg: 0 })
+      place(r, x, WALK_Z, lerp(faceVisitor(x), faceLeft(x), turn), -CROUCH_DROP * brace)
+      boardPx = lerp(anchors.offHandleX, grabPx, easeOutCubic(Math.max(0, Math.min(1, (k - 0.15) / 0.7))))
+      grip(boardPx, easeInOutCubic(Math.max(0, Math.min(1, (k - 0.45) / 0.45))))
+    } else if (desktop && t < T.PULL_END) {
+      // Three heavy tugs. The board's path is fixed (ease-out per tug, then
+      // a pause); she stays HOLD_X behind the handle, stepping backwards,
+      // leaning harder and dipping her head on each effort.
+      const tug = tugAt(t)
+      boardPx = lerp(grabPx, handleFinalPx, tug.pos / T.TUGS) + JOLT_PX * tug.jolt
+      const x = worldXAt(boardPx, HAND_HEIGHT, WALK_Z) + HOLD_X
+      setBracing(r, 1, { lean: lerp(LEAN_REST, LEAN_TUG, tug.effort), step: tug.step, leg: tug.index % 2 })
+      r.head.rotation.x = TUG_DIP * tug.effort
+      r.torso.position.y = 0.5 - SHOULDER_DIP * tug.effort
+      place(r, x, WALK_Z, faceLeft(x), -CROUCH_DROP - 0.01 * tug.effort)
+      grip(boardPx, 1)
+    } else if (t < T.TO_DESK_END) {
+      // Let go (desktop), then walk on to the desk: along her walking line
+      // first, then in to the stand point in front of the chair.
+      const fromX = desktop ? p2X : p1X
+      if (desktop && t < T.RELEASE_END) {
+        // Let go, straighten up, a small exhale (shoulders drop, slight nod).
+        const k = between(t, T.PULL_END, T.RELEASE_END)
+        const hold = 1 - easeInOutCubic(Math.min(1, k / 0.4))
+        const brace = 1 - easeInOutCubic(Math.max(0, Math.min(1, (k - 0.15) / 0.5)))
+        const exhale = Math.sin(Math.PI * Math.max(0, (k - 0.45) / 0.55))
+        setBracing(r, brace)
+        r.torso.position.y = 0.5 - 0.012 * exhale
+        r.head.rotation.x = 0.06 * exhale
+        place(r, fromX, WALK_Z, faceLeft(fromX), -CROUCH_DROP * brace)
+        grip(handleFinalPx, hold)
+      } else {
+        const start = desktop ? T.RELEASE_END : T.WAVE_END
+        const k = between(t, start, T.TO_DESK_END)
+        const kx = easeInOutSine(Math.min(1, k / 0.7))
+        const kz = easeInOutSine(Math.max(0, (k - 0.35) / 0.65))
+        const cycle = t * WALK_RATE
+        const moving = k < 0.98
+        if (moving) setWalking(r, cycle)
+        const x = lerp(fromX, STAND_WORLD[0], kx)
+        const yawStart = desktop ? faceLeft(x) : faceVisitor(x)
+        const yaw = lerp(lerp(yawStart, faceRight(x), Math.min(1, k / 0.3)), SEAT_YAW + SCENE_FACING, kz)
+        place(r, x, lerp(WALK_Z, STAND_WORLD[1], kz), yaw, moving ? bob(cycle) : 0)
+      }
+      if (desktop) boardPx = handleFinalPx
+    } else if (t < T.SIT_END) {
+      // Her existing sit: lower toward the chair, hips + knees together.
+      const s = easeInOutCubic(between(t, T.TO_DESK_END, T.SIT_END))
+      r.root.position.set(
+        lerp(STAND_POSITION[0], SEAT_ROOT[0], s),
+        lerp(0, SEAT_ROOT[1], s),
+        lerp(STAND_POSITION[2], SEAT_ROOT[2], s)
+      )
+      r.root.rotation.y = SEAT_YAW
+      r.hipL.rotation.x = lerp(0, SEAT_HIP, s)
+      r.hipR.rotation.x = lerp(0, SEAT_HIP, s)
+      r.kneeL.rotation.x = lerp(0, SEAT_KNEE, s)
+      r.kneeR.rotation.x = lerp(0, SEAT_KNEE, s)
+      r.shoulderL.rotation.x = lerp(IDLE_SHOULDER, SEAT_SHOULDER, s)
+      r.shoulderR.rotation.x = lerp(IDLE_SHOULDER, SEAT_SHOULDER, s)
+      r.elbowL.rotation.x = lerp(IDLE_ELBOW, SEAT_ELBOW, s)
+      r.elbowR.rotation.x = lerp(IDLE_ELBOW, SEAT_ELBOW, s)
+      if (desktop) boardPx = handleFinalPx
+    } else if (t < T.TAP_END) {
+      // Her existing tap on the laptop as she starts typing.
+      const bump = Math.sin(between(t, T.SIT_END, T.TAP_END) * Math.PI)
+      r.root.position.set(SEAT_ROOT[0], SEAT_ROOT[1], SEAT_ROOT[2])
+      r.root.rotation.y = SEAT_YAW
+      r.hipL.rotation.x = SEAT_HIP
+      r.hipR.rotation.x = SEAT_HIP
+      r.kneeL.rotation.x = SEAT_KNEE
+      r.kneeR.rotation.x = SEAT_KNEE
+      r.shoulderL.rotation.x = SEAT_SHOULDER
+      r.shoulderR.rotation.x = lerp(SEAT_SHOULDER, TAP_SHOULDER_X, bump)
+      r.shoulderR.rotation.z = TAP_SHOULDER_Z * bump
+      r.elbowL.rotation.x = SEAT_ELBOW
+      r.elbowR.rotation.x = lerp(SEAT_ELBOW, TAP_ELBOW, bump)
+      r.head.rotation.x = bump * 0.12
+      if (desktop) boardPx = handleFinalPx
+    } else {
+      // Typing, looped for as long as the page is open (still for reduced
+      // motion). Hands come up onto the keyboard after the light tap; if
+      // the intro was skipped (or already played) they're there at once.
+      const live = reducedMotion ? 0 : 1
+      const ty = typing.current
+      const dt = Math.min(delta, 0.1)
+      const jumped = ty.lastT < T.TAP_END && (timeline.jumpedToEnd() || ty.lastT < 0)
+      ty.reach = jumped || reducedMotion ? 1 : Math.min(1, ty.reach + dt / TYPE.settleIn)
+      ty.clock += dt * live
+      const tt = ty.clock
+      const scoot = smooth01(ty.reach / 0.55)
+      const reach = smooth01((ty.reach - 0.35) / 0.65)
+      const { active, glance, shift } = typingAt(tt)
+      const a = active * live
+
+      const breathe = Math.sin(tt * 1.3) * 0.006 * live
+      r.root.position.set(SEAT_ROOT[0], SEAT_ROOT[1] + breathe, SEAT_ROOT[2] + TYPE.scoot * scoot)
+      if (chair?.current) chair.current.position.z = SEAT_POSITION[2] + TYPE.scoot * scoot
+      r.root.rotation.y = SEAT_YAW
+      r.hipL.rotation.x = SEAT_HIP
+      r.hipR.rotation.x = SEAT_HIP
+      r.kneeL.rotation.x = SEAT_KNEE
+      r.kneeR.rotation.x = SEAT_KNEE
+      r.shoulderL.rotation.x = SEAT_SHOULDER
+      r.shoulderR.rotation.x = SEAT_SHOULDER
+      r.elbowL.rotation.x = SEAT_ELBOW
+      r.elbowR.rotation.x = SEAT_ELBOW
+      r.torso.rotation.z = 0.035 * shift * live
+      r.head.rotation.x = TYPE.look * reach + 0.015 * (pressAt(tt, 1) + pressAt(tt, -1)) * a - 0.05 * Math.abs(glance) * live
+      r.head.rotation.y = 0.16 * glance * live
+      r.head.rotation.z = Math.sin(tt * 0.6) * 0.02 * live
+
+      r.root.updateWorldMatrix(true, true)
+      for (const side of [-1, 1]) {
+        const press = pressAt(tt, side) * a
+        tmp.top.set(
+          TYPE.keys[0] + side * TYPE.spread + Math.sin(tt * 0.7 + side * 2) * 0.012 * a,
+          TYPE.keys[1] - TYPE.press * press + TYPE.rest * (1 - active) * live,
+          TYPE.keys[2] + Math.sin(tt * 1.1 + side) * 0.008 * a
+        )
+        r.root.parent.localToWorld(tmp.top)
+        const elbow = side > 0 ? r.elbowR : r.elbowL
+        solveArm(side > 0 ? r.shoulderR : r.shoulderL, elbow, tmp.top, side, reach)
+        // Roll the forearm about its length so the palm faces down onto the
+        // keys (whatever angle the IK left it at), then drop the fingers
+        // onto the keys from the wrist; a press bends them a little more.
+        elbow.updateWorldMatrix(true, false)
+        elbow.getWorldQuaternion(tmp.q)
+        const down = tmp.a.set(0, -1, 0).applyQuaternion(tmp.q.invert())
+        elbow.rotation.y = Math.atan2(down.x, down.z) * reach
+        const wrist = side > 0 ? r.wristR : r.wristL
+        if (wrist) wrist.rotation.x = -(TYPE.wrist + TYPE.wristPress * press) * reach
+      }
+      if (desktop) boardPx = handleFinalPx
+    }
+    if (t < T.TAP_END) {
+      typing.current.reach = 0
+      typing.current.clock = 0
+      if (chair?.current) chair.current.position.z = SEAT_POSITION[2]
+    }
+    typing.current.lastT = t
+
+    // Her shadow follows her on the floor; it fades out as she sits.
+    if (blob.current) {
+      blob.current.position.set(r.root.position.x, soleY.current + 0.004, r.root.position.z)
+      const seatFade = 1 - between(t, T.TO_DESK_END, T.TO_DESK_END + (T.SIT_END - T.TO_DESK_END) * 0.6)
+      blob.current.material.opacity = BLOB_SHADOW.opacity * seatFade
+      blob.current.visible = seatFade > 0
+    }
+
+    if (!desktop) return
+    timeline.setHand(boardPx, handleYpx, handleYpx)
+  })
+
+  return (
+    <>
+      <Avatar rig={rig} />
+      <mesh ref={blob} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
+        <planeGeometry args={[BLOB_SHADOW.width, BLOB_SHADOW.depth]} />
+        <meshBasicMaterial map={blobTexture} transparent depthWrite={false} opacity={BLOB_SHADOW.opacity} color="#000000" />
+      </mesh>
+    </>
+  )
+}
+
+// `paused`: the hero is off-screen or the tab is hidden -- no frames are
+// rendered (and so no typing) until it's visible again.
+export default function HeroScene({ reducedMotion, lines, frame = null, anchors = null, paused = false }) {
+  const chair = useRef(null)
+  return (
+    <Canvas
+      frameloop={paused ? 'never' : 'always'}
+      shadows
+      dpr={frame ? [1, 1.25] : [1, 1.5]}
+      camera={{ position: CAMERA_POSITION, fov: FOV }}
+      gl={{ alpha: true, antialias: true }}
+      style={{ background: 'transparent', pointerEvents: 'none' }}
+    >
+      <ambientLight intensity={0.65} color="#FFFDF8" />
+      <directionalLight position={[2, 3, 2]} intensity={1.1} color="#FFF3E0" castShadow />
+      <directionalLight position={[-2, 1.5, -1]} intensity={0.35} color="#D8DCEB" />
+      {/* Rim light from behind and above, in the palette's cream: it lands
+          on the surfaces turned away from the camera, so it outlines her
+          against the dark wall without changing the colours of the sides
+          the viewer sees. */}
+      <directionalLight position={RIM_LIGHT.position} intensity={RIM_LIGHT.intensity} color={RIM_LIGHT.color} />
+      <CameraRig frame={frame} />
+
+      <group position={SCENE_POSITION} rotation={[0, SCENE_FACING, 0]}>
+        <Desk placement={DESK_PLACEMENT} chairRef={chair} screenContent={<ScreenTexture lines={lines} reducedMotion={reducedMotion} />} />
+        <Rig reducedMotion={reducedMotion} anchors={anchors} chair={chair} />
+        <ContactShadows position={[0, 0.001, 0]} opacity={0.6} scale={3} blur={2.2} far={1} color="#000000" />
+      </group>
+
+    </Canvas>
+  )
+}

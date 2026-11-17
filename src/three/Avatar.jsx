@@ -465,7 +465,10 @@ export default function Avatar({ rig }) {
             <capsuleGeometry args={[0.095, 0.34, 4, 8]} />
             <meshStandardMaterial color={PALETTE.hair} flatShading />
           </mesh>
-          <mesh position={[0, -0.18, -0.2]} rotation={[0.18, 0, 0]} castShadow>
+          {/* Nape volume -- sits flush with the crown and the long back
+              piece (z -0.07; it was -0.2, which pushed ~9cm out past the
+              rest of the hair and read as a lump from the side/behind). */}
+          <mesh position={[0, -0.18, -0.07]} rotation={[0.18, 0, 0]} castShadow>
             <capsuleGeometry args={[0.1, 0.2, 4, 8]} />
             <meshStandardMaterial color={PALETTE.hairShine} flatShading />
           </mesh>

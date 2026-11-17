@@ -1,0 +1,33 @@
+import * as THREE from 'three'
+
+// Elbow + arm values for her animations (walk, idle, wave, sit, type).
+//
+// On her rig the elbow is a hinge about its local x-axis, and a NEGATIVE
+// rotation flexes the forearm forward -- the natural way. Her original
+// values were all positive, which bent every elbow backwards (it only
+// showed once the camera saw her from the side). These are the same bends
+// with the correct sign; the wave additionally twists the raised arm a
+// quarter-turn about its own axis so the hinge faces forward and the
+// forearm rises toward her head instead of swinging behind it.
+
+export const IDLE_ELBOW = -0.2   // was 0.2
+export const WALK_ELBOW = -0.3   // was 0.3
+export const SEAT_ELBOW = -0.55  // was 0.55: forearms forward over her lap
+export const TAP_ELBOW = -0.6    // was 0.6: forearm forward toward the laptop
+
+export const WAVE_LIFT = 2.0     // arm raised out to the side (unchanged)
+export const WAVE_SHOULDER_X = -0.15
+export const WAVE_TWIST = Math.PI / 2  // turns the elbow hinge to face forward
+export const WAVE_ELBOW = -1.3   // was 1.3: forearm up
+
+const lerp = (a, b, t) => a + (b - a) * t
+const euler = new THREE.Euler(0, 0, 0, 'ZYX')
+
+// Her wave, blended in by `lift` (0..1); `swing` is the side-to-side wave.
+// Written as a quaternion (twist about the arm, then the lift) so it never
+// depends on the shoulder's default Euler order.
+export function setWaveArm(shoulder, elbow, lift, swing, idleShoulder) {
+  euler.set(lerp(idleShoulder, WAVE_SHOULDER_X, lift), WAVE_TWIST * lift, lift * WAVE_LIFT + swing, 'ZYX')
+  shoulder.quaternion.setFromEuler(euler)
+  elbow.rotation.x = lerp(IDLE_ELBOW, WAVE_ELBOW, lift)
+}

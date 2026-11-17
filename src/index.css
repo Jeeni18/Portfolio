@@ -3,43 +3,50 @@
 @tailwind utilities;
 
 /*
- * Burgundy & Architectural Cream
+ * Departure board
  *
- * Palette            Role
- * #35101E deep wine  dark sections, overlays, projector hardware, 3D floor
- * #641D35 rich wine  primary actions, the 3D alcove, active states
- * #8D5365 muted rose small labels / metadata on cream (4.9:1)
- * #D5B7B8 dusty pink highlights & hairline accents; text only on dark
- * #F1E8DD cream      page background
- * #29232A charcoal   text, lines, furniture details (12.6:1 on cream)
+ * Token          Hex      Use
+ * charcoal       #29232A  page / hero wall, dark blades
+ * charcoal-deep  #1F1A20  floor, alternate section background
+ * board-black    #121013  board face, hinge line on dark blades
+ * oxblood        #35101E  board frame + legs, alternate section background
+ * burgundy       #641D35  name text, header rule, status blades
+ * rose           #8D5365  small mono labels, thin lines, floor line
+ * dusty-pink     #D5B7B8  nav links, secondary text on dark, hinge on cream
+ * cream          #F1E8DD  key blades, primary button, light text on dark
  *
- * Colours are stored as RGB channels so Tailwind can apply alpha
- * (`text-ink/70`). `.tone-dark` / `.tone-ink` re-map the same roles for
- * dark sections, so components never need a separate dark class list.
+ * The hero, nav, board and blades use the plain CSS below (exact hex via
+ * these variables), not Tailwind colour classes, so they render correctly
+ * even if a running dev server hasn't reloaded tailwind.config.js.
+ *
+ * The channel variables (ink / paper / wine / dusty / line) only exist so
+ * the sections not yet restyled keep rendering; round 2 removes them.
  */
 @layer base {
-  /* Base: deep burgundy ground with cream type */
   :root {
-    --ink: 241 232 221;       /* cream text */
-    --cream: 53 16 30;        /* deep burgundy page */
-    --paper: 67 24 40;        /* lifted burgundy for cards on the base */
-    --wine: 213 183 184;      /* primary action: dusty pink */
+    --charcoal: #29232A;
+    --charcoal-deep: #1F1A20;
+    --board-black: #121013;
+    --oxblood: #35101E;
+    --burgundy: #641D35;
+    --rose: #8D5365;
+    --dusty-pink: #D5B7B8;
+    --cream: #F1E8DD;
+
+    --ink: 241 232 221;
+    --paper: 31 26 32;
+    --wine: 213 183 184;
     --wine-strong: 241 232 221;
-    --rose: 213 183 184;      /* labels: dusty pink */
-    --dusty: 141 83 101;      /* highlights: muted rose */
-    --line: 241 232 221;      /* hairlines */
+    --dusty: 141 83 101;
+    --line: 241 232 221;
   }
 
-  /* Light panels: architectural cream with charcoal type. Used for the
-     cream sections, the projector screen, modals and the photo frame. */
   .tone-light {
-    --ink: 41 35 42;          /* charcoal */
-    --cream: 241 232 221;     /* architectural cream */
-    --paper: 248 243 236;     /* lifted cream for reading surfaces */
-    --wine: 100 29 53;        /* rich burgundy */
-    --wine-strong: 53 16 30;  /* deep burgundy (hover) */
-    --rose: 141 83 101;       /* muted rose */
-    --dusty: 213 183 184;     /* dusty pink */
+    --ink: 41 35 42;
+    --paper: 248 243 236;
+    --wine: 100 29 53;
+    --wine-strong: 53 16 30;
+    --dusty: 213 183 184;
     --line: 41 35 42;
     color: rgb(var(--ink));
   }
@@ -52,23 +59,20 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: rgb(var(--cream));
+    background-color: #29232A;
   }
 
   body {
     font-family: 'Work Sans', sans-serif;
-    background-color: rgb(var(--cream));
-    /* Fine paper grain only -- no pattern */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
-    color: rgb(var(--ink));
+    background-color: #29232A;
+    color: #F1E8DD;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background: rgb(var(--dusty));
+    background: #D5B7B8;
     color: #29232A;
   }
 
@@ -77,34 +81,299 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #35101E;
+    background: #1F1A20;
   }
 
   ::-webkit-scrollbar-thumb {
     background: #8D5365;
-    border-radius: 10px;
   }
 
   :focus-visible {
-    outline: 2px solid rgb(var(--wine));
+    outline: 1px solid #D5B7B8;
     outline-offset: 3px;
   }
 }
 
 @layer utilities {
-  /* Reading surface: lifted cream, single hairline, no hard shadow */
+  /* ---- Buttons and links ------------------------------------------- */
+
+  /* Primary: solid cream, oxblood mono text, square, 28px tall */
+  .btn-primary {
+    @apply inline-flex items-center justify-center font-mono text-[13px] px-5;
+    height: 28px;
+    background: #F1E8DD;
+    color: #35101E;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: #D5B7B8;
+  }
+
+  /* Secondary: dusty-pink mono text link with an arrow; underline draws in */
+  .btn-secondary {
+    @apply inline-flex items-center font-mono text-[13px] gap-1.5;
+    height: 28px;
+    color: #D5B7B8;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 calc(50% + 0.75em);
+    background-size: 0% 1px;
+    transition: color 0.2s ease, background-size 0.25s ease;
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    color: #F1E8DD;
+    background-size: 100% 1px;
+  }
+
+  /* Outline: 1px dusty-pink border, cream text, square */
+  /* Sized in em from its parent (the nav sets the room's mono size) */
+  .btn-outline {
+    @apply inline-flex items-center justify-center font-mono leading-none;
+    height: 2.05em;
+    padding: 0 0.55em;
+    color: #F1E8DD;
+    border: 1px solid #D5B7B8;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-outline:hover,
+  .btn-outline:focus-visible {
+    background: #F1E8DD;
+    color: #35101E;
+    border-color: #F1E8DD;
+  }
+
+  /* Hero floor actions -- sized in em from the room's mono size so they
+     keep the reference proportions (box 2.75em tall, 2.1em side padding). */
+  .room-btn-primary {
+    @apply inline-flex items-center justify-center font-mono leading-none;
+    height: 2.75em;
+    padding: 0 2.1em;
+    background: #F1E8DD;
+    color: #35101E;
+    transition: background-color 0.2s ease;
+  }
+
+  .room-btn-primary:hover,
+  .room-btn-primary:focus-visible {
+    background: #D5B7B8;
+  }
+
+  .room-btn-secondary {
+    @apply inline-flex items-center gap-[0.45em] font-mono leading-none;
+    height: 2.75em;
+    color: #D5B7B8;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 calc(50% + 0.8em);
+    background-size: 0% 1px;
+    transition: color 0.2s ease, background-size 0.25s ease;
+  }
+
+  .room-btn-secondary:hover,
+  .room-btn-secondary:focus-visible {
+    color: #F1E8DD;
+    background-size: 100% 1px;
+  }
+
+  /* Nav link: mono, dusty pink; underline draws in from the left */
+  .nav-link {
+    @apply font-mono;
+    position: relative;
+    padding-bottom: 2px;
+    color: #D5B7B8;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link[aria-current='true'] {
+    color: #F1E8DD;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+}
+
+/* Room, board and blade styles sit outside Tailwind's layers on purpose:
+   Tailwind drops @layer classes it can't find literally in the source,
+   and the blade variants are composed at runtime (blade--${variant}). */
+/* ---- Room (hero) --------------------------------------------------- */
+
+.room { background: var(--charcoal); }
+.room-floor { background: var(--charcoal-deep); border-top: 1px solid var(--rose); }
+.room-cone { background: var(--cream); opacity: 0.05; }
+.room-pool { background: var(--board-black); border-radius: 50%; }
+.room-logo { color: var(--cream); }
+.room-rule { height: 1px; background: var(--burgundy); }
+.room-header--solid { background: var(--charcoal); }
+.mobile-menu-item { border-bottom: 1px solid rgba(141, 83, 101, 0.3); }
+.room-pin {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--board-black);
+  transform: translateY(-50%);
+  z-index: 40;
+}
+.room-pin--l { left: -3px; }
+.room-pin--r { right: -3px; }
+
+/* Layout (display / position) stays in Tailwind classes so responsive
+   utilities like `hidden sm:flex` and `lg:absolute` keep working. */
+.scroll-cue { align-items: flex-end; gap: 0.75em; color: var(--dusty-pink); }
+.scroll-cue__line { display: block; width: 1px; height: 30px; background: var(--dusty-pink); }
+.scroll-cue:hover, .scroll-cue:focus-visible { color: var(--cream); }
+.scroll-cue:hover .scroll-cue__line, .scroll-cue:focus-visible .scroll-cue__line { background: var(--cream); }
+
+.skip-intro {
+  color: var(--dusty-pink);
+  font-size: 0.85em;
+  padding: 0.35em 0;
+  transition: color 0.2s ease;
+}
+.skip-intro:hover, .skip-intro:focus-visible { color: var(--cream); }
+
+.chat-btn {
+  border: 1px solid var(--dusty-pink);
+  background: transparent;
+  color: var(--cream);
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.chat-btn:hover, .chat-btn:focus-visible { background: var(--cream); color: var(--oxblood); border-color: var(--cream); }
+
+/* ---- Departure board --------------------------------------------- */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  background: var(--board-black);
+  border: 4px solid var(--oxblood);
+  border-radius: 0;
+  container-type: inline-size;
+}
+
+.board__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  line-height: 1;
+  color: var(--rose);
+}
+
+.board-control { color: var(--rose); transition: color 0.2s ease; }
+.board-control:hover, .board-control:focus-visible { color: var(--dusty-pink); }
+
+.board__leg {
+  position: absolute;
+  top: 100%;
+  width: 8px;
+  background: var(--oxblood);
+  transform: translateX(-50%);
+}
+
+/* ---- Split-flap blade -------------------------------------------- */
+/* Final-state styles. The hinge (::after) sits above the background and
+   below the text layer (z-index 2), so text stays crisp. */
+
+.blade {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.blade::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.blade--cream { background: var(--cream); color: var(--burgundy); }
+.blade--cream::after { background: var(--dusty-pink); }
+.blade--dark { background: var(--charcoal); color: var(--cream); }
+.blade--dark::after { background: var(--board-black); }
+.blade--status { background: var(--burgundy); color: var(--cream); }
+.blade--status::after { background: var(--oxblood); }
+.blade--plum { background: var(--oxblood); color: var(--cream); }
+.blade--plum::after { background: var(--board-black); }
+.blade--rose { background: var(--rose); color: var(--cream); }
+.blade--rose::after { background: var(--oxblood); }
+.blade--dusty { background: var(--dusty-pink); color: var(--burgundy); }
+.blade--dusty::after { background: var(--rose); }
+.blade--secondary { color: var(--dusty-pink); }
+
+.blade-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.blade-layer--center { justify-content: center; }
+
+/* Handle on the board's right edge: 4 x 40px dusty-pink bar, just outside
+   the frame. Its height on the edge (`top`) is set inline to match her
+   hand, since she pulls the board in by it. */
+.board__handle {
+  position: absolute;
+  left: calc(100% + 5px); /* 1px clear of the 4px frame */
+  width: 4px;
+  height: 40px;
+  background: var(--dusty-pink);
+  transform: translateY(-50%);
+}
+
+/* Faint contact shadow under each leg; moves with the board */
+.board__leg-shadow {
+  position: absolute;
+  width: 30px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--board-black);
+  transform: translateX(-50%);
+  opacity: 0.8;
+}
+
+
+@layer utilities {
+  /* ---- Legacy helpers (sections awaiting round 2) ------------------ */
+
   .card {
     background: rgb(var(--paper));
     border: 1px solid rgb(var(--line) / 0.12);
-    border-radius: 2px;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
   }
 
-  .card:hover {
-    border-color: rgb(var(--line) / 0.24);
-  }
-
-  /* The one soft elevation in the system -- featured work and modals */
   .shadow-soft {
     box-shadow: 0 1px 2px rgba(20, 5, 11, 0.12), 0 16px 40px rgba(20, 5, 11, 0.22);
   }
@@ -113,59 +382,27 @@
     padding: 6rem 1.5rem;
   }
 
-  .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 px-7 font-body font-medium text-[15px];
-    min-height: 46px;
-    background: rgb(var(--wine));
-    color: rgb(var(--cream));
-    border: 1px solid rgb(var(--wine));
-    border-radius: 2px;
-    letter-spacing: 0.01em;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .btn-primary:hover {
-    background: rgb(var(--wine-strong));
-    border-color: rgb(var(--wine-strong));
-  }
-
-  /* Editorial text action: underline that thickens and shifts to wine */
-  .btn-secondary {
-    @apply relative inline-flex items-center justify-center gap-2 px-1 font-body font-medium text-[15px];
-    min-height: 46px;
-    color: rgb(var(--ink));
-    background-image: linear-gradient(currentColor, currentColor);
-    background-repeat: no-repeat;
-    background-position: 0 calc(50% + 0.85em);
-    background-size: 100% 1px;
-    transition: color 0.2s ease, background-size 0.2s ease;
-  }
-
-  .btn-secondary:hover {
-    color: rgb(var(--wine));
-    background-size: 100% 2px;
-  }
-
   .tag {
     @apply inline-flex items-center font-mono text-[11px] px-2.5 py-1 uppercase tracking-wider;
     border: 1px solid rgb(var(--line) / 0.25);
-    border-radius: 2px;
     color: rgb(var(--ink) / 0.8);
   }
 
   .tag-chip {
     @apply inline-flex items-center font-mono text-[11px] px-2.5 py-1;
     border: 1px solid rgb(var(--dusty) / 0.9);
-    border-radius: 2px;
     color: rgb(var(--ink) / 0.8);
   }
 
   .api-label {
     @apply font-mono text-[11px] uppercase tracking-[0.16em];
-    color: rgb(var(--rose));
+    color: var(--dusty-pink);
   }
 
-  /* Dhaka weave -- kept once, as a slim band at the top of the footer */
+  .tone-light .api-label {
+    color: var(--rose);
+  }
+
   .dhaka {
     height: 8px;
     background-color: #35101E;
@@ -178,28 +415,21 @@
     background-position: -4px 0, -4px 0, 0 0, 0 0;
     opacity: 0.9;
   }
+}
 
-  /* Hero projector screen */
-  .cursor-blink {
-    animation: cursor-blink 1s steps(2, start) infinite;
-  }
-
-  .beam-flicker {
-    animation: beam-flicker 4.5s ease-in-out infinite;
-  }
-
-  @keyframes cursor-blink {
-    to { visibility: hidden; }
-  }
-
-  @keyframes beam-flicker {
-    0%, 100% { opacity: 1; }
-    37% { opacity: 0.9; }
-    41% { opacity: 1; }
-    72% { opacity: 0.94; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .beam-flicker { animation: none; }
-  }
+/* Wave caption (WaveCaption.jsx): typed text over a thin rose leader line +
+   underline, with a dusty-pink block cursor. Plain CSS (outside @layer). */
+.wave-caption { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; z-index: 30; }
+.wave-caption__line { position: absolute; left: 0; top: 0; height: 1px; background: #8D5365; transform-origin: 0 50%; }
+.wave-caption__text { position: absolute; left: 0; top: 0; color: #F1E8DD; white-space: pre; line-height: 1.12; }
+.wave-caption__measure { visibility: hidden; }
+.wave-caption__cursor {
+  display: inline-block; width: 0.26em; height: 0.42em; margin-left: 0.07em;
+  background: #D5B7B8; vertical-align: baseline;
+  animation: wave-caption-blink 0.9s steps(1) infinite;
+}
+@keyframes wave-caption-blink { 50% { opacity: 0; } }
+.wave-caption__sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
 }

@@ -6,7 +6,6 @@ import {
   AppWindow, Notebook,
 } from 'lucide-react'
 
-import jeeniPhoto from '../assets/me/jeeni.jpg'
 
 import Hack4SafeFood from '../assets/achievements/Hack4SafeFood_certificate.webp'
 import Hultprize from '../assets/achievements/hultprize.webp'
@@ -28,41 +27,45 @@ export const site = {
     "Jeeni Shrestha — Full-stack developer working toward AI engineering, with hackathon-tested AI projects from emotion recognition to gender-aware diagnosis support.",
 }
 
+// Top nav: three destinations + CV. Every section stays reachable by
+// scrolling and from the footer index (`sectionIndex`).
 export const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#techstack' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Achievements', href: '#achievements' },
-  { label: 'Education', href: '#education' },
+  { label: 'about', href: '#about' },
+  { label: 'works', href: '#projects' },
+  { label: 'experience', href: '#experience' },
+]
+
+export const sectionIndex = [
+  { label: 'introduction', href: '#hero', number: '01' },
+  { label: 'about', href: '#about', number: '02' },
+  { label: 'skills', href: '#techstack', number: '03' },
+  { label: 'works', href: '#projects', number: '04' },
+  { label: 'experience', href: '#experience', number: '05' },
+  { label: 'achievements', href: '#achievements', number: '06' },
+  { label: 'education', href: '#education', number: '07' },
 ]
 
 export const hero = {
-  photo: jeeniPhoto,
-  photoCaption: 'Kathmandu, Nepal',
-  locationLine: 'Bhaktapur, Nepal — Open to full-stack & AI engineering roles',
+  locationLine: 'Kathmandu, Nepal — Open to full-stack & AI engineering roles',
   firstName: 'Jeeni',
-  greeting: "Hello, I'm",
   lastName: 'Shrestha.',
   roleLine: 'Full-Stack Developer',
-  bioPre: 'Building ',
-  bioHighlight: 'reliable',
-  bioPost: ' web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
   bio: 'Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience.',
-  // Projector screen copy
-  screenLabel: '01 — Bhaktapur, Nepal',
-  statementPre: 'Full-stack developer building ',
-  statementMark: 'reliable',
-  statementPost: ' web applications and AI tools.',
+  // Departure board (hero)
+  board: {
+    label: 'now showing',
+    place: 'Kathmandu',
+    role: 'Full-stack developer',
+    field: 'AI / ML',
+    stack: ['React', 'Next.js', 'Python'],
+    status: 'open to roles',
+    footnote: '4× hackathon winner',
+    index: '01 / 07',
+  },
   ctaPrimary: { label: 'view projects', href: '#projects' },
   ctaSecondary: { label: "let's connect" },
   availability: 'Open to full-stack & AI engineering roles',
   ctaDownload: { label: 'Download CV', href: '/Jeeni_Shrestha_CV.pdf' },
-  handwrittenNote: '4x hackathon winner!',
-  hackathonLabel: '4× hackathon winner',
-  polaroidBackFacts: [
-    '[TODO: 3-4 short personal facts]',
-  ],
 }
 
 export const about = {

@@ -1,35 +1,20 @@
-import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React from 'react'
 import { MessageCircle } from 'lucide-react'
 
+// Thin outline circle, matching the nav's "contact" button: 1px #D5B7B8
+// border, transparent fill, cream icon, fixed bottom-right. Styles are
+// plain CSS (.chat-btn in index.css). In the hero it sits in the floor
+// band's corner, below the scroll cue and clear of the mini-me.
 export default function FloatingContact({ onClick }) {
-  const [hovered, setHovered] = useState(false)
-
   return (
-    <div className="fixed bottom-7 right-7 z-50 flex items-center gap-3">
-      <AnimatePresence>
-        {hovered && (
-          <motion.span
-            initial={{ opacity: 0, x: 8 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8 }}
-            transition={{ duration: 0.15 }}
-            className="font-mono text-[11px] uppercase tracking-wider text-ink whitespace-nowrap bg-paper border border-ink/10 shadow-soft rounded-[2px] px-3 py-1.5"
-          >
-            Contact
-          </motion.span>
-        )}
-      </AnimatePresence>
-
-      <button
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onClick={onClick}
-        aria-label="Open contact form"
-        className="w-12 h-12 rounded-full bg-wine-rich text-bone shadow-soft border border-bone/30 hover:bg-wine-deep flex items-center justify-center transition-colors duration-200"
-      >
-        <MessageCircle size={18} strokeWidth={1.5} />
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Open contact form"
+      title="contact"
+      className="chat-btn fixed bottom-6 right-6 z-50 w-11 h-11 flex items-center justify-center"
+    >
+      <MessageCircle size={17} strokeWidth={1.5} />
+    </button>
   )
 }
