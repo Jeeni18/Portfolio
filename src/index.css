@@ -666,11 +666,16 @@ a.blade--status:hover, a.blade--status:focus-visible { filter: none; }
    stop the hero sticking; `clip` hides horizontal overflow the same way
    without that */
 .stack-on { overflow-x: clip; }
+/* browsers without `clip` (Safari 15 and older): leave the root visible so
+   the hero can still stick (body already hides horizontal overflow) */
+@supports not (overflow-x: clip) { .stack-on { overflow-x: visible; } }
 /* sticky only once the page has scrolled (.stack-pinned): at the very top
    the hero is already where it would stick, and a sticky element gets its
    own compositing layer, which renders its text very slightly differently */
 .stack-on #hero { z-index: 0; transform-origin: 50% 50%; }
-.stack-on.stack-pinned #hero { position: sticky; top: 0; }
+/* --stack-top: 0, or minus how much taller than the screen the hero is, so
+   a tall hero pins by its bottom edge (useStickyStack.js) */
+.stack-on.stack-pinned #hero { position: sticky; top: var(--stack-top, 0px); }
 .stack-on main > section:not(#hero), .stack-on footer { position: relative; z-index: 1; }
 /* soft shadow on About's top edge, faded in as it starts to rise (so the
    page at rest is unchanged) */

@@ -7,8 +7,9 @@ import { timeline } from './introTimeline'
 // tied to the scroll position (one requestAnimationFrame per scroll frame,
 // transform and opacity only). CSS: .stack-on in index.css.
 //
-// - Only when the hero fits in the screen; otherwise (small phones, short
-//   laptop windows) the page scrolls normally.
+// - At every screen size. A hero taller than the screen (phones, short
+//   laptop windows) first scrolls up normally until its bottom edge meets
+//   the bottom of the screen, then pins there while About covers it.
 // - Reduced motion: the pinned cover stays (it's the visitor's own
 //   scrolling), without the scale and dimming.
 // - If the intro is still playing when About starts to cover the hero, it
@@ -69,7 +70,9 @@ export function useStickyStack(rootRef) {
     const frame = () => {
       raf = 0
       if (!enabled) { setCovered(false); setProgress(0, false); return }
-      const h = hero.offsetHeight
+      // the part of the hero that stays on screen while it is pinned: all
+      // of it, or (taller than the screen) the bottom screenful
+      const h = Math.min(hero.offsetHeight, window.innerHeight)
       const top = about.getBoundingClientRect().top
       // within 2px of either end counts as the end: section edges sit on
       // fractional pixels (a smooth-scroll to #about can stop 1px short)
@@ -100,13 +103,19 @@ export function useStickyStack(rootRef) {
     const pin = () => root.classList.toggle('stack-pinned', enabled && window.scrollY > 0)
     const onScroll = () => { pin(); schedule() }
 
-    // On only while the hero fits in the screen.
+    // On at every size. A hero taller than the screen (phones, short
+    // windows) scrolls up normally until its bottom edge reaches the bottom
+    // of the screen, then stays pinned there (a negative sticky top) while
+    // About slides over it; it recedes around the middle of what's visible.
     const measure = () => {
-      const fits = hero.offsetHeight <= window.innerHeight + 1
-      if (fits !== enabled) {
-        enabled = fits
-        root.classList.toggle('stack-on', fits)
-        if (!fits) reset()
+      const h = hero.offsetHeight
+      const vh = window.innerHeight
+      const extra = Math.max(0, h - vh)
+      root.style.setProperty('--stack-top', `${-extra}px`)
+      hero.style.transformOrigin = extra ? `50% ${Math.round(h - vh / 2)}px` : ''
+      if (!enabled) {
+        enabled = true
+        root.classList.add('stack-on')
       }
       pin()
       schedule()
@@ -126,6 +135,8 @@ export function useStickyStack(rootRef) {
       reduced.removeEventListener?.('change', onReduced)
       ro?.disconnect()
       root.classList.remove('stack-on', 'stack-pinned')
+      root.style.removeProperty('--stack-top')
+      hero.style.transformOrigin = ''
       reset()
       setCovered(false)
       setProgress(0, false)
