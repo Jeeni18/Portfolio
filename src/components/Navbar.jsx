@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { navLinks, hero, sectionIndex } from '../data/content'
+import ThemeSwitch from './ThemeSwitch'
 
 // Fixed nav. Transparent over the hero wall; charcoal once scrolled. The
 // 1px burgundy header rule under it spans the full content column and
@@ -84,6 +85,7 @@ export default function Navbar({ onContactOpen }) {
                 cv <span aria-hidden="true">↓</span>
                 <span className="sr-only">download</span>
               </a>
+              <ThemeSwitch />
               <button type="button" onClick={onContactOpen} className="btn-outline">
                 contact
               </button>
@@ -124,14 +126,15 @@ export default function Navbar({ onContactOpen }) {
                   onClick={() => handleNavClick(s.href)}
                   className="mobile-menu-item flex items-baseline gap-4 py-4 text-left"
                 >
-                  <span className="font-mono text-[11px]" style={{ color: 'var(--rose)' }}>{s.number}</span>
-                  <span className="font-mono text-[15px]" style={{ color: 'var(--dusty-pink)' }}>{s.label}</span>
+                  <span className="mobile-menu-number font-mono text-[11px]">{s.number}</span>
+                  <span className="mobile-menu-label font-mono text-[15px]">{s.label}</span>
                 </button>
               ))}
               <div className="flex items-center gap-6 pt-8">
                 <a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName} className="nav-link">
                   cv <span aria-hidden="true">↓</span>
                 </a>
+                <ThemeSwitch />
                 <button type="button" onClick={() => { setMenuOpen(false); onContactOpen() }} className="btn-outline">
                   contact
                 </button>

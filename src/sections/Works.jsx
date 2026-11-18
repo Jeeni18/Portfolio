@@ -18,7 +18,7 @@ function Workflow({ steps, name }) {
   const selected = steps.find((s) => s.id === selectedId)
 
   return (
-    <div className="mt-[clamp(24px,2.2vw,36px)] pt-[clamp(18px,1.6vw,26px)] border-t border-[rgba(141,83,101,0.35)]">
+    <div className="works-flow mt-[clamp(24px,2.2vw,36px)] pt-[clamp(18px,1.6vw,26px)]">
       <p className="works-flow-label mb-3">workflow</p>
       <ol className="flex flex-wrap items-center gap-y-2" aria-label={`${name} workflow`}>
         {steps.map((step, i) => (
@@ -97,7 +97,7 @@ function Row({ project, open, onToggle }) {
         aria-controls={`work-panel-${project.number}`}
         className={`works-row grid-cols-[clamp(44px,4vw,72px)_minmax(0,1fr)] ${COLS} s-gap`}
       >
-        <Blade as="span" fit center variant="dark" secondary text={project.number} className="s-mono" />
+        <Blade as="span" fit center variant="dark" secondary text={project.number} className="works-no s-mono" />
         <Blade as="span" fit variant={open ? 'cream' : 'dark'} text={project.name} className="works-name" />
         {/* Phones: stack + status share one wrapping line below the name;
             from 768px they are the grid's stack and status columns. */}

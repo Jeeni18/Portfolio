@@ -128,8 +128,6 @@ const stepTime = (name) => (name === 'BOARD' ? T.BOARD_START : T[name])
 export const STEP = Object.fromEntries(STEP_NAMES.map((name, i) => [name, i + 1]))
 const stepFor = (t) => STEP_NAMES.filter((name) => t >= stepTime(name)).length
 
-const SESSION_KEY = 'jeeni-intro-played'
-
 const listeners = new Set()
 // Called the moment the 3D scene publishes her hand, inside its own frame, so
 // the board can move in that same frame instead of one behind.
@@ -212,11 +210,11 @@ export const timeline = {
     state.captionAnchor.valid = true
   },
 
-  // First play of the session. No-op once started or finished, so the 3D
-  // scene and the fallback kick in Hero.jsx can both call it.
+  // First play on this page load (every load plays it, refreshes included).
+  // No-op once started or finished, so the 3D scene and the fallback kick
+  // in Hero.jsx can both call it.
   start() {
     if (state.status !== 'idle') return
-    try { window.sessionStorage.setItem(SESSION_KEY, '1') } catch { /* private mode */ }
     play()
   },
   // Jump to the finished state. `quick` = returning visitor (short fade).
@@ -234,9 +232,6 @@ export const timeline = {
   },
   replay() {
     play()
-  },
-  hasPlayedThisSession() {
-    try { return window.sessionStorage.getItem(SESSION_KEY) === '1' } catch { return false }
   },
   setHand(x, y, handleY) {
     state.hand.x = x
@@ -276,7 +271,6 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
     timeline.finish = freeze
     timeline.replay = freeze
     timeline.skip = () => {}
-    timeline.hasPlayedThisSession = () => false
   }
 }
 

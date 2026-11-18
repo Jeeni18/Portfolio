@@ -1,0 +1,399 @@
+/*
+ * Themes: semantic colour tokens.
+ *
+ * Every colour in index.css is one of these tokens. `:root` holds the dark
+ * theme (the default, exactly the original departure-board colours);
+ * `[data-theme="light"]` on <html> switches to the light palette. The
+ * inline script in index.html sets data-theme before the first paint
+ * (saved choice in localStorage 'jeeni-theme', else dark; the OS setting is
+ * deliberately ignored). ThemeSwitch.jsx changes it.
+ *
+ * Light palette, "Rose quartz and mauve": rose quartz #DFC3CB · rose mist
+ * #EEDDE2 · deep rose #CBA7B2 · mauve stone #D3B3BE · petal white #F4E9EC ·
+ * plum #3B2230 · mauve #5A3446 · orchid #8A4C66 · muted plum #7A4B5E ·
+ * dusty mauve #B48C9A (lines only) · deep plum #2A1822 · soft mauve label
+ * #C9A3B1 (small labels on plum boards). Rooms rose, boards plum.
+ */
+
+:root {
+  /* Light palette (names used by the light tokens below) */
+  --l-quartz: #DFC3CB;
+  --l-mist: #EEDDE2;
+  --l-deep-rose: #CBA7B2;
+  --l-stone: #D3B3BE;
+  --l-petal: #F4E9EC;
+  --l-plum: #3B2230;
+  --l-mauve: #5A3446;
+  --l-orchid: #8A4C66;
+  --l-muted-plum: #7A4B5E;
+  --l-dusty: #B48C9A;
+  --l-deep-plum: #2A1822;
+  --l-soft-label: #C9A3B1;
+
+  /* ---- Dark theme (default) = the original colours ---- */
+  /* page */
+  --page-bg: #29232A;
+  --text-primary: #F1E8DD;
+  --selection-bg: #D5B7B8;
+  --selection-text: #29232A;
+  --scroll-track: #1F1A20;
+  --scroll-thumb: #8D5365;
+  --focus-ring: #D5B7B8;
+  /* nav */
+  --nav-bg: var(--charcoal);
+  --logo: var(--cream);
+  --nav-link: #D5B7B8;
+  --nav-link-active: #F1E8DD;
+  --header-rule: var(--burgundy);
+  --menu-divider: rgba(141, 83, 101, 0.3);
+  --menu-number: var(--rose);
+  --menu-label: var(--dusty-pink);
+  --switch-text: var(--dusty-pink);
+  --switch-active: var(--cream);
+  /* buttons */
+  --btn-primary-bg: #F1E8DD;
+  --btn-primary-text: #35101E;
+  --btn-primary-hover-bg: #D5B7B8;
+  --btn-secondary-text: #D5B7B8;
+  --btn-secondary-hover: #F1E8DD;
+  --btn-outline-border: #D5B7B8;
+  --btn-outline-text: #F1E8DD;
+  --btn-outline-hover-bg: #F1E8DD;
+  --btn-outline-hover-text: #35101E;
+  /* hero room */
+  --room-wall: var(--charcoal);
+  --room-floor: var(--charcoal-deep);
+  --room-floor-line: var(--rose);
+  --room-cone: var(--cream);
+  --room-cone-opacity: 0.05;
+  --room-pool: var(--board-black);
+  --room-pin: var(--board-black);
+  --cue: var(--dusty-pink);
+  --cue-hover: var(--cream);
+  --chat-border: var(--dusty-pink);
+  --chat-bg: transparent;
+  --chat-icon: var(--cream);
+  --chat-hover-bg: var(--cream);
+  --chat-hover-icon: var(--oxblood);
+  /* wave caption */
+  --caption-text: #F1E8DD;
+  --caption-line: #8D5365;
+  --caption-cursor: #D5B7B8;
+  /* boards */
+  --board-face: var(--board-black);
+  --board-frame: var(--oxblood);
+  --board-label: var(--rose);
+  --board-control-hover: var(--dusty-pink);
+  --board-leg-shadow: var(--board-black);
+  --board-handle: var(--dusty-pink);
+  /* blades */
+  --blade-name-bg: var(--cream);
+  --blade-name-text: var(--burgundy);
+  --blade-name-hinge: var(--dusty-pink);
+  --blade-bg: var(--charcoal);
+  --blade-text: var(--cream);
+  --blade-hinge: var(--board-black);
+  --blade-label: var(--dusty-pink);
+  --status-bg: var(--burgundy);
+  --status-text: var(--cream);
+  --status-hinge: var(--oxblood);
+  /* sections */
+  --section-divider: rgba(141, 83, 101, 0.5);
+  --section-about-bg: var(--oxblood);
+  --section-skills-bg: var(--charcoal-deep);
+  --section-works-bg: var(--charcoal);
+  --section-awards-bg: var(--oxblood);
+  --section-education-bg: var(--charcoal-deep);
+  --section-contact-bg: var(--charcoal);
+  --label: var(--rose);
+  --heading: var(--cream);
+  --note: var(--dusty-pink);
+  --index: var(--rose);
+  --link-text: var(--cream);
+  --link-underline: var(--rose);
+  --link-underline-hover: var(--cream);
+  --statement: var(--cream);
+  --body-text: var(--dusty-pink);
+  /* works */
+  --works-blade-bg: var(--board-black);
+  --works-blade-hinge: var(--charcoal);
+  --outline-border: var(--dusty-pink);
+  --outline-text: var(--cream);
+  --outline-hover-bg: var(--cream);
+  --outline-hover-text: var(--oxblood);
+  --panel-bg: var(--cream);
+  --panel-text: var(--charcoal);
+  --panel-number: var(--dusty-pink);
+  --shot-bg: var(--dusty-pink);
+  --shot-text: var(--burgundy);
+  --panel-title: var(--burgundy);
+  --panel-tagline: var(--burgundy);
+  --panel-mark: var(--rose);
+  --panel-link: var(--burgundy);
+  --panel-link-line: var(--rose);
+  --flow-divider: rgba(141, 83, 101, 0.35);
+  --code-bg: var(--charcoal);
+  --code-text: var(--cream);
+  /* awards */
+  --four-number: var(--burgundy);
+  --four-caption: var(--rose);
+  --also-text: var(--dusty-pink);
+  --also-line: var(--rose);
+  --also-hover: var(--cream);
+  /* education */
+  --card-bg: var(--charcoal);
+  --card-top: var(--dusty-pink);
+  --card-title: var(--cream);
+  --card-title-line: var(--rose);
+  --card-meta: var(--rose);
+  --card-line: var(--dusty-pink);
+  --cert-frame: var(--board-black);
+  --cert-tag-bg: var(--oxblood);
+  --cert-tag-text: var(--cream);
+  --cert-tag-hover: var(--burgundy);
+  /* certificate pop-up */
+  --modal-overlay: rgba(18, 16, 19, 0.9);
+  --modal-frame-bg: var(--charcoal-deep);
+  --modal-title: var(--cream);
+  --modal-org: var(--rose);
+  --modal-desc: var(--dusty-pink);
+  /* footer */
+  --footer-bg: var(--board-black);
+  --footer-rule: var(--burgundy);
+  --footer-credit: var(--rose);
+  --footer-link: var(--dusty-pink);
+  --footer-link-hover: var(--cream);
+  --footer-top: var(--dusty-pink);
+  /* 3D scene: shadows under her and the desk (read by HeroScene.jsx) */
+  --scene-shadow: #000000;
+}
+
+/* Sections take their own background token (same colours as the
+   .s-section--* classes in dark). */
+#about.s-section { background: var(--section-about-bg); }
+#skills.s-section { background: var(--section-skills-bg); }
+#projects.s-section { background: var(--section-works-bg); }
+#awards.s-section { background: var(--section-awards-bg); }
+#education.s-section { background: var(--section-education-bg); }
+#contact.s-section { background: var(--section-contact-bg); }
+.app-root { background: var(--page-bg); }
+.chat-btn { background: var(--chat-bg); }
+.works-flow { border-top: 1px solid var(--flow-divider); }
+.site-footer__top { color: var(--footer-top); }
+.mobile-menu-number { color: var(--menu-number); }
+.mobile-menu-label { color: var(--menu-label); }
+
+/* ---- Light theme: "Rose quartz and mauve" ------------------------------
+   The rooms are rose and the departure boards stay dark (plum): the dark
+   design with the lights turned up. */
+html[data-theme='light'] {
+  color-scheme: light;
+  --page-bg: var(--l-quartz);
+  --text-primary: var(--l-plum);
+  --selection-bg: var(--l-mauve);
+  --selection-text: var(--l-petal);
+  --scroll-track: var(--l-mist);
+  --scroll-thumb: var(--l-dusty);
+  --focus-ring: var(--l-mauve);
+
+  --nav-bg: var(--l-quartz);
+  --logo: var(--l-plum);
+  --nav-link: var(--l-plum);
+  --nav-link-active: var(--l-mauve);
+  --header-rule: var(--l-dusty);
+  --menu-divider: var(--l-dusty);
+  --menu-number: var(--l-muted-plum);
+  --menu-label: var(--l-plum);
+  --switch-text: var(--l-muted-plum);
+  --switch-active: var(--l-plum);
+
+  --btn-primary-bg: var(--l-mauve);
+  --btn-primary-text: var(--l-petal);
+  --btn-primary-hover-bg: var(--l-orchid);
+  --btn-secondary-text: var(--l-mauve);
+  --btn-secondary-hover: var(--l-plum);
+  --btn-outline-border: var(--l-dusty);
+  --btn-outline-text: var(--l-plum);
+  --btn-outline-hover-bg: var(--l-mauve);
+  --btn-outline-hover-text: var(--l-petal);
+
+  --room-wall: var(--l-quartz);
+  --room-floor: var(--l-deep-rose);
+  --room-floor-line: var(--l-dusty);
+  --room-cone: #FFFFFF;
+  --room-cone-opacity: 0.28;
+  --room-pool: rgba(59, 34, 48, 0.22);
+  --room-pin: transparent;
+  --cue: var(--l-muted-plum);
+  --cue-hover: var(--l-mauve);
+  --chat-border: var(--l-dusty);
+  --chat-bg: var(--l-petal);
+  --chat-icon: var(--l-plum);
+  --chat-hover-bg: var(--l-mauve);
+  --chat-hover-icon: var(--l-petal);
+
+  --caption-text: var(--l-plum);
+  --caption-line: var(--l-muted-plum);
+  --caption-cursor: var(--l-orchid);
+
+  /* boards: plum face, mauve frame and legs, soft mauve labels */
+  --board-face: var(--l-plum);
+  --board-frame: var(--l-mauve);
+  --board-label: var(--l-soft-label);
+  --board-control-hover: var(--l-petal);
+  --board-leg-shadow: rgba(59, 34, 48, 0.3);
+  --board-handle: var(--l-petal);
+
+  /* blades */
+  --blade-name-bg: var(--l-petal);
+  --blade-name-text: var(--l-mauve);
+  --blade-bg: var(--l-mauve);
+  --blade-text: var(--l-petal);
+  --blade-label: var(--l-quartz);
+  --status-bg: var(--l-orchid);
+  --status-text: var(--l-petal);
+
+  /* sections */
+  --section-divider: var(--l-dusty);
+  --section-about-bg: var(--l-mist);
+  --section-skills-bg: var(--l-quartz);
+  --section-works-bg: var(--l-mist);
+  --section-awards-bg: var(--l-plum);
+  --section-education-bg: var(--l-stone);
+  --section-contact-bg: var(--l-quartz);
+  --label: var(--l-muted-plum);
+  --heading: var(--l-plum);
+  --note: var(--l-mauve);
+  --index: var(--l-muted-plum);
+  --link-text: var(--l-plum);
+  --link-underline: var(--l-dusty);
+  --link-underline-hover: var(--l-plum);
+  --statement: var(--l-mauve);
+  --body-text: var(--l-plum);
+
+  /* works */
+  --works-blade-bg: var(--l-mauve);
+  --outline-border: var(--l-mauve);
+  --outline-text: var(--l-mauve);
+  --outline-hover-bg: var(--l-mauve);
+  --outline-hover-text: var(--l-petal);
+  --panel-bg: var(--l-petal);
+  --panel-text: var(--l-plum);
+  --panel-number: var(--l-mist);
+  --shot-bg: var(--l-quartz);
+  --shot-text: var(--l-mauve);
+  --panel-title: var(--l-mauve);
+  --panel-tagline: var(--l-plum);
+  --panel-mark: var(--l-orchid);
+  --panel-link: var(--l-mauve);
+  --panel-link-line: var(--l-dusty);
+  --flow-divider: var(--l-dusty);
+  --code-bg: var(--l-plum);
+  --code-text: var(--l-petal);
+
+  /* awards */
+  --four-number: var(--l-mauve);
+  --four-caption: var(--l-orchid);
+  --also-text: var(--l-quartz);
+  --also-line: var(--l-dusty);
+  --also-hover: var(--l-petal);
+
+  /* education */
+  --card-bg: var(--l-petal);
+  --card-top: var(--l-mauve);
+  --card-title: var(--l-plum);
+  --card-title-line: var(--l-dusty);
+  --card-meta: var(--l-mauve);
+  --card-line: var(--l-muted-plum);
+  --cert-frame: var(--l-mist);
+  --cert-tag-bg: var(--l-mauve);
+  --cert-tag-text: var(--l-petal);
+  --cert-tag-hover: var(--l-orchid);
+
+  /* certificate pop-up (a plum board, like the others) */
+  --modal-overlay: rgba(42, 24, 34, 0.72);
+  --modal-frame-bg: var(--l-deep-plum);
+  --modal-title: var(--l-petal);
+  --modal-org: var(--l-soft-label);
+  --modal-desc: var(--l-quartz);
+
+  /* footer */
+  --footer-bg: var(--l-deep-plum);
+  --footer-rule: var(--l-mauve);
+  --footer-credit: var(--l-soft-label);
+  --footer-link: var(--l-quartz);
+  --footer-link-hover: var(--l-petal);
+  --footer-top: var(--l-petal);
+
+  --scene-shadow: #3B2230;
+}
+
+/* Sections with their own light tokens */
+html[data-theme='light'] #awards {
+  /* the dark break: plum room, deep plum board */
+  --label: var(--l-soft-label);
+  --heading: var(--l-petal);
+  --note: var(--l-quartz);
+  --board-face: var(--l-deep-plum);
+}
+html[data-theme='light'] #education {
+  --label: var(--l-mauve);
+  --index: var(--l-mauve);
+}
+html[data-theme='light'] .works-panel {
+  /* workflow: rose mist steps, the highlighted step mauve */
+  --blade-bg: var(--l-mist);
+  --blade-text: var(--l-plum);
+  --status-bg: var(--l-mauve);
+}
+
+/* Light only: no hinge lines through the blades, and no pins at the name
+   blades' ends. Dark keeps both. */
+html[data-theme='light'] .blade::after { display: none; }
+html[data-theme='light'] .room-pin { display: none; }
+
+/* Light only: blades that differ from the theme's defaults */
+html[data-theme='light'] .skills-cat .blade { background: var(--l-orchid); color: var(--l-petal); }
+html[data-theme='light'] .works-no { color: var(--l-petal); }
+html[data-theme='light'] .works-row .blade--cream { box-shadow: inset 0 0 0 1px var(--l-dusty); }
+html[data-theme='light'] .works-panel { box-shadow: inset 0 0 0 1px var(--l-dusty); }
+html[data-theme='light'] .awards-result.blade--dark { background: var(--l-plum); color: var(--l-quartz); box-shadow: inset 0 0 0 1px var(--l-muted-plum); }
+/* Education timetable: highlighted row petal white with plum text, years in
+   orchid, status in mauve; second row mauve, years + status in rose quartz */
+html[data-theme='light'] .edu-row.blade--cream { color: var(--l-plum); }
+html[data-theme='light'] .edu-row.blade--cream [role='cell']:first-child { color: var(--l-orchid); }
+html[data-theme='light'] .edu-row.blade--cream [role='cell']:last-child { color: var(--l-mauve); }
+html[data-theme='light'] .edu-row.blade--dark [role='cell']:first-child,
+html[data-theme='light'] .edu-row.blade--dark [role='cell']:last-child { color: var(--l-quartz); }
+/* 2px mauve top line on the training cards: the 1px border plus a 1px
+   inset shadow, so the cards keep their height */
+html[data-theme='light'] .edu-card { box-shadow: inset 0 1px 0 var(--l-mauve); }
+/* the divider takes 9px; the margin gives them back, so both themes have
+   exactly the same layout (switching never moves the page) */
+html[data-theme='light'] .works-cols { padding-bottom: 8px; border-bottom: 1px solid var(--l-dusty); margin-bottom: 3px; }
+
+/* Theme switch: colours animate (300ms) only while switching, never on
+   first load (ThemeSwitch adds .theme-switching for the duration). */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition-property: background-color, color, border-color, fill, stroke, opacity, box-shadow !important;
+  transition-duration: 0.3s !important;
+  transition-timing-function: ease !important;
+  transition-delay: 0s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching,
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after { transition: none !important; }
+}
+
+/* The switch itself: "dark · light" in the nav's mono, active one
+   underlined (1px), inactive dimmed. */
+.theme-switch { display: inline-flex; align-items: baseline; gap: 0.4em; font-family: 'IBM Plex Mono', monospace; color: var(--switch-text); background: none; border: 0; padding: 0; cursor: pointer; line-height: 1; }
+.theme-switch__opt { padding-bottom: 1px; border-bottom: 1px solid transparent; opacity: 0.7; transition: color 0.2s ease, opacity 0.2s ease; }
+.theme-switch__opt--on { color: var(--switch-active); border-bottom-color: currentColor; opacity: 1; }
+.theme-switch__dot { opacity: 0.6; }
+.theme-switch:hover .theme-switch__opt, .theme-switch:focus-visible .theme-switch__opt { opacity: 1; }

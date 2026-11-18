@@ -89,13 +89,12 @@ export default function Hero({ onContactOpen }) {
   const screenLines = [`> whoami`, hero.firstName + ' ' + hero.lastName.replace('.', ''), `> role`, hero.roleLine]
 
   // Decide once -- before the first paint -- whether to play the intro or
-  // land on the final state. Reduced motion: final state, no fade. Seen
-  // already this session: final state behind a 300ms fade. Playing itself
+  // land on the final state. Reduced motion: final state, no fade.
+  // Otherwise it plays on every page load, refreshes included. Playing itself
   // is kicked off by the 3D scene's first frame (so her walk never runs
   // behind a loading canvas), or right away when there's no WebGL.
   useState(() => {
     if (prefersReducedMotion) timeline.finish()
-    else if (timeline.hasPlayedThisSession()) timeline.finish({ quick: true })
     return null
   })
 
@@ -139,15 +138,8 @@ export default function Hero({ onContactOpen }) {
     }
   }, [])
 
-  // Any interaction while the intro is running jumps to the end.
-  useEffect(() => {
-    if (status !== 'playing') return undefined
-    const skip = () => timeline.skip()
-    const opts = { passive: true }
-    const events = ['pointerdown', 'keydown', 'wheel', 'touchmove', 'scroll']
-    events.forEach((e) => window.addEventListener(e, skip, opts))
-    return () => events.forEach((e) => window.removeEventListener(e, skip, opts))
-  }, [status])
+  // Only the "skip intro" button ends the intro early: clicks, keys and
+  // scrolling elsewhere let it play on.
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -286,8 +278,7 @@ export default function Hero({ onContactOpen }) {
       ref={sectionRef}
       className="room relative overflow-hidden lg:h-screen lg:min-h-[640px] lg:max-h-[1100px]"
     >
-      {/* Room fades up from dark (first visit: 0.3s; return visit in the
-          same session: a quick 300ms fade; reduced motion: no fade). */}
+      {/* Room fades up from dark (0.3s; reduced motion: no fade). */}
       <motion.div
         initial={{ opacity: prefersReducedMotion ? 1 : 0 }}
         animate={{ opacity: 1 }}

@@ -7,6 +7,7 @@ import Desk from './Desk'
 import { FLOOR_Y, THIGH, THIGH_RADIUS, KNEE_TO_SOLE, SEAT_HEIGHT, SEAT_POSITION, SEAT_HIP_FINAL, SCOOT, DESK_HEIGHT } from './layout'
 import { T, timeline, between } from '../hooks/introTimeline'
 import { IDLE_ELBOW, WALK_ELBOW, SEAT_ELBOW, WAVE_SWINGS, setWaveArm } from './armPoses'
+import { useTheme } from '../hooks/useTheme'
 
 const SCREEN_W = 0.29
 const SCREEN_H = 0.155
@@ -30,6 +31,13 @@ const BLOB_SHADOW = { width: 0.62, depth: 0.34, opacity: 0.75 }
 // The workspace's contact shadow: centred under the desk + chair, kept tight
 // so it reads as the furniture standing on the floor, not a smudge.
 const CONTACT_SHADOW = { x: 0.14, z: 0.5, scale: 1.8, opacity: 0.45, blur: 1.4, far: 0.5 }
+// Shadow colour per theme. Dark: black (as always). Light: plum at about 30%
+// on the deep rose floor. Lights and materials are the
+// same in both themes, so her colours never change.
+const SHADOWS = {
+  dark: { color: '#000000', blob: 1, contact: CONTACT_SHADOW.opacity },
+  light: { color: '#3B2230', blob: 0.4, contact: 0.3 },
+}
 
 // ---- Poses (her existing rig) -------------------------------------------
 // Furniture is fitted to her (layout.js): seated, her thighs rest on the
@@ -379,7 +387,7 @@ function useBlobTexture() {
   }, [])
 }
 
-function Rig({ reducedMotion, anchors, chair }) {
+function Rig({ reducedMotion, anchors, chair, shadow = SHADOWS.dark }) {
   const rig = useRef({})
   const blob = useRef(null)
   const soleY = useRef(0)
@@ -677,7 +685,7 @@ function Rig({ reducedMotion, anchors, chair }) {
     if (blob.current) {
       blob.current.position.set(r.root.position.x, soleY.current + 0.004, r.root.position.z)
       const seatFade = 1 - between(t, T.TO_DESK_END, T.TO_DESK_END + (T.SIT_END - T.TO_DESK_END) * 0.6)
-      blob.current.material.opacity = BLOB_SHADOW.opacity * seatFade
+      blob.current.material.opacity = BLOB_SHADOW.opacity * shadow.blob * seatFade
       blob.current.visible = seatFade > 0
     }
 
@@ -698,7 +706,7 @@ function Rig({ reducedMotion, anchors, chair }) {
       <Avatar rig={rig} />
       <mesh ref={blob} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
         <planeGeometry args={[BLOB_SHADOW.width, BLOB_SHADOW.depth]} />
-        <meshBasicMaterial map={blobTexture} transparent depthWrite={false} opacity={BLOB_SHADOW.opacity} color="#000000" />
+        <meshBasicMaterial map={blobTexture} transparent depthWrite={false} opacity={BLOB_SHADOW.opacity * shadow.blob} color={shadow.color} />
       </mesh>
     </>
   )
@@ -708,6 +716,10 @@ function Rig({ reducedMotion, anchors, chair }) {
 // rendered (and so no typing) until it's visible again.
 export default function HeroScene({ reducedMotion, lines, frame = null, anchors = null, paused = false }) {
   const chair = useRef(null)
+  // Theme only re-colours the shadows (props, no remount): the intro, the
+  // board and the typing loop carry on when it changes.
+  const theme = useTheme()
+  const shadow = SHADOWS[theme]
   return (
     <Canvas
       frameloop={paused ? 'never' : 'always'}
@@ -728,10 +740,10 @@ export default function HeroScene({ reducedMotion, lines, frame = null, anchors 
       <CameraRig frame={frame} />
 
       <group position={SCENE_POSITION} rotation={[0, SCENE_FACING, 0]}>
-        <Desk chairRef={chair} screenContent={<ScreenTexture lines={lines} reducedMotion={reducedMotion} />} />
-        <Rig reducedMotion={reducedMotion} anchors={anchors} chair={chair} />
+        <Desk chairRef={chair} light={theme === 'light'} screenContent={<ScreenTexture lines={lines} reducedMotion={reducedMotion} />} />
+        <Rig reducedMotion={reducedMotion} anchors={anchors} chair={chair} shadow={shadow} />
         {/* Soft contact shadow on her floor, centred under the desk + chair */}
-        <ContactShadows position={[CONTACT_SHADOW.x, FLOOR_Y + 0.001, CONTACT_SHADOW.z]} opacity={CONTACT_SHADOW.opacity} scale={CONTACT_SHADOW.scale} blur={CONTACT_SHADOW.blur} far={CONTACT_SHADOW.far} color="#000000" />
+        <ContactShadows position={[CONTACT_SHADOW.x, FLOOR_Y + 0.001, CONTACT_SHADOW.z]} opacity={shadow.contact} scale={CONTACT_SHADOW.scale} blur={CONTACT_SHADOW.blur} far={CONTACT_SHADOW.far} color={shadow.color} />
       </group>
 
     </Canvas>

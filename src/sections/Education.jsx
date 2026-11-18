@@ -44,8 +44,20 @@ export default function Education({ onCertClick }) {
           {training.map((t) => {
             const cert = certifications.items.find((c) => c.id === t.certId)
             return (
-              <li key={t.title} className="edu-card">
-                <h3>
+              <li key={t.title} className="edu-card flex flex-col">
+                {/* The certificate itself, shown up front; click to see it large. */}
+                {cert?.image && (
+                  <button
+                    type="button"
+                    className="edu-cert"
+                    onClick={() => onCertClick(cert)}
+                    aria-label={`View certificate: ${t.title}`}
+                  >
+                    <img src={cert.image} alt="" loading="lazy" />
+                    <span className="edu-cert__tag" aria-hidden="true">view certificate ⤢</span>
+                  </button>
+                )}
+                <h3 className="mt-[clamp(14px,1.3vw,20px)]">
                   {cert
                     ? <button type="button" className="edu-card__title" onClick={() => onCertClick(cert)} aria-label={`${t.title}: view certificate`}>{t.title}</button>
                     : <span className="edu-card__title">{t.title}</span>}
