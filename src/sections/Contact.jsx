@@ -25,7 +25,7 @@ export default function Contact() {
           topLeft="final call"
           topRight="07 / 07"
           bottomLeft={contactBoard.location}
-          bottomRight={<a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName}>download cv <span aria-hidden="true">↓</span></a>}
+          bottomRight={<a href={hero.ctaDownload.href} download={hero.ctaDownload.fileName} className="fill-link">download cv <span aria-hidden="true">↓</span></a>}
           className="s-board"
           bodyClassName="s-gap py-[clamp(6px,0.8vw,14px)]"
         >

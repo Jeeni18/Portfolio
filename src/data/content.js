@@ -67,6 +67,8 @@ export const hero = {
 export const about = {
   // Three lines from 1024px up; wraps naturally on smaller screens.
   statementLines: ['I build reliable, scalable', 'applications that solve', 'real-world problems.'],
+  // marker highlight (sweeps in once, see .s-highlight in index.css)
+  highlight: 'reliable',
   body: 'Computer Engineering graduate from Khwopa College of Engineering, working across frontend, backend, APIs and databases, alone and in teams, with a growing focus on applied AI/ML.',
   cvLabel: 'read the full cv',
   board: [

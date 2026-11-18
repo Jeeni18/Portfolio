@@ -1,0 +1,164 @@
+// When scroll animations play (every section except the hero).
+//
+// Two gates, so visitors actually see the animations:
+//  1. The section: About opens once it has fully covered the hero (its top
+//     has reached the header rule, i.e. the sticky stack is complete).
+//     Every other section opens when its top reaches LINE (35% from the top
+//     of the screen), or when half of it is visible if it's shorter.
+//  2. Each animated element in it (a blade, the count-up, the highlight,
+//     the first project's curtain), by its own position: it plays once its
+//     top reaches ITEM_LINE (65% from the top, i.e. clearly on screen, not
+//     just peeking in at the bottom). When About opens, whatever of it is
+//     on screen plays.
+// Then, DELAY_MS later, it plays -- once per page load. Elements that turn
+// up together (a row of blades) are staggered left to right.
+//
+// IntersectionObservers do the watching; a light scroll check backs them
+// up for fast scrolling (an element can jump past the line between two
+// frames) and for the end of the page, where the last elements may never
+// reach the line: there, anything on screen plays.
+const LINE = 0.35          // section trigger: fraction of the screen height, from the top
+const ITEM_LINE = 0.65     // element trigger (rootMargin 0px 0px -35% 0px)
+const DELAY_MS = 150
+const STEP_MS = 40         // stagger between elements that play together
+const MAX_STAGGER_MS = 480
+
+const sections = new Map() // section element -> state
+let batch = []
+let batchQueued = false
+let checking = false
+let listening = false
+
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const lineY = () => window.innerHeight * LINE
+const itemLineY = () => window.innerHeight * ITEM_LINE
+const navBottom = () => document.getElementById('header-rule')?.getBoundingClientRect().bottom || 0
+const atPageEnd = () => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4
+
+function play(items) {
+  // DOM order, so a row wipes in left to right
+  items.sort((a, b) => (a.el.compareDocumentPosition(b.el) & window.Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+  const step = Math.min(STEP_MS, MAX_STAGGER_MS / Math.max(1, items.length - 1))
+  items.forEach((it, i) => it.run(DELAY_MS + Math.round(i * step)))
+}
+
+function queue(item) {
+  if (item.done) return
+  item.done = true
+  item.io?.disconnect()
+  item.section.items.delete(item)
+  batch.push(item)
+  if (!batchQueued) {
+    batchQueued = true
+    Promise.resolve().then(() => { const b = batch; batch = []; batchQueued = false; play(b) })
+  }
+}
+
+// Is this pending element ready (its section is open)?
+function checkItem(item, line) {
+  if (!item.el.isConnected) { item.section.items.delete(item); item.io?.disconnect(); return }
+  // its top at or above the line (that includes having scrolled past it)
+  if (item.el.getBoundingClientRect().top <= line) queue(item)
+}
+
+function openSection(s) {
+  if (s.open) return
+  s.open = true
+  s.ios.forEach((io) => io.disconnect())
+  s.ios = []
+  // About: what's on screen plays now; elsewhere, what's above the line
+  const line = s.isAbout || atPageEnd() ? window.innerHeight : itemLineY()
+  ;[...s.items].forEach((it) => { checkItem(it, line); if (!it.done) watchItem(it) })
+}
+
+function watchItem(item) {
+  if (item.io || !('IntersectionObserver' in window)) return
+  item.io = new window.IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting || e.boundingClientRect.bottom <= 0) queue(item) })
+  }, { rootMargin: `0px 0px -${Math.round((1 - ITEM_LINE) * 100)}% 0px`, threshold: 0 })
+  item.io.observe(item.el)
+}
+
+function watchSection(s) {
+  if (!('IntersectionObserver' in window)) { openSection(s); return }
+  const open = (e) => { if (e.isIntersecting || e.boundingClientRect.bottom <= 0) openSection(s) }
+  if (s.isAbout) {
+    // About's top just under the header rule = the hero fully covered
+    const io = new window.IntersectionObserver((es) => es.forEach(open), {
+      rootMargin: `0px 0px -${Math.max(0, Math.round(window.innerHeight - navBottom() - 2))}px 0px`,
+      threshold: 0,
+    })
+    io.observe(s.el)
+    s.ios.push(io)
+  } else {
+    // its top above the line ...
+    const top = new window.IntersectionObserver((es) => es.forEach(open), {
+      rootMargin: `0px 0px -${Math.round((1 - LINE) * 100)}% 0px`, threshold: 0,
+    })
+    // ... or half of it on screen (a section shorter than the screen)
+    const half = new window.IntersectionObserver((es) => es.forEach((e) => {
+      if (e.intersectionRatio >= 0.5) openSection(s)
+    }), { threshold: 0.5 })
+    top.observe(s.el)
+    half.observe(s.el)
+    s.ios.push(top, half)
+  }
+}
+
+// Backup check on scroll (one per frame).
+function sectionReady(s) {
+  const r = s.el.getBoundingClientRect()
+  if (r.bottom <= 0) return true
+  if (s.isAbout) return r.top <= navBottom() + 2
+  if (r.top <= lineY()) return true
+  const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0)
+  return r.height > 0 && visible / r.height >= 0.5
+}
+function check() {
+  checking = false
+  const end = atPageEnd()
+  sections.forEach((s) => {
+    if (!s.open) {
+      if (sectionReady(s) || (end && s.el.getBoundingClientRect().top < window.innerHeight)) openSection(s)
+      return
+    }
+    const line = end ? window.innerHeight : itemLineY()
+    ;[...s.items].forEach((it) => checkItem(it, line))
+  })
+}
+const scheduleCheck = () => { if (!checking) { checking = true; requestAnimationFrame(check) } }
+
+function sectionFor(el) {
+  let s = sections.get(el)
+  if (!s) {
+    s = { el, open: false, isAbout: el.id === 'about', items: new Set(), ios: [] }
+    sections.set(el, s)
+    watchSection(s)
+    if (!listening) {
+      listening = true
+      window.addEventListener('scroll', scheduleCheck, { passive: true })
+      window.addEventListener('resize', scheduleCheck)
+    }
+  }
+  return s
+}
+
+// Register an animated element. `run(delayMs)` starts its animation after
+// the given delay. Reduced motion: runs at once (CSS shows the final state).
+// Returns an unregister function.
+export function whenRevealed(el, run, sectionEl = el.closest('section.reveal')) {
+  if (!el) return () => {}
+  if (reduced() || !sectionEl) { run(0); return () => {} }
+  const section = sectionFor(sectionEl)
+  const item = { el, run, section, done: false, io: null }
+  section.items.add(item)
+  if (section.open) { checkItem(item, atPageEnd() ? window.innerHeight : itemLineY()); if (!item.done) watchItem(item) }
+  scheduleCheck()
+  return () => { item.done = true; item.io?.disconnect(); section.items.delete(item) }
+}
+
+// Has this section opened yet (so later content, e.g. a panel the visitor
+// opens, can just play when it appears)?
+export function isSectionOpen(sectionEl) {
+  return !!sectionEl && !!sections.get(sectionEl)?.open
+}

@@ -1,0 +1,141 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Board from '../components/Board'
+import Blade from '../components/Blade'
+import SectionHead from '../components/SectionHead'
+import { useReveal } from '../hooks/useReveal'
+import { whenRevealed } from '../hooks/revealScheduler'
+import { awards } from '../data/content'
+
+// 05 — Awards (oxblood): a cream "4 hackathons won" panel and an arrivals
+// board (year · event · result), then one mono line of finalist places.
+// Event blades link to the certificate where one exists.
+// The big number counts up 0 -> 1 -> 2 -> 3 -> 4 once, when the panel
+// comes into view (revealScheduler): ~0.8s, each step a little slower than the
+// last. Clicking / tapping the panel (a button) plays it again. The digits
+// are stacked in one cell and shown by opacity, so the panel never shifts.
+// Screen readers only get "4 hackathons won" (the digits are aria-hidden).
+// Reduced motion: 4 straight away, and a click changes nothing visible.
+const STEPS_MS = [110, 150, 210, 290] // 0->1, 1->2, 2->3, 3->4 (760ms in all)
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+function useCountUp(target, panelRef) {
+  const [value, setValue] = useState(() => (reducedMotion() ? target : 0))
+  const timers = useRef([])
+  const counting = useRef(false)
+
+  const run = useCallback((delay = 0) => {
+    if (counting.current || reducedMotion()) return
+    counting.current = true
+    timers.current.forEach(clearTimeout)
+    timers.current = []
+    let at = delay
+    timers.current.push(setTimeout(() => setValue(0), delay))
+    for (let n = 1; n <= target; n++) {
+      at += STEPS_MS[Math.min(n - 1, STEPS_MS.length - 1)]
+      timers.current.push(setTimeout(() => {
+        setValue(n)
+        if (n === target) counting.current = false
+      }, at))
+    }
+  }, [target])
+
+  useEffect(() => {
+    // scrolled past before its turn: just show the final number
+    const off = whenRevealed(panelRef.current, (delay, instant) => (instant ? setValue(target) : run(delay)))
+    const t = timers
+    return () => { off(); t.current.forEach(clearTimeout) }
+  }, [panelRef, run, target])
+
+  return [value, () => run(0)]
+}
+
+function CountUp({ target, value }) {
+  return (
+    <span className="awards-four__n count-up" aria-hidden="true">
+      {/* every digit sits in the same cell (so the box is as wide as the
+          widest: "0" and "2" are wider than "4" in this serif); only the
+          current one is shown, by opacity, so the text never changes and
+          nothing moves */}
+      {Array.from({ length: target + 1 }, (_, d) => (
+        <span key={d} className={d === value ? 'is-on' : undefined}>{d}</span>
+      ))}
+    </span>
+  )
+}
+
+export default function Awards() {
+  const ref = useReveal()
+  const fourRef = useRef(null)
+  const [count, replay] = useCountUp(Number(awards.hackathonsWon), fourRef)
+
+  return (
+    <section id="awards" ref={ref} aria-labelledby="awards-heading" className="reveal s-section s-section--oxblood">
+      <div className="s-col">
+        <SectionHead number="05" name="awards" id="awards-heading" title="Awards and wins." note="arrivals" />
+
+        <div className="grid lg:grid-cols-[minmax(0,0.3fr)_minmax(0,1fr)] gap-[clamp(14px,1.4vw,24px)]">
+          {/* The big number: a cream panel with the hinge line through it.
+              A button: clicking it replays the count. */}
+          <button
+            ref={fourRef}
+            type="button"
+            onClick={replay}
+            aria-label={`Replay: ${awards.hackathonsWon} hackathons won`}
+            className="awards-four awards-four--button blade blade--cream flex flex-col items-center justify-center"
+          >
+            <span className="relative z-[2] flex flex-col items-center gap-[clamp(10px,1.4vw,24px)] pt-[0.6em]">
+              <CountUp target={Number(awards.hackathonsWon)} value={count} />
+              <span className="awards-four__cap relative">
+                hackathons won
+                <span className="awards-four__hint" aria-hidden="true">↻ replay</span>
+              </span>
+            </span>
+          </button>
+
+          <Board label="Arrivals: awards" className="s-board justify-center" bodyClassName="s-gap justify-center">
+            <ul className="flex flex-col s-gap">
+              {awards.items.map((a) => (
+                <li key={a.event} className="grid grid-cols-[4.2em_minmax(0,1fr)] sm:grid-cols-[clamp(64px,6vw,104px)_minmax(0,1fr)_clamp(150px,14vw,250px)] s-gap s-mono">
+                  <Blade as="span" fit center variant="dark" secondary text={a.year} className="s-h" />
+                  {a.link ? (
+                    <Blade
+                      as="a"
+                      href={a.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      fit
+                      variant="dark"
+                      text={<>{a.event}<span className="sr-only"> (certificate, opens in a new tab)</span></>}
+                      className="s-h"
+                    />
+                  ) : (
+                    <Blade as="span" fit variant="dark" text={a.event} className="s-h" />
+                  )}
+                  <Blade
+                    as="span"
+                    fit
+                    center
+                    variant={a.win ? 'status' : 'dark'}
+                    secondary={!a.win}
+                    text={a.result}
+                    className="s-h col-start-2 sm:col-start-auto"
+                  />
+                </li>
+              ))}
+            </ul>
+          </Board>
+        </div>
+
+        <p className="awards-also mt-[clamp(18px,1.8vw,30px)]">
+          also:{' '}
+          {awards.also.map((a, i) => (
+            <React.Fragment key={a.text}>
+              {i > 0 && ' · '}
+              {a.link ? <a href={a.link} target="_blank" rel="noopener noreferrer">{a.text}</a> : a.text}
+            </React.Fragment>
+          ))}
+        </p>
+      </div>
+    </section>
+  )
+}

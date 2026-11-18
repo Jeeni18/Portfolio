@@ -4,6 +4,7 @@ import { hero } from '../data/content'
 import { useWebglSupport } from '../hooks/useWebglSupport'
 import { STEP, T, timeline, useIntro, between } from '../hooks/introTimeline'
 import { useLocalTime } from '../hooks/useLocalTime'
+import { heroCovered } from '../hooks/useStickyStack'
 import Blade from '../components/Blade'
 import Board from '../components/Board'
 import WaveCaption from '../components/WaveCaption'
@@ -120,12 +121,14 @@ export default function Hero({ onContactOpen }) {
   }, [])
 
   // Pause the 3D scene (and her typing loop) while the hero is scrolled out
-  // of view or the tab is hidden; it picks up where it left off.
+  // of view, fully covered by About (sticky stack), or the tab is hidden;
+  // it picks up where it left off.
   const [scenePaused, setScenePaused] = useState(false)
   useEffect(() => {
     const el = sectionRef.current
     let onScreen = true
-    const update = () => setScenePaused(!onScreen || document.visibilityState === 'hidden')
+    const update = () => setScenePaused(!onScreen || heroCovered.get() || document.visibilityState === 'hidden')
+    const unsubscribe = heroCovered.subscribe(update)
     const io = new window.IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting
       update()
@@ -134,6 +137,7 @@ export default function Hero({ onContactOpen }) {
     document.addEventListener('visibilitychange', update)
     return () => {
       io.disconnect()
+      unsubscribe()
       document.removeEventListener('visibilitychange', update)
     }
   }, [])

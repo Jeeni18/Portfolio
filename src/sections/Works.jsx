@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Blade from '../components/Blade'
 import SectionHead from '../components/SectionHead'
 import { useReveal } from '../hooks/useReveal'
+import { whenRevealed } from '../hooks/revealScheduler'
 import { projects } from '../data/content'
 
 // 04 — Works (charcoal): a departures list. Each row (number · name ·
@@ -18,7 +19,7 @@ function Workflow({ steps, name }) {
   const selected = steps.find((s) => s.id === selectedId)
 
   return (
-    <div className="mt-[clamp(24px,2.2vw,36px)] pt-[clamp(18px,1.6vw,26px)] border-t border-[rgba(141,83,101,0.35)]">
+    <div className="works-flow mt-[clamp(24px,2.2vw,36px)] pt-[clamp(18px,1.6vw,26px)] border-t border-[rgba(141,83,101,0.35)]">
       <p className="works-flow-label mb-3">workflow</p>
       <ol className="flex flex-wrap items-center gap-y-2" aria-label={`${name} workflow`}>
         {steps.map((step, i) => (
@@ -48,16 +49,53 @@ function Workflow({ steps, name }) {
   )
 }
 
+// The project image, revealed by a cream curtain sliding off to the right
+// (and the image settling from 1.04 to 1) each time the panel opens: once
+// it's its turn (see below) and the image has loaded. Reduced motion: CSS
+// shows the image straight away.
+function Shot({ project }) {
+  const frameRef = useRef(null)
+  const [inView, setInView] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [revealed, setRevealed] = useState(false)
+  const [instant, setInstant] = useState(false)
+  useEffect(() => {
+    const el = frameRef.current
+    if (!el) return undefined
+    // Plays on its turn (revealScheduler), for the panel that is open now;
+    // reset off-screen, so it plays again each time the visitor comes back.
+    return whenRevealed(el, (delay, instant) => {
+      if (instant) setInstant(true)
+      setTimeout(() => setInView(true), delay)
+    }, {
+      reset: () => { setInView(false); setRevealed(false); setInstant(false) },
+    })
+  }, [])
+  useEffect(() => {
+    if (!inView || !loaded || revealed) return undefined
+    // a frame in the covered state first, so the transition always runs
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setRevealed(true)))
+    return () => cancelAnimationFrame(id)
+  }, [inView, loaded, revealed])
+  const imgRef = (img) => { if (img && img.complete && img.naturalWidth) setLoaded(true) }
+  return (
+    <div ref={frameRef} className={`works-shot${project.image ? ' works-shot--curtain' : ''}${revealed ? ' is-revealed' : ''}${instant ? ' is-instant' : ''}`}>
+      {project.image ? (
+        <>
+          <img ref={imgRef} src={project.image} alt={`${project.name} screenshot`} loading="lazy" onLoad={() => setLoaded(true)} />
+          <span className="works-curtain" aria-hidden="true" />
+        </>
+      ) : <span aria-hidden="true">project screenshot</span>}
+    </div>
+  )
+}
+
 function Panel({ project }) {
   return (
     <div id={`work-panel-${project.number}`} className="works-panel p-[clamp(16px,1.6vw,28px)]">
       <span className="works-panel__no hidden sm:block" aria-hidden="true">{project.number}</span>
       <div className="relative grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-[clamp(18px,2.2vw,40px)]">
-        <div className="works-shot">
-          {project.image
-            ? <img src={project.image} alt={`${project.name} screenshot`} loading="lazy" />
-            : <span aria-hidden="true">project screenshot</span>}
-        </div>
+        <Shot project={project} />
         <div className="flex flex-col justify-center md:pr-[clamp(60px,8vw,150px)]">
           <h3 className="works-title">{project.name}</h3>
           <p className="works-tagline mt-2">{project.tagline}</p>

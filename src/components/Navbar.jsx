@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { navLinks, hero, sectionIndex } from '../data/content'
 
@@ -8,7 +8,10 @@ import { navLinks, hero, sectionIndex } from '../data/content'
 export default function Navbar({ onContactOpen }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [active, setActive] = useState('')
+  const [active, setActive] = useState('hero') // id of the section on screen
+  const navRef = useRef(null)
+  const linkRefs = useRef({})
+  const indicatorRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -17,22 +20,63 @@ export default function Navbar({ onContactOpen }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Highlight the nav link for the section currently on screen.
+  // The section on screen = the one crossing the middle of the screen. With
+  // the sticky stack the pinned hero crosses it the whole time, so the
+  // latest section in page order wins (later sections lie on top): the
+  // hero stays active until About covers more than half the screen. The
+  // footer counts as Contact.
   useEffect(() => {
-    const targets = sectionIndex
-      .map((s) => document.querySelector(s.href))
-      .filter(Boolean)
-    if (!targets.length) return undefined
+    const order = [...sectionIndex.map((s) => s.href.slice(1)), 'footer']
+    const els = order.map((id) => (id === 'footer' ? document.querySelector('footer') : document.getElementById(id))).filter(Boolean)
+    if (!els.length || !('IntersectionObserver' in window)) return undefined
+    const crossing = new Set()
     const io = new window.IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible[0]) setActive('#' + visible[0].target.id)
+        entries.forEach((e) => {
+          const id = e.target.tagName === 'FOOTER' ? 'footer' : e.target.id
+          if (e.isIntersecting) crossing.add(id)
+          else crossing.delete(id)
+        })
+        const last = order.filter((id) => crossing.has(id)).pop()
+        if (last) setActive(last === 'footer' ? 'contact' : last)
       },
-      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.2, 0.5] }
+      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
     )
-    targets.forEach((el) => io.observe(el))
+    els.forEach((el) => io.observe(el))
     return () => io.disconnect()
   }, [])
+
+  // One cream box behind the active link, sliding from link to link (and
+  // fading out where no link applies: the hero, Education, Contact -- which
+  // lights up the contact button instead). Reduced motion: no sliding.
+  const activeHref = `#${active}`
+  const linkActive = navLinks.some((l) => l.href === activeHref) ? activeHref : null
+  const contactActive = active === 'contact'
+  const shown = useRef(false)
+  useLayoutEffect(() => {
+    const ind = indicatorRef.current
+    const nav = navRef.current
+    if (!ind || !nav) return undefined
+    const place = () => {
+      const link = linkActive && linkRefs.current[linkActive]
+      if (!link) { ind.style.opacity = '0'; shown.current = false; return }
+      const x = link.offsetLeft - 10
+      const y = link.offsetTop - 6
+      const fresh = !shown.current
+      // appearing (rather than moving): put it in place without sliding
+      if (fresh) ind.classList.add('nav-indicator--still')
+      ind.style.width = `${link.offsetWidth + 20}px`
+      ind.style.height = `${link.offsetHeight + 12}px`
+      ind.style.transform = `translate(${x}px, ${y}px)`
+      ind.style.opacity = '1'
+      shown.current = true
+      if (fresh) requestAnimationFrame(() => requestAnimationFrame(() => ind.classList.remove('nav-indicator--still')))
+    }
+    place()
+    window.addEventListener('resize', place)
+    document.fonts?.ready.then(place)
+    return () => window.removeEventListener('resize', place)
+  }, [linkActive])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -68,14 +112,16 @@ export default function Navbar({ onContactOpen }) {
               Jeeni.
             </a>
 
-            <nav className="hidden md:flex items-center gap-[1.75em]" aria-label="Primary">
+            <nav ref={navRef} className="nav-desktop relative hidden md:flex items-center gap-[1.75em]" aria-label="Primary">
+              <span ref={indicatorRef} className="nav-indicator" aria-hidden="true" />
               {navLinks.map((link) => (
                 <button
                   key={link.href}
+                  ref={(el) => { linkRefs.current[link.href] = el }}
                   type="button"
                   onClick={() => handleNavClick(link.href)}
                   className="nav-link"
-                  aria-current={active === link.href ? 'true' : undefined}
+                  aria-current={linkActive === link.href ? 'true' : undefined}
                 >
                   {link.label}
                 </button>
@@ -84,7 +130,7 @@ export default function Navbar({ onContactOpen }) {
                 cv <span aria-hidden="true">↓</span>
                 <span className="sr-only">download</span>
               </a>
-              <button type="button" onClick={onContactOpen} className="btn-outline">
+              <button type="button" onClick={onContactOpen} className={`btn-outline${contactActive ? ' is-active' : ''}`}>
                 contact
               </button>
             </nav>
@@ -123,9 +169,10 @@ export default function Navbar({ onContactOpen }) {
                   type="button"
                   onClick={() => handleNavClick(s.href)}
                   className="mobile-menu-item flex items-baseline gap-4 py-4 text-left"
+                  aria-current={activeHref === s.href ? 'true' : undefined}
                 >
                   <span className="font-mono text-[11px]" style={{ color: 'var(--rose)' }}>{s.number}</span>
-                  <span className="font-mono text-[15px]" style={{ color: 'var(--dusty-pink)' }}>{s.label}</span>
+                  <span className={`mobile-menu-label font-mono text-[15px]${activeHref === s.href ? ' is-active' : ''}`}>{s.label}</span>
                 </button>
               ))}
               <div className="flex items-center gap-6 pt-8">

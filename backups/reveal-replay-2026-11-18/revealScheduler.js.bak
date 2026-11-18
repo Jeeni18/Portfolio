@@ -1,0 +1,125 @@
+import { stackProgress } from './useStickyStack'
+
+// When scroll animations play (every section except the hero): per
+// element, naturally as the visitor scrolls.
+//
+// - Each animated group (a board, a project row, the "4" box, the About
+//   highlight, the first project's image ...) has its own trigger: it plays
+//   as soon as its top edge is about 15% up from the bottom of the screen
+//   (IntersectionObserver, threshold 0, rootMargin 0px 0px -15% 0px). No
+//   extra waiting.
+// - About: not before it has covered 60% of the hero in the sticky stack
+//   (so it is already playing as it settles into place). Without the
+//   sticky stack (small phones) the normal rule applies.
+// - Already on screen at load / after a nav jump: plays straight away.
+// - Scrolled past before it could play (fast scrolling): shown in its
+//   final state at once, with no animation off-screen.
+// - Once per page load; scrolling back up leaves everything as it is.
+// - Inside a group: a board with several rows plays row by row, a single
+//   row blade by blade, 60-80ms apart, the whole group within about 1s.
+const ROOT_MARGIN = '0px 0px -15% 0px'
+const ABOUT_AT = 0.6       // sticky-stack progress at which About starts
+const STEP_MIN = 60
+const STEP_MAX = 80
+const GROUP_SPAN_MS = 450  // last item starts by then (+0.55s wipe ~ 1s)
+const MAX_BANDS = 8        // more rows than this (tall boards on phones): neighbouring rows play together
+
+const groups = new Map()   // group element -> { el, items: [], done, section }
+const openSections = new WeakSet()
+let io = null
+let listening = false
+let checkQueued = false
+
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const isAbout = (g) => g.section && g.section.id === 'about'
+const aboutReady = () => !stackProgress.enabled() || stackProgress.get() >= ABOUT_AT
+
+// Delay per item: row by row when the group has several rows, else item by
+// item. At most MAX_BANDS steps, so the group stays within about 1s.
+function delays(items) {
+  const tops = items.map((it) => Math.round(it.el.getBoundingClientRect().top))
+  const rows = [...new Set(tops)].sort((a, b) => a - b)
+  const multi = rows.length > 1
+  const units = multi ? rows.length : items.length
+  const bands = Math.min(units, MAX_BANDS)
+  const band = (i) => (units > MAX_BANDS ? Math.floor((i * MAX_BANDS) / units) : i)
+  const step = bands > 1 ? Math.max(STEP_MIN, Math.min(STEP_MAX, GROUP_SPAN_MS / (bands - 1))) : 0
+  if (multi) return tops.map((t) => Math.round(band(rows.indexOf(t)) * step))
+  // one row: left to right
+  const order = items.map((it, i) => [it.el.getBoundingClientRect().left, i]).sort((a, b) => a[0] - b[0]).map((x) => x[1])
+  const d = new Array(items.length)
+  order.forEach((idx, k) => { d[idx] = Math.round(band(k) * step) })
+  return d
+}
+
+function finish(g, instant) {
+  if (g.done) return
+  g.done = true
+  io?.unobserve(g.el)
+  groups.delete(g.el)
+  if (g.section) openSections.add(g.section)
+  const items = g.items.filter((it) => !it.off)
+  if (instant) { items.forEach((it) => it.run(0, true)); return }
+  const d = delays(items)
+  items.forEach((it, i) => it.run(d[i], false))
+}
+
+// Decide for one group from its current position.
+function evaluate(g, entry) {
+  if (g.done) return
+  if (!g.el.isConnected) { groups.delete(g.el); io?.unobserve(g.el); return }
+  const r = entry ? entry.boundingClientRect : g.el.getBoundingClientRect()
+  if (r.bottom <= 0) { finish(g, true); return }           // scrolled past: final state
+  const inZone = entry ? entry.isIntersecting : r.top < window.innerHeight * 0.85 && r.bottom > 0
+  if (!inZone) return
+  if (isAbout(g) && !aboutReady()) return                  // waits for the sticky stack
+  finish(g, false)
+}
+
+function check() {
+  checkQueued = false
+  groups.forEach((g) => evaluate(g))
+}
+const scheduleCheck = () => { if (!checkQueued) { checkQueued = true; requestAnimationFrame(check) } }
+
+function ensureWatching() {
+  if (io || !('IntersectionObserver' in window)) return
+  io = new window.IntersectionObserver((entries) => {
+    entries.forEach((e) => { const g = groups.get(e.target); if (g) evaluate(g, e) })
+  }, { rootMargin: ROOT_MARGIN, threshold: 0 })
+  if (!listening) {
+    listening = true
+    // backup for very fast scrolling, and About's sticky-stack start
+    window.addEventListener('scroll', scheduleCheck, { passive: true })
+    window.addEventListener('resize', scheduleCheck)
+    stackProgress.subscribe(scheduleCheck)
+  }
+}
+
+// Register an animated element. `run(delayMs, instant)` starts it after
+// the delay (instant: show the final state at once, no transition).
+// `group`: the element whose position triggers it (default: itself).
+// Reduced motion: runs at once. Returns an unregister function.
+export function whenRevealed(el, run, { group = el } = {}) {
+  if (!el) return () => {}
+  const section = (group || el).closest('section.reveal')
+  if (reduced()) { run(0, true); if (section) openSections.add(section); return () => {} }
+  ensureWatching()
+  let g = groups.get(group)
+  if (!g) {
+    g = { el: group, items: [], done: false, section }
+    groups.set(group, g)
+    if (io) io.observe(group)
+  }
+  const item = { el, run, off: false }
+  g.items.push(item)
+  if (!io) finish(g, false)
+  scheduleCheck()
+  return () => { item.off = true }
+}
+
+// Has anything in this section played yet (so content the visitor opens
+// later, e.g. another project panel, can simply play as it appears)?
+export function isSectionOpen(sectionEl) {
+  return !!sectionEl && openSections.has(sectionEl)
+}

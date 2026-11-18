@@ -7,6 +7,16 @@ import { about, hero } from '../data/content'
 
 // 02 — About (oxblood): italic statement + short body + CV link on the
 // left; a small facts board on the right (under the text below 1024px).
+// One word of the statement: "real-world" never breaks at its hyphen, and
+// the highlight word ("reliable") sits on a burgundy marker bar.
+function renderWord(w) {
+  const hl = about.highlight
+  if (hl && w.startsWith(hl)) {
+    return <><span className="s-highlight">{hl}</span>{w.slice(hl.length)}</>
+  }
+  return w.includes('-') ? <span className="whitespace-nowrap">{w}</span> : w
+}
+
 export default function About() {
   const ref = useReveal()
 
@@ -20,9 +30,10 @@ export default function About() {
             <h2 id="about-heading" className="about-statement">
               {about.statementLines.map((line) => (
                 <span key={line} className="lg:block">
-                  {/* never break "real-world" at its hyphen */}
+                  {/* never break "real-world" at its hyphen; the highlighted
+                      word gets the marker bar behind it */}
                   {line.split(' ').map((w, i) => (
-                    <React.Fragment key={i}>{w.includes('-') ? <span className="whitespace-nowrap">{w}</span> : w}{' '}</React.Fragment>
+                    <React.Fragment key={i}>{renderWord(w)}{' '}</React.Fragment>
                   ))}
                 </span>
               ))}

@@ -1,0 +1,147 @@
+import React, { useState } from 'react'
+import Blade from '../components/Blade'
+import SectionHead from '../components/SectionHead'
+import { useReveal } from '../hooks/useReveal'
+import { projects } from '../data/content'
+
+// 04 — Works (charcoal): a departures list. Each row (number · name ·
+// stack · status) is a button; it opens a cream panel below it (one at a
+// time, the first open by default). The open row's name blade is cream.
+
+// Row columns: no. · project · stack · status (stacked below 768px).
+const COLS = 'md:grid-cols-[clamp(44px,4vw,72px)_minmax(0,1.5fr)_minmax(0,2fr)_clamp(150px,13.5vw,250px)]'
+
+// The project's workflow: small blades joined by thin rose arrows; click a
+// step for what it does (the previous site's architecture diagram).
+function Workflow({ steps, name }) {
+  const [selectedId, setSelectedId] = useState((steps.find((s) => s.default) || steps[0]).id)
+  const selected = steps.find((s) => s.id === selectedId)
+
+  return (
+    <div className="mt-[clamp(24px,2.2vw,36px)] pt-[clamp(18px,1.6vw,26px)] border-t border-[rgba(141,83,101,0.35)]">
+      <p className="works-flow-label mb-3">workflow</p>
+      <ol className="flex flex-wrap items-center gap-y-2" aria-label={`${name} workflow`}>
+        {steps.map((step, i) => (
+          <li key={step.id} className="flex items-center">
+            <Blade
+              as="button"
+              type="button"
+              fit
+              variant={selectedId === step.id ? 'status' : 'dark'}
+              text={step.label}
+              onClick={() => setSelectedId(step.id)}
+              aria-pressed={selectedId === step.id}
+              className="works-step s-h s-mono"
+            />
+            {i < steps.length - 1 && <span className="works-arrow mx-2" aria-hidden="true" />}
+          </li>
+        ))}
+      </ol>
+      <div className="works-step-detail mt-4 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-4 lg:gap-6" aria-live="polite">
+        <div>
+          <h4 className="mb-2">{selected.title}</h4>
+          <p>{selected.explanation}</p>
+        </div>
+        <pre className="self-start">{selected.code}</pre>
+      </div>
+    </div>
+  )
+}
+
+function Panel({ project }) {
+  return (
+    <div id={`work-panel-${project.number}`} className="works-panel p-[clamp(16px,1.6vw,28px)]">
+      <span className="works-panel__no hidden sm:block" aria-hidden="true">{project.number}</span>
+      <div className="relative grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-[clamp(18px,2.2vw,40px)]">
+        <div className="works-shot">
+          {project.image
+            ? <img src={project.image} alt={`${project.name} screenshot`} loading="lazy" />
+            : <span aria-hidden="true">project screenshot</span>}
+        </div>
+        <div className="flex flex-col justify-center md:pr-[clamp(60px,8vw,150px)]">
+          <h3 className="works-title">{project.name}</h3>
+          <p className="works-tagline mt-2">{project.tagline}</p>
+          <ul className="works-bullets mt-[clamp(14px,1.3vw,22px)] space-y-1">
+            {project.bullets.map((b) => <li key={b}>{b}</li>)}
+          </ul>
+          {(project.live || project.code) && (
+            <p className="mt-[clamp(16px,1.5vw,26px)] flex flex-wrap gap-x-6 gap-y-2">
+              {project.live && (
+                <a href={project.live} target="_blank" rel="noopener noreferrer" className="works-plink">
+                  view live demo <span aria-hidden="true">→</span>
+                  <span className="sr-only"> ({project.name}, opens in a new tab)</span>
+                </a>
+              )}
+              {project.code && (
+                <a href={project.code} target="_blank" rel="noopener noreferrer" className="works-plink">
+                  github <span aria-hidden="true">→</span>
+                  <span className="sr-only"> ({project.name} repository, opens in a new tab)</span>
+                </a>
+              )}
+            </p>
+          )}
+        </div>
+      </div>
+      {project.workflow && <Workflow steps={project.workflow} name={project.name} />}
+    </div>
+  )
+}
+
+function Row({ project, open, onToggle }) {
+  return (
+    <li className="flex flex-col s-gap">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`work-panel-${project.number}`}
+        className={`works-row grid-cols-[clamp(44px,4vw,72px)_minmax(0,1fr)] ${COLS} s-gap`}
+      >
+        <Blade as="span" fit center variant="dark" secondary text={project.number} className="s-mono" />
+        <Blade as="span" fit variant={open ? 'cream' : 'dark'} text={project.name} className="works-name" />
+        {/* Phones: stack + status share one wrapping line below the name;
+            from 768px they are the grid's stack and status columns. */}
+        <span className="col-span-2 flex flex-wrap s-gap md:contents">
+          <span className="flex flex-wrap s-gap">
+            {project.stack.map((tech) => (
+              <Blade key={tech} as="span" fit variant="dark" text={tech} className="s-h s-mono md:min-h-full" />
+            ))}
+          </span>
+          <span className="flex">
+            {project.status
+              ? <Blade as="span" fit center variant="status" text={project.status} className="s-h s-mono md:w-full" />
+              : <span className="s-outline s-h s-mono md:w-full">view&nbsp;<span aria-hidden="true">→</span></span>}
+          </span>
+        </span>
+      </button>
+      {open && <Panel project={project} />}
+    </li>
+  )
+}
+
+export default function Works() {
+  const ref = useReveal()
+  const [openNo, setOpenNo] = useState(projects[0].number)
+
+  return (
+    <section id="projects" ref={ref} aria-labelledby="works-heading" className="reveal s-section s-section--charcoal">
+      <div className="s-col">
+        <SectionHead number="04" name="works" id="works-heading" title="Selected works." note="departures" />
+
+        <div className={`works-cols hidden md:grid ${COLS} s-gap mb-3`} aria-hidden="true">
+          <span>no.</span><span>project</span><span>stack</span><span className="text-right">status</span>
+        </div>
+        <ol className="works-list flex flex-col s-gap">
+          {projects.map((p) => (
+            <Row
+              key={p.number}
+              project={p}
+              open={openNo === p.number}
+              onToggle={() => setOpenNo((cur) => (cur === p.number ? null : p.number))}
+            />
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}

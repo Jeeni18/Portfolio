@@ -27,8 +27,11 @@ export default function FloatingContact({ onClick }) {
     const hero = document.getElementById('hero')
     if (!hero) return undefined
     // "In view" = the hero still covers the bottom 100px of the screen,
-    // where the button sits.
-    const probe = () => setHeroInView(hero.getBoundingClientRect().bottom > window.innerHeight - 100)
+    // where the button sits: About's top edge is still below that line
+    // (the same as the hero's bottom edge, and right while the sticky hero
+    // is being covered).
+    const about = document.getElementById('about')
+    const probe = () => setHeroInView((about || hero).getBoundingClientRect()[about ? 'top' : 'bottom'] > window.innerHeight - 100)
     window.addEventListener('scroll', probe, { passive: true })
     window.addEventListener('resize', probe)
     probe()

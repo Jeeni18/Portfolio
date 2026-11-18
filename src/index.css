@@ -103,11 +103,6 @@
     height: 28px;
     background: #F1E8DD;
     color: #35101E;
-    transition: background-color 0.2s ease;
-  }
-
-  .btn-primary:hover {
-    background: #D5B7B8;
   }
 
   /* Secondary: dusty-pink mono text link with an arrow; underline draws in */
@@ -136,14 +131,6 @@
     padding: 0 0.55em;
     color: #F1E8DD;
     border: 1px solid #D5B7B8;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .btn-outline:hover,
-  .btn-outline:focus-visible {
-    background: #F1E8DD;
-    color: #35101E;
-    border-color: #F1E8DD;
   }
 
   /* Hero floor actions -- sized in em from the room's mono size so they
@@ -154,12 +141,6 @@
     padding: 0 2.1em;
     background: #F1E8DD;
     color: #35101E;
-    transition: background-color 0.2s ease;
-  }
-
-  .room-btn-primary:hover,
-  .room-btn-primary:focus-visible {
-    background: #D5B7B8;
   }
 
   .room-btn-secondary {
@@ -471,7 +452,7 @@ a.blade:hover, a.blade:focus-visible, button.blade:hover { filter: brightness(1.
 .s-gap { gap: clamp(6px, 0.55vw, 10px); }
 
 /* Outline "blade": no fill, 1px dusty-pink frame (Works: "view ->"). */
-.s-outline { display: flex; align-items: center; justify-content: center; border: 1px solid var(--dusty-pink); color: var(--cream); background: transparent; transition: background-color 0.2s ease, color 0.2s ease; }
+.s-outline { display: flex; align-items: center; justify-content: center; border: 1px solid var(--dusty-pink); color: var(--cream); background: transparent; }
 
 /* Mono text link with a thin rose underline */
 .s-link { font-family: 'IBM Plex Mono', monospace; color: var(--cream); font-size: clamp(13px, 1vw, 17px); text-decoration: none; border-bottom: 1px solid var(--rose); padding-bottom: 3px; transition: border-color 0.2s ease, color 0.2s ease; }
@@ -492,7 +473,6 @@ a.blade:hover, a.blade:focus-visible, button.blade:hover { filter: brightness(1.
 .works-list .works-row .blade--dark::after { background: var(--charcoal); }
 .works-row { display: grid; width: 100%; text-align: left; cursor: pointer; background: none; border: 0; padding: 0; color: inherit; }
 .works-name { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(22px, 2.1vw, 38px); min-height: clamp(44px, 3.7vw, 66px); padding-inline: clamp(12px, 1.2vw, 22px); }
-.works-row:hover .s-outline, .works-row:focus-visible .s-outline { background: var(--cream); color: var(--oxblood); }
 .works-row:hover .blade--dark { filter: brightness(1.18); }
 .works-panel { background: var(--cream); color: var(--charcoal); position: relative; overflow: hidden; }
 .works-panel__no { position: absolute; top: 0.08em; right: 0.22em; font-family: 'Instrument Serif', Georgia, serif; color: var(--dusty-pink); font-size: clamp(72px, 7.6vw, 136px); line-height: 1; pointer-events: none; }
@@ -549,12 +529,16 @@ a.blade:hover, a.blade:focus-visible, button.blade:hover { filter: brightness(1.
 .site-footer__link { font-family: 'IBM Plex Mono', monospace; color: var(--dusty-pink); font-size: clamp(13px, 1vw, 17px); background: none; border: 0; padding: 0; cursor: pointer; transition: color 0.2s ease; }
 .site-footer__link:hover, .site-footer__link:focus-visible { color: var(--cream); }
 
-/* ---- Scroll reveal (useReveal): blades wipe in left to right, once,
-   staggered via --d. No animation for reduced motion. ---- */
-.reveal .blade { clip-path: inset(0 100% 0 0); }
-.reveal.is-in .blade { clip-path: inset(0 0 0 0); transition: clip-path 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) var(--d, 0ms); }
+/* ---- Scroll reveal (useReveal + revealScheduler.js): blades wipe in left
+   to right, once, each when it's its turn (rv-wait until then), staggered
+   via --d. Content that appears later isn't marked and just shows. No
+   animation for reduced motion. ---- */
+.blade.rv-wait { clip-path: inset(0 100% 0 0); }
+.blade.rv-wait.is-in { clip-path: inset(0 0 0 0); transition: clip-path 0.55s cubic-bezier(0.25, 0.8, 0.25, 1) var(--d, 0ms); }
+/* scrolled past before its turn: the final state at once */
+.blade.rv-wait.rv-instant, .s-highlight.rv-instant::before, .works-shot--curtain.is-instant img, .works-shot--curtain.is-instant .works-curtain { transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  .reveal .blade, .reveal.is-in .blade { clip-path: none; transition: none; }
+  .blade.rv-wait, .blade.rv-wait.is-in { clip-path: none; transition: none; }
 }
 
 /* ---- Training cards: certificate preview (Education.jsx) ----
@@ -577,3 +561,155 @@ a.blade:hover, a.blade:focus-visible, button.blade:hover { filter: brightness(1.
 .cert-modal__title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; color: var(--cream); font-size: clamp(22px, 1.9vw, 32px); line-height: 1.1; }
 .cert-modal__org { font-family: 'IBM Plex Mono', monospace; color: var(--rose); font-size: clamp(12px, 0.9vw, 15px); margin-top: 6px; }
 .cert-modal__desc { font-family: 'Work Sans', sans-serif; color: var(--dusty-pink); font-size: clamp(13px, 0.95vw, 15px); line-height: 1.55; margin-top: 6px; max-width: 70ch; }
+
+/* ==== Quiet motions ===================================================
+   One ease-out everywhere (unless noted); transform and opacity only, so
+   nothing shifts layout. prefers-reduced-motion: final states, no motion. */
+:root { --ease-quiet: cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+/* ---- 1. Button fill: a layer under the text fills left to right (0.4s)
+   on hover and keyboard focus, and empties back when it leaves. Touch
+   screens: no hover, just a short pressed fill. ---- */
+.room-btn-primary, .btn-primary, .btn-outline, .s-outline, .fill-link { position: relative; isolation: isolate; }
+.room-btn-primary::before, .btn-primary::before, .btn-outline::before, .s-outline::before, .fill-link::before,
+a.blade--status::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #D5B7B8;               /* dusty pink */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-quiet);
+  pointer-events: none;
+}
+/* "download cv": a text link, so its fill reaches a little past the text */
+.fill-link::before { inset: -0.35em -0.5em; }
+/* Outline buttons: the text turns oxblood as the fill comes in */
+.btn-outline, .s-outline, .fill-link { transition: color 0.4s var(--ease-quiet); }
+/* Burgundy action blades ("say hello"): muted rose fill under the hinge
+   line and the text; the text stays cream */
+a.blade--status::before { z-index: 0; background: #8D5365; }
+a.blade--status:hover, a.blade--status:focus-visible { filter: none; }
+
+@media (hover: hover) {
+  .room-btn-primary:hover::before, .btn-primary:hover::before, .btn-outline:hover::before,
+  .fill-link:hover::before, a.blade--status:hover::before,
+  .works-row:hover .s-outline::before { transform: scaleX(1); }
+  .btn-outline:hover, .works-row:hover .s-outline,
+  .s-board .board__meta a.fill-link:hover { color: #35101E; }
+}
+.room-btn-primary:focus-visible::before, .btn-primary:focus-visible::before, .btn-outline:focus-visible::before,
+.fill-link:focus-visible::before, a.blade--status:focus-visible::before,
+.works-row:focus-visible .s-outline::before { transform: scaleX(1); }
+.btn-outline:focus-visible, .works-row:focus-visible .s-outline,
+.s-board .board__meta a.fill-link:focus-visible { color: #35101E; }
+
+/* touch: a short pressed fill while the finger is down (pressFeedback.js) */
+.room-btn-primary.is-pressed::before, .btn-primary.is-pressed::before, .btn-outline.is-pressed::before,
+.fill-link.is-pressed::before, a.blade--status.is-pressed::before,
+.works-row.is-pressed .s-outline::before { transform: scaleX(1); transition-duration: 0.12s; }
+.btn-outline.is-pressed, .works-row.is-pressed .s-outline, .s-board .board__meta a.fill-link.is-pressed { color: #35101E; }
+
+/* ---- 2. Count-up (Awards): all digits stacked in one cell (as wide as
+   the widest), the current one shown by opacity: nothing moves. ---- */
+.count-up { display: inline-grid; }
+.count-up > span { grid-area: 1 / 1; text-align: center; opacity: 0; }
+.count-up > span.is-on { opacity: 1; }
+
+/* ---- 3. Highlight sweep (About): a burgundy marker bar behind the lower
+   part of "reliable", sweeping in left to right once the section is
+   revealed (0.7s, 0.3s after it appears). The text stays on top. ---- */
+.s-highlight { position: relative; isolation: isolate; }
+.s-highlight::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 0.14em;
+  height: 0.35em;
+  z-index: -1;
+  background: #641D35;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.s-highlight.is-in::before { transform: scaleX(1); transition: transform 0.7s var(--ease-quiet) 0.15s; }
+
+/* ---- 4. Image curtain (Works): a cream layer covers the image, then
+   slides off to the right while the image settles from 1.04 to 1. ---- */
+.works-shot--curtain { position: relative; }
+.works-shot--curtain img { transform: scale(1.04); }
+.works-curtain {
+  position: absolute;
+  inset: 0;
+  background: #F1E8DD;               /* the panel's cream */
+  transform-origin: right;
+  pointer-events: none;
+}
+.works-shot--curtain.is-revealed img { transform: scale(1); transition: transform 0.9s var(--ease-quiet); }
+.works-shot--curtain.is-revealed .works-curtain { transform: scaleX(0); transition: transform 0.8s cubic-bezier(0.7, 0, 0.2, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .room-btn-primary::before, .btn-primary::before, .btn-outline::before, .s-outline::before, .fill-link::before,
+  a.blade--status::before, .btn-outline, .s-outline, .fill-link { transition: none; }
+  .s-highlight::before, .s-highlight.is-in::before { transform: scaleX(1); transition: none; }
+  .works-shot--curtain img, .works-shot--curtain.is-revealed img { transform: none; transition: none; }
+  .works-curtain { display: none; }
+}
+
+/* ---- Sticky stack (useStickyStack.js): the hero stays pinned while About
+   slides up over it like a card. On only while the hero fits in the screen
+   (.stack-on on the app root). The hero is its own layer (z-index 0), so
+   its canvas and caption never show through; every later section and the
+   footer sit above it with their own opaque backgrounds. ---- */
+/* `overflow-x: hidden` on the root would make it a scroll container and
+   stop the hero sticking; `clip` hides horizontal overflow the same way
+   without that */
+.stack-on { overflow-x: clip; }
+/* sticky only once the page has scrolled (.stack-pinned): at the very top
+   the hero is already where it would stick, and a sticky element gets its
+   own compositing layer, which renders its text very slightly differently */
+.stack-on #hero { z-index: 0; transform-origin: 50% 50%; }
+.stack-on.stack-pinned #hero { position: sticky; top: 0; }
+.stack-on main > section:not(#hero), .stack-on footer { position: relative; z-index: 1; }
+/* soft shadow on About's top edge, faded in as it starts to rise (so the
+   page at rest is unchanged) */
+.stack-on #about::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 0;                 /* from the top of the 1px border line */
+  box-shadow: 0 -16px 32px rgba(0, 0, 0, 0.35);
+  opacity: var(--stack-shadow, 0);
+  pointer-events: none;
+}
+
+/* ---- Awards: the "4" panel is a button that replays the count-up ---- */
+.awards-four--button { width: 100%; border: 0; padding: 0; font: inherit; text-align: center; cursor: pointer; }
+.awards-four__hint {
+  position: absolute; left: 50%; top: calc(100% + 0.55em);
+  transform: translateX(-50%); white-space: nowrap;
+  font-family: 'IBM Plex Mono', monospace; color: #8D5365; font-size: inherit;
+  opacity: 0; transition: opacity 0.3s var(--ease-quiet); pointer-events: none;
+}
+.awards-four--button:focus-visible .awards-four__hint { opacity: 1; }
+@media (hover: hover) { .awards-four--button:hover .awards-four__hint { opacity: 1; } }
+
+/* ---- Nav: the section on screen. One cream box (4px corners) slides
+   behind the active link; on Contact the contact button lights up. ---- */
+.nav-desktop .nav-link { z-index: 1; transition: color 0.4s var(--ease-quiet); }
+.nav-desktop .nav-link[aria-current='true'] { color: #35101E; }
+.nav-indicator {
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+  background: #F1E8DD; border-radius: 4px; opacity: 0; pointer-events: none; z-index: 0;
+  transition: transform 0.4s var(--ease-quiet), width 0.4s var(--ease-quiet), height 0.4s var(--ease-quiet), opacity 0.3s var(--ease-quiet);
+}
+.nav-indicator--still { transition: opacity 0.3s var(--ease-quiet); }
+.btn-outline::before { border-radius: inherit; }
+.btn-outline.is-active { background: #F1E8DD; color: #35101E; border-color: #F1E8DD; border-radius: 4px; transition: color 0.4s var(--ease-quiet), background-color 0.4s var(--ease-quiet), border-color 0.4s var(--ease-quiet); }
+/* phone menu: the same cream box on the active item (padding offset by a
+   negative margin, so nothing moves) */
+.mobile-menu-label { color: var(--dusty-pink); padding: 6px 10px; margin: -6px -10px; border-radius: 4px; }
+.mobile-menu-label.is-active { background: #F1E8DD; color: #35101E; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-indicator, .nav-desktop .nav-link, .btn-outline.is-active { transition: none; }
+}

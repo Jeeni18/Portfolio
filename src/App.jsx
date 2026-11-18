@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Hero from './sections/Hero'
@@ -12,16 +12,20 @@ import Footer from './components/Footer'
 import FloatingContact from './components/FloatingContact'
 import CertModal from './components/CertModal'
 import ContactModal from './components/ContactModal'
+import { useStickyStack } from './hooks/useStickyStack'
 
 // 01 hero · 02 about · 03 skills · 04 works · 05 awards · 06 education ·
 // 07 contact · footer
 function App() {
   const [selectedCert, setSelectedCert] = useState(null)
   const [contactOpen, setContactOpen] = useState(false)
+  // hero (01) pinned while About (02) slides up over it
+  const rootRef = useRef(null)
+  useStickyStack(rootRef)
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="relative min-h-screen bg-charcoal overflow-x-hidden">
+      <div ref={rootRef} className="relative min-h-screen bg-charcoal overflow-x-hidden">
         <div className="relative z-10">
           <Navbar onContactOpen={() => setContactOpen(true)} />
           <main>
