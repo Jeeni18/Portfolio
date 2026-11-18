@@ -148,6 +148,9 @@ const state = {
 let snapshot = { status: 'idle', step: 0, instant: false, quick: false, layout: T.layout }
 let raf = 0
 let last = 0
+// Paused while the hero is fully covered by About (sticky stack): the
+// clock stops, so the intro carries on from the same moment afterwards.
+let paused = false
 
 function publish() {
   const step = stepFor(state.t)
@@ -177,8 +180,10 @@ function loop(now) {
   if (state.t >= T.END) {
     state.status = 'done'
     raf = 0
-  } else {
+  } else if (!paused) {
     raf = requestAnimationFrame(loop)
+  } else {
+    raf = 0
   }
   publish()
 }
@@ -191,7 +196,7 @@ function play() {
   state.instant = false
   state.quick = false
   last = window.performance.now()
-  raf = requestAnimationFrame(loop)
+  if (!paused) raf = requestAnimationFrame(loop)
   publish()
 }
 
@@ -230,6 +235,21 @@ export const timeline = {
   skip() {
     if (state.status === 'playing') timeline.finish()
   },
+  // Hold the intro where it is (hero fully covered) / carry on from there.
+  pause() {
+    if (paused) return
+    paused = true
+    stopTicker()
+  },
+  resume() {
+    if (!paused) return
+    paused = false
+    if (state.status === 'playing' && !raf) {
+      last = window.performance.now()
+      raf = requestAnimationFrame(loop)
+    }
+  },
+  isPaused: () => paused,
   replay() {
     play()
   },

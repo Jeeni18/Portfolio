@@ -111,9 +111,16 @@ export default function Hero({ onContactOpen }) {
     const kick = setTimeout(() => {
       if (timeline.getStatus() === 'idle') timeline.start()
     }, INTRO.safetyStart)
-    const hardStop = setTimeout(() => {
+    // An intro paused under the sticky stack isn't stalled: wait while it's
+    // paused, then give it a fresh window once it carries on.
+    let hardStop = 0
+    let waited = false
+    const stop = () => {
+      if (timeline.isPaused()) { waited = true; hardStop = setTimeout(stop, 1000); return }
+      if (waited) { waited = false; hardStop = setTimeout(stop, INTRO.safetyEnd); return }
       if (timeline.getStatus() !== 'done') timeline.finish()
-    }, INTRO.safetyEnd)
+    }
+    hardStop = setTimeout(stop, INTRO.safetyEnd)
     return () => {
       clearTimeout(kick)
       clearTimeout(hardStop)

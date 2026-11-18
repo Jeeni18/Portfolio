@@ -12,13 +12,13 @@ import { timeline } from './introTimeline'
 //   the bottom of the screen, then pins there while About covers it.
 // - Reduced motion: the pinned cover stays (it's the visitor's own
 //   scrolling), without the scale and dimming.
-// - If the intro is still playing when About starts to cover the hero, it
-//   jumps to its final state.
+// - The intro is left as it is while About slides over it (it keeps
+//   playing); once the hero is fully covered it pauses with the 3D scene
+//   and carries on from the same moment when it is uncovered again.
 // - Fully covered: `heroCovered` is true, so Hero.jsx pauses the 3D scene
 //   (the sticky hero still counts as "on screen" to an IntersectionObserver).
 const RECEDE_SCALE = 0.05   // scale 1 -> 0.95
 const RECEDE_FADE = 0.45    // opacity 1 -> 0.55
-const FINISH_INTRO_AT = 0.02 // cover progress at which a running intro jumps to its end
 
 const listeners = new Set()
 let covered = false
@@ -78,7 +78,6 @@ export function useStickyStack(rootRef) {
       // fractional pixels (a smooth-scroll to #about can stop 1px short)
       const raw = (h - top) / h
       const p = raw <= 2 / h ? 0 : raw >= 1 - 2 / h ? 1 : raw
-      if (p > FINISH_INTRO_AT && timeline.getStatus() !== 'done') timeline.finish()
       if (p !== last) {
         last = p
         if (p === 0 || reduced.matches) {
@@ -95,6 +94,9 @@ export function useStickyStack(rootRef) {
         about.style.setProperty('--stack-shadow', String(Math.min(1, p * 6)))
       }
       setCovered(p >= 1)
+      // fully covered: hold the intro where it is (the scene is paused too)
+      if (p >= 1) timeline.pause()
+      else timeline.resume()
       setProgress(p, true)
     }
     const schedule = () => { if (!raf) raf = requestAnimationFrame(frame) }
@@ -140,6 +142,7 @@ export function useStickyStack(rootRef) {
       reset()
       setCovered(false)
       setProgress(0, false)
+      timeline.resume()
     }
   }, [rootRef])
 }
