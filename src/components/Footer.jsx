@@ -24,7 +24,7 @@ export default function Footer() {
           </nav>
           <button
             type="button"
-            className="site-footer__link site-footer__top"
+            className="site-footer__link"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             back to top <span aria-hidden="true">↑</span>

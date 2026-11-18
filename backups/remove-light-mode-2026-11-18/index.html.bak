@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Theme before the first paint: the saved choice (localStorage
+         'jeeni-theme'), else dark. The OS colour-scheme setting is ignored
+         on purpose. Keep in step with src/hooks/useTheme.js. -->
+    <script>
+      (function () {
+        var t = 'dark'
+        try { if (localStorage.getItem('jeeni-theme') === 'light') t = 'light' } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t)
+        if (t === 'light') document.querySelector('meta[name="theme-color"]') || document.addEventListener('DOMContentLoaded', function () {
+          var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', '#F5EFE8')
+        })
+      })()
+    </script>
+    <style>
+      html, body { background-color: #29232A; }
+      html[data-theme="light"], html[data-theme="light"] body { background-color: #F5EFE8; }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#29232A" />
+    <meta name="description" content="Jeeni Shrestha — Full-Stack Developer building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience." />
+    <link rel="canonical" href="https://www.jeenishrestha.com.np/" />
+    <title>Jeeni Shrestha – Full-Stack Developer</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Jeeni Shrestha – Full-Stack Developer" />
+    <meta property="og:description" content="Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience." />
+    <meta property="og:url" content="https://www.jeenishrestha.com.np/" />
+    <!-- TODO: add a real 1200x630 preview image and update this path -->
+    <meta property="og:image" content="https://www.jeenishrestha.com.np/og-image.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jeeni Shrestha – Full-Stack Developer" />
+    <meta name="twitter:description" content="Building reliable web applications and APIs with React, Next.js and Python, with hands-on AI/ML experience." />
+    <meta name="twitter:image" content="https://www.jeenishrestha.com.np/og-image.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

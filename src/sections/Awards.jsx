@@ -53,7 +53,7 @@ export default function Awards() {
                     variant={a.win ? 'status' : 'dark'}
                     secondary={!a.win}
                     text={a.result}
-                    className="awards-result s-h col-start-2 sm:col-start-auto"
+                    className="s-h col-start-2 sm:col-start-auto"
                   />
                 </li>
               ))}

@@ -21,7 +21,7 @@ function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="app-root relative min-h-screen overflow-x-hidden">
+      <div className="relative min-h-screen bg-charcoal overflow-x-hidden">
         <div className="relative z-10">
           <Navbar onContactOpen={() => setContactOpen(true)} />
           <main>
